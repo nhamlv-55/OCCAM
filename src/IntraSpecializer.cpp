@@ -56,6 +56,7 @@
 /* here specialization policies */
 #include "AggressiveSpecPolicy.h"
 #include "RecursiveGuardSpecPolicy.h"
+#include "MLPolicy.h"
 
 using namespace llvm;
 using namespace previrt;
@@ -71,7 +72,7 @@ static cl::opt<SpecializationPolicyType> SpecPolicy(
                clEnumValN(AGGRESSIVE, "aggressive",
                           "Specialize always if some constant argument"),
                clEnumValN(NONRECURSIVE_WITH_AGGRESSIVE, "nonrec-aggressive",
-                          "aggressive + non-recursive function")
+                          "aggressive + non-recursive function"),
                clEnumValN(ML, "machine-learning", "using machine learning policy")),
     cl::init(ML));
 
@@ -233,7 +234,9 @@ bool SpecializerPass::runOnModule(Module &M) {
     break;
   }
   case ML: {
-    policy = new MLPolicy();
+    SpecializationPolicy *subpolicy = new AggressiveSpecPolicy();
+    CallGraph &cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();
+    policy = new MLPolicy(subpolicy, cg);
     break;
   }
   }

@@ -55,7 +55,8 @@ namespace previrt
   enum SpecializationPolicyType {
     NOSPECIALIZE,
     AGGRESSIVE,
-    NONRECURSIVE_WITH_AGGRESSIVE
+    NONRECURSIVE_WITH_AGGRESSIVE,
+    ML
   };
   
   class SpecializationPolicy
