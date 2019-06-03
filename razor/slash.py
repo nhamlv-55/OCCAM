@@ -182,7 +182,8 @@ class Slash(object):
 
             if policy <> 'none' and \
                policy <> 'aggressive' and \
-               policy <> 'nonrec-aggressive':
+               policy <> 'nonrec-aggressive' and\
+               policy <> 'machine-learning':
                 sys.stderr.write('Error: unsupported specialization policy. ' + \
                                  'Valid policies: none, aggressive, nonrec-aggressive')
                 return False
