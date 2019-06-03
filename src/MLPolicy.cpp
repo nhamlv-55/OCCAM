@@ -21,105 +21,103 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 //
 
 #include "MLPolicy.h"
 
+#include "iostream"
+#include "torch/torch.h"
 #include "llvm/ADT/SCCIterator.h"
-
 using namespace llvm;
+using namespace torch;
+namespace previrt {
 
-namespace previrt
-{
+MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg)
+    : cg(_cg), delegate(_delegate) {
 
-  MLPolicy::MLPolicy(SpecializationPolicy* _delegate,
-						     CallGraph& _cg)
-    : cg(_cg)
-    , delegate(_delegate) {
-    
-    assert(delegate);
-    markRecursiveFunctions();
+  assert(delegate);
+  torch::Tensor tensor = torch::eye(3);
+  std::cout << tensor << std::endl;
+  markRecursiveFunctions();
+}
+
+MLPolicy::~MLPolicy() {
+  if (delegate) {
+    delete delegate;
   }
-  
-  MLPolicy::~MLPolicy() {
-    if (delegate) {
-      delete delegate;
+}
+
+void MLPolicy::markRecursiveFunctions() {
+  for (auto it = scc_begin(&cg); !it.isAtEnd(); ++it) {
+    auto &scc = *it;
+    bool recursive = false;
+
+    if (scc.size() == 1 && it.hasLoop()) {
+      // direct recursive
+      recursive = true;
+    } else if (scc.size() > 1) {
+      // indirect recursive
+      recursive = true;
     }
-  }
 
-  void MLPolicy::markRecursiveFunctions() {
-    for (auto it = scc_begin(&cg); !it.isAtEnd(); ++it) {
-      auto &scc = *it;
-      bool recursive = false;
-      
-      if (scc.size() == 1 && it.hasLoop()) {
-	// direct recursive
-	recursive = true;
-      } else if (scc.size() > 1) {
-	// indirect recursive
-	recursive = true;
-      }
-
-      if (recursive) {
-	for (CallGraphNode *cgn : scc) {
-	  Function *fn = cgn->getFunction();
-	  if (!fn || fn->isDeclaration() || fn->empty()) {
-	    continue;
-	  }
-	  rec_functions.insert(fn);
-	}
+    if (recursive) {
+      for (CallGraphNode *cgn : scc) {
+        llvm::Function *fn = cgn->getFunction();
+        if (!fn || fn->isDeclaration() || fn->empty()) {
+          continue;
+        }
+        rec_functions.insert(fn);
       }
     }
   }
+}
 
-  bool MLPolicy::isRecursive(Function* F) const {
-    return rec_functions.count(F);
-  }
-  
-  // Return true if F is not recursive  
-  bool MLPolicy::allowSpecialization(Function* F) const {
-    return (!isRecursive(F));
-  }
+bool MLPolicy::isRecursive(llvm::Function *F) const {
+  return rec_functions.count(F);
+}
 
-  bool MLPolicy::specializeOn(CallSite CS,
-					      std::vector<Value*>& slice) const {
-    Function* callee = CS.getCalledFunction();
-    if (callee && allowSpecialization(callee)) {
-      return delegate->specializeOn(CS, slice);
-    } else {
-      return false;
-    }
-  }
+// Return true if F is not recursive
+bool MLPolicy::allowSpecialization(llvm::Function *F) const {
+  return (!isRecursive(F));
+}
 
-  bool MLPolicy::specializeOn(Function* F,
-					      const PrevirtType* begin,
-					      const PrevirtType* end,
-					      SmallBitVector& slice) const {
-    if (allowSpecialization(F)) {
-      return delegate->specializeOn(F, begin, end, slice);
-    } else {
-      return false;
-    }
+bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
+  llvm::Function *callee = CS.getCalledFunction();
+  if (callee && allowSpecialization(callee)) {
+    return delegate->specializeOn(CS, slice);
+  } else {
+    return false;
   }
+}
 
-  bool MLPolicy::specializeOn(Function* F,
-					      std::vector<PrevirtType>::const_iterator begin,
-					      std::vector<PrevirtType>::const_iterator end,
-					      SmallBitVector& slice) const {
-    if (allowSpecialization(F)) {
-      return delegate->specializeOn(F, begin, end, slice);
-    } else {
-      return false;
-    }
+bool MLPolicy::specializeOn(llvm::Function *F, const PrevirtType *begin,
+                            const PrevirtType *end,
+                            SmallBitVector &slice) const {
+  if (allowSpecialization(F)) {
+    return delegate->specializeOn(F, begin, end, slice);
+  } else {
+    return false;
   }
+}
+
+bool MLPolicy::specializeOn(llvm::Function *F,
+                            std::vector<PrevirtType>::const_iterator begin,
+                            std::vector<PrevirtType>::const_iterator end,
+                            SmallBitVector &slice) const {
+  if (allowSpecialization(F)) {
+    return delegate->specializeOn(F, begin, end, slice);
+  } else {
+    return false;
+  }
+}
 
 } // end namespace previrt
-
