@@ -48,20 +48,14 @@ LIBFLAGS = -shared -Wl,-soname,${LIBRARY}
 OTHERLIBS =  -lpthread -lprotobuf 
 endif
 
-
 # torch
 PYTORCH_INSTALL=/Users/e32851/workspace/libtorchmac/libtorch
 
-UNAME := $(shell uname)
-ifeq ($(UNAME),Darwin)
-    DYLIB=dylib
-else
-    DYLIB=so
-endif
 PYTORCH_LIBS = $(PYTORCH_INSTALL)/lib/libtorch.${DYLIB}
 
 PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libcaffe2.${DYLIB}
 
+PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libtorch.1.${DYLIB}
 
 PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libc10.${DYLIB}
 PYTORCH_LIBS += /Users/e32851/Downloads/mklml_mac_2019.0.5.20190502/lib/libmklml.${DYLIB}
@@ -70,16 +64,10 @@ LDLIBS := \
      $(PYTORCH_LIBS)
 
 CXX_FLAGS += \
-		 -fexceptions \
-		 -frtti \
      -I $(PYTORCH_INSTALL)/include/torch/csrc/api/include \
      -I $(PYTORCH_INSTALL)/include \
      -std=c++11 \
-     -O2 -g
-
-LD_FLAGS += -Wl,-rpath,$(PYTORCH_INSTALL)/lib/
-
-
+# end torch stuff
 
 PROTOC = $(shell which protoc)
 
@@ -117,7 +105,7 @@ ${LIBRARY}: extern_libs ${SOURCES}
 	$(MAKE) lib
 
 lib: ${OBJECTS}
-	$(CXX) ${OBJECTS} ${LIBFLAGS} ${LDLIBS} -o ${LIBRARY} ${CXX_FLAGS} ${LD_FLAGS} ${OTHERLIBS}
+	$(CXX) ${OBJECTS} ${LIBFLAGS} -o ${LIBRARY} ${CXX_FLAGS} ${LD_FLAGS} ${OTHERLIBS}
 
 analysis/%.o: analysis/%.cpp 
 	$(CXX) ${CXX_FLAGS} $< -c -o $@
@@ -129,8 +117,9 @@ utils/%.o: utils/%.cpp
 	$(CXX) ${CXX_FLAGS} $< -c -o $@
 
 %.o: %.cpp
-	$(CXX) -I. ${CXX_FLAGS} ${LD_FLAGS} ${LDLIBS} $< -c 
+	#$(CXX) -I. ${CXX_FLAGS} -fexceptions -frtti $< -c 
 
+	$(CXX) -I. ${CXX_FLAGS} $< -c 
 proto/%.o: proto/%.cc proto/%.h 
 	$(CXX)  ${CXX_FLAGS} $< -c -o $@
 
@@ -145,6 +134,7 @@ clean:
 	$(MAKE) -C analysis -f Makefile.sea-dsa clean
 
 install: check-occam-lib ${LIBRARY}
+	echo *************** ${LIBRARY}
 	$(INSTALL) -m 664 ${LIBRARY} $(OCCAM_LIB)
 
 uninstall_occam_lib:
