@@ -55,11 +55,12 @@ __libext = libExtension()
 class ConfigObj(object):
     """All access to the environment comes through this class.
     """
-    def  __init__(self, libfile, seadsalib, llvmdsalib, llpelibs):
+    def  __init__(self, libfile, seadsalib, llvmdsalib, llpelibs, torchlibs):
         self._occamlib = libfile
         self._seadsalib = seadsalib
         self._llvmdsalib = llvmdsalib
         self._llpelibs = llpelibs
+        self._torchlibs = torchlibs
         self._env = {'clang'      :  'LLVM_CC_NAME',
                      'clang++'    :  'LLVM_CXX_NAME',
                      'llvm-link'  :  'LLVM_LINK_NAME',
@@ -99,6 +100,8 @@ class ConfigObj(object):
         """
         return self._llpelibs
 
+    def get_torchlibs(self):
+        return self._torchlibs
     def get_llvm_tool(self, tool):
         """ Returns the appropriate tool.
         """
@@ -115,7 +118,6 @@ def get_occamlib_path():
         return os.path.join(home, 'lib', 'libprevirt.{0}'.format(__libext))
     sys.stderr.write('Unsupported platform: {0}\n'.format(__system))
     return None
-
 def get_sea_dsalib_path():
     """ Deduces the full path to the SeaHorn DSA shared/dynamic library.
     """
@@ -155,6 +157,22 @@ def get_llpelibs_paths():
     else:
         sys.stderr.write('Unsupported platform: {0}\n'.format(__system))
     return paths
+def get_torch_paths():
+    """ Deduces the full path to the LLPE shared/dynamic libraries.
+        LLPE consists of multiple libraries so it returns a list.
+    """
+    home = os.getenv('OCCAM_HOME')
+    paths = []
+    if home is None:
+        return paths
+    if __libext is not None:
+        paths.append(os.path.join(home, 'lib', 'libc10.{0}'.format(__libext)))
+        paths.append(os.path.join(home, 'lib', 'libcaffe2.{0}'.format(__libext)))
+        paths.append(os.path.join(home, 'lib', 'libtorch.{0}'.format(__libext)))
+    else:
+        sys.stderr.write('Unsupported platform: {0}\n'.format(__system))
+    return paths
+
 
 def get_logfile():
     """ Returns the path to the occam logfile.
@@ -167,7 +185,8 @@ def get_logfile():
 CFG = ConfigObj(get_occamlib_path(), \
                 get_sea_dsalib_path(), \
                 get_llvm_dsalib_path(), \
-                get_llpelibs_paths())
+                get_llpelibs_paths(),
+                get_torch_paths())
 
 def get_occamlib():
     """ Returns the path to the occam shared/dynamic library.
@@ -197,3 +216,6 @@ def get_llvm_tool(tool):
     if llvm_home:
         return os.path.join(llvm_home, 'bin', tool)
     return tool
+
+def get_torch_libs():
+    return CFG.get_torchlibs()
