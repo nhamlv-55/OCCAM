@@ -46,7 +46,8 @@ MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg)
 
   assert(delegate);
   torch::Tensor tensor = torch::eye(3);
-  std::cout << tensor << std::endl;
+  std::cerr<< "Print a tensor"<< tensor <<std::endl;
+  std::cerr << "Hello ML" << std::endl;
   markRecursiveFunctions();
 }
 
@@ -90,8 +91,21 @@ bool MLPolicy::allowSpecialization(llvm::Function *F) const {
   return (!isRecursive(F));
 }
 
+unsigned getInstructionCount(llvm::Function* f) {
+    unsigned NumInstrs = 0;
+    for (const BasicBlock &BB : *f)
+      NumInstrs += BB.size();
+    return NumInstrs;
+ }
+
 bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
   llvm::Function *callee = CS.getCalledFunction();
+  std::vector<float> features;
+  features.push_back((float)CS.arg_size());
+  features.push_back((float)getInstructionCount(callee));
+
+  std::cerr<<"Feature vector: "<<features<<std::endl;
+
   if (callee && allowSpecialization(callee)) {
     return delegate->specializeOn(CS, slice);
   } else {
