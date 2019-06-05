@@ -37,6 +37,31 @@
 
 #include "SpecializationPolicy.h"
 
+#include "torch/torch.h"
+#define NO_OF_FEATS 3
+
+struct Net : torch::nn::Module {
+  Net() {
+    // Construct and register two Linear submodules.
+    fc1 = register_module("fc1", torch::nn::Linear(NO_OF_FEATS, 3));
+    fc2 = register_module("fc2", torch::nn::Linear(3, 1));
+  }
+
+  // Implement the Net's algorithm.
+  torch::Tensor forward(torch::Tensor x) {
+    // Use one of many tensor manipulation functions.
+    x = torch::relu(fc1->forward(x.reshape({x.size(0), NO_OF_FEATS})));
+    // x = torch::dropout(x, /*p=*/0.5, /*train=*/is_training());
+    x = torch::relu(fc2->forward(x));
+    //x = torch::log_softmax(x, /*dim=*/1);
+    return x;
+  }
+
+  // Use one of many "standard library" modules.
+  torch::nn::Linear fc1{nullptr}, fc2{nullptr};
+};
+
+
 namespace previrt
 {
   
@@ -55,6 +80,8 @@ namespace previrt
     bool isRecursive(llvm::Function* f) const;    
     bool allowSpecialization(llvm::Function* f) const;
 
+    // Generate the net
+    Net* net = new Net();
   public:
     
     MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg);
