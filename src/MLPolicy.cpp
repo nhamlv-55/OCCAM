@@ -35,8 +35,8 @@
 #include "MLPolicy.h"
 
 #include "iostream"
-#include "torch/torch.h"
 #include "llvm/ADT/SCCIterator.h"
+
 using namespace llvm;
 using namespace torch;
 namespace previrt {
@@ -48,6 +48,12 @@ MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg)
   torch::Tensor tensor = torch::eye(3);
   std::cerr<< "Print a tensor"<< tensor <<std::endl;
   std::cerr << "Hello ML" << std::endl;
+  // randomize weight
+  //torch::nn::init::xavier_uniform_(this->net->fc1->weight, 1.0);
+  //torch::nn::init::xavier_uniform_(this->net->fc2->weight, 1.0);
+  std::cerr<<"w:::"<<this->net->fc1->weight<<std::endl;
+  std::cerr<<"w:::"<<this->net->fc2->weight<<std::endl;
+
   markRecursiveFunctions();
 }
 
@@ -103,9 +109,16 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
   std::vector<float> features;
   features.push_back((float)CS.arg_size());
   features.push_back((float)getInstructionCount(callee));
-
+  features.push_back(1.0);
   std::cerr<<"Feature vector: "<<features<<std::endl;
 
+  torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
+  //std::cerr<<"size x:"<<x<<std::endl;
+  x = x.reshape({1, x.size(0)});
+  //std::cerr<<"after reshaping"<<x<<std::endl;
+  torch::Tensor prediction = this->net->forward(x);
+
+  std::cerr<<"prediction: "<<prediction<<std::endl;
   if (callee && allowSpecialization(callee)) {
     return delegate->specializeOn(CS, slice);
   } else {
