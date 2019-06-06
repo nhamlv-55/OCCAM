@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/Users/e32851/workspace/libtorchmac/libtorch/lib:/Users/e32851/Downloads/mklml_mac_2019.0.5.20190502/lib
 # Make sure we exit if there is a failure
 set -e
 
@@ -11,7 +12,7 @@ function usage() {
 
 #default values
 INTER_SPEC="none"
-INTRA_SPEC="none"
+INTRA_SPEC="machine-learning"
 DEVIRT="dsa"
 OPT_OPTIONS=""
 
@@ -78,7 +79,7 @@ clang++ tree.bc -o tree_from_bc
 
 export OCCAM_LOGLEVEL=INFO
 export OCCAM_LOGFILE=${PWD}/slash/occam.log
-
+echo AAAAAAAAAA $LD_LIBRARY_PATH
 rm -rf slash
 
 # OCCAM
