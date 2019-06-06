@@ -41,11 +41,12 @@ using namespace llvm;
 using namespace torch;
 namespace previrt {
 
-MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg)
-    : cg(_cg), delegate(_delegate) {
+  MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg, std::string _database)
+    : cg(_cg), delegate(_delegate), database(_database) {
 
   assert(delegate);
   torch::Tensor tensor = torch::eye(3);
+  std::cerr << "database:" << database << std::endl;
   std::cerr << "Print a tensor" << tensor << std::endl;
   std::cerr << "Hello ML" << std::endl;
   // randomize weight

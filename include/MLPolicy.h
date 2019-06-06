@@ -74,6 +74,7 @@ namespace previrt
 
     llvm::CallGraph& cg;
     SpecializationPolicy* const delegate;
+    std::string const database;
     FunctionSet rec_functions;
     
     void markRecursiveFunctions();
@@ -84,7 +85,7 @@ namespace previrt
     Net* net = new Net();
   public:
     
-    MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg);
+    MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, std::string database);
 
     virtual ~MLPolicy();
     
