@@ -33,20 +33,19 @@
 //
 
 #include "MLPolicy.h"
-#include <random>
-#include "iostream"
 #include "llvm/ADT/SCCIterator.h"
-
+#include <random>
 using namespace llvm;
 using namespace torch;
 namespace previrt {
 
-  MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg, std::string _database)
-    : cg(_cg), delegate(_delegate), database(_database) {
+MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg,
+                   std::string _database)
+  : cg(_cg), delegate(_delegate) {
 
   assert(delegate);
   torch::Tensor tensor = torch::eye(3);
-  std::cerr << "database:" << database << std::endl;
+  std::cerr << "database:" << _database << std::endl;
   std::cerr << "Print a tensor" << tensor << std::endl;
   std::cerr << "Hello ML" << std::endl;
   // randomize weight
@@ -54,7 +53,6 @@ namespace previrt {
   // torch::nn::init::xavier_uniform_(this->net->fc2->weight, 1.0);
   std::cerr << "w:::" << this->net->fc1->weight << std::endl;
   std::cerr << "w:::" << this->net->fc2->weight << std::endl;
-
   markRecursiveFunctions();
 }
 
@@ -62,6 +60,14 @@ MLPolicy::~MLPolicy() {
   if (delegate) {
     delete delegate;
   }
+  std::ofstream outFile(*database);
+  std::cerr<<"calling destructor with file "<<*database<<std::endl;
+  outFile << "blah";
+  outFile<<*s;
+  outFile.flush();
+  std::cerr << "print out s"<<*s<<std::endl;
+  outFile.close();
+  std::cerr<<"file closed"<<std::endl;
 }
 
 void MLPolicy::markRecursiveFunctions() {
@@ -115,16 +121,19 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     std::uniform_real_distribution<> dist(0, 1);
 
     float sample = dist(e2);
-    std::cerr<<"sample:"<<sample<<std::endl;
+    database->assign(std::to_string(sample));
+    std::cerr << "sample:" << sample << std::endl;
 
-    float threshold = 0.5; //sampling a random number. If it is less than threshold, specialize
-    if (sample > 0.7) { // use the policy 
-      std::vector<float> features;
-      features.push_back((float)CS.arg_size());
-      features.push_back((float)getInstructionCount(callee));
-      features.push_back(1.0);
-      std::cerr << "Feature vector: " << features << std::endl;
+    float threshold = 0.5; // sampling a random number. If it is less than
+                           // threshold, specialize
+    std::vector<float> features;
+    features.push_back((float)CS.arg_size());
+    features.push_back((float)getInstructionCount(callee));
+    features.push_back(1.0);
+    std::cerr << "Feature vector: " << features << std::endl;
 
+    if (sample > 0.7) { // use the policy
+    
       torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
       // std::cerr<<"size x:"<<x<<std::endl;
       x = x.reshape({1, x.size(0)});
@@ -133,20 +142,31 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
 
       std::cerr << "prediction: " << prediction << std::endl;
       sample = dist(e2);
-      std::cerr << "sample: "<< sample<<std::endl;
+      std::cerr << "sample: " << sample << std::endl;
       threshold = prediction[0][0].item<float>();
+      for (float f: features)
+        s->append(std::to_string(f)).append(",");
+      for (int i=0; i < 2; i++)
+        s->append(std::to_string(prediction[0][i].item<float>())).append(",");
+      
+    }else{
+      for (float f: features)
+        s->append(std::to_string(f)).append(",");
+      for (int i=0; i < 2; i++)
+        s->append("-1").append(",");
     }
     sample = dist(e2);
-    
-    std::cerr<<"result:"<< (sample < threshold) <<std::endl;
 
-    if(sample < threshold){
+    std::cerr << "result:" << (sample < threshold) << std::endl;
+    s->append(std::to_string(sample < threshold)).append("\n");
+    if (sample < threshold) {
       return delegate->specializeOn(CS, slice);
-    }else{
+    }
+    else {
       return false;
     }
   } else {
-    std::cerr<<"not callee or not allowSpecialization"<<std::endl;
+    std::cerr << "not callee or not allowSpecialization" << std::endl;
     return false;
   }
 }
