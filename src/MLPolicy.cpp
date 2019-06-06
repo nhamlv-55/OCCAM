@@ -33,7 +33,7 @@
 //
 
 #include "MLPolicy.h"
-
+#include <random>
 #include "iostream"
 #include "llvm/ADT/SCCIterator.h"
 
@@ -46,13 +46,13 @@ MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg)
 
   assert(delegate);
   torch::Tensor tensor = torch::eye(3);
-  std::cerr<< "Print a tensor"<< tensor <<std::endl;
+  std::cerr << "Print a tensor" << tensor << std::endl;
   std::cerr << "Hello ML" << std::endl;
   // randomize weight
-  //torch::nn::init::xavier_uniform_(this->net->fc1->weight, 1.0);
-  //torch::nn::init::xavier_uniform_(this->net->fc2->weight, 1.0);
-  std::cerr<<"w:::"<<this->net->fc1->weight<<std::endl;
-  std::cerr<<"w:::"<<this->net->fc2->weight<<std::endl;
+  // torch::nn::init::xavier_uniform_(this->net->fc1->weight, 1.0);
+  // torch::nn::init::xavier_uniform_(this->net->fc2->weight, 1.0);
+  std::cerr << "w:::" << this->net->fc1->weight << std::endl;
+  std::cerr << "w:::" << this->net->fc2->weight << std::endl;
 
   markRecursiveFunctions();
 }
@@ -97,31 +97,55 @@ bool MLPolicy::allowSpecialization(llvm::Function *F) const {
   return (!isRecursive(F));
 }
 
-unsigned getInstructionCount(llvm::Function* f) {
-    unsigned NumInstrs = 0;
-    for (const BasicBlock &BB : *f)
-      NumInstrs += BB.size();
-    return NumInstrs;
- }
+unsigned getInstructionCount(llvm::Function *f) {
+  unsigned NumInstrs = 0;
+  for (const BasicBlock &BB : *f)
+    NumInstrs += BB.size();
+  return NumInstrs;
+}
 
 bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
   llvm::Function *callee = CS.getCalledFunction();
-  std::vector<float> features;
-  features.push_back((float)CS.arg_size());
-  features.push_back((float)getInstructionCount(callee));
-  features.push_back(1.0);
-  std::cerr<<"Feature vector: "<<features<<std::endl;
 
-  torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
-  //std::cerr<<"size x:"<<x<<std::endl;
-  x = x.reshape({1, x.size(0)});
-  //std::cerr<<"after reshaping"<<x<<std::endl;
-  torch::Tensor prediction = this->net->forward(x);
-
-  std::cerr<<"prediction: "<<prediction<<std::endl;
   if (callee && allowSpecialization(callee)) {
-    return delegate->specializeOn(CS, slice);
+    // setting up random devices and engines
+    std::random_device rd;
+    std::mt19937 e2(rd());
+    std::uniform_real_distribution<> dist(0, 1);
+
+    float sample = dist(e2);
+    std::cerr<<"sample:"<<sample<<std::endl;
+
+    float threshold = 0.5; //sampling a random number. If it is less than threshold, specialize
+    if (sample > 0.7) { // use the policy 
+      std::vector<float> features;
+      features.push_back((float)CS.arg_size());
+      features.push_back((float)getInstructionCount(callee));
+      features.push_back(1.0);
+      std::cerr << "Feature vector: " << features << std::endl;
+
+      torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
+      // std::cerr<<"size x:"<<x<<std::endl;
+      x = x.reshape({1, x.size(0)});
+      // std::cerr<<"after reshaping"<<x<<std::endl;
+      torch::Tensor prediction = this->net->forward(x);
+
+      std::cerr << "prediction: " << prediction << std::endl;
+      sample = dist(e2);
+      std::cerr << "sample: "<< sample<<std::endl;
+      threshold = prediction[0][0].item<float>();
+    }
+    sample = dist(e2);
+    
+    std::cerr<<"result:"<< (sample < threshold) <<std::endl;
+
+    if(sample < threshold){
+      return delegate->specializeOn(CS, slice);
+    }else{
+      return false;
+    }
   } else {
+    std::cerr<<"not callee or not allowSpecialization"<<std::endl;
     return false;
   }
 }
