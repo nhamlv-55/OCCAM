@@ -21,71 +21,68 @@
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 //
 
 #include "AggressiveSpecPolicy.h"
 
 using namespace llvm;
 
-namespace previrt
-{
-  
-  AggressiveSpecPolicy::AggressiveSpecPolicy() {
-  }
+namespace previrt {
 
-  AggressiveSpecPolicy::~AggressiveSpecPolicy() {
-  }
-  
-  bool AggressiveSpecPolicy::specializeOn(CallSite CS,
-					  std::vector<Value*>& slice) const {
-    bool specialize = false;
-    slice.reserve(CS.arg_size());
-    for (unsigned i=0, e = CS.arg_size(); i<e; ++i) {
-      Constant* cst = dyn_cast<Constant> (CS.getArgument(i));
-      // XXX: cst can be nullptr
-      if (SpecializationPolicy::isConstantSpecializable(cst)) {
-	slice.push_back(cst);
-	specialize=true;
-      } else {
-	slice.push_back(nullptr);
-      } 
-    }
-    return specialize;
-  }
+AggressiveSpecPolicy::AggressiveSpecPolicy() {}
 
-  bool AggressiveSpecPolicy::specializeOn(Function* F,
-					  const PrevirtType* begin, const PrevirtType* end,
-					  SmallBitVector& slice) const {
-    bool specialize = false;
-    for (unsigned int i = 0; begin != end; ++begin, ++i) {
-      if (begin->isConcrete()) {
-        specialize = true;
-        slice.set(i);
-      }
-    }
-    return specialize;
-  }
+AggressiveSpecPolicy::~AggressiveSpecPolicy() {}
 
-  bool AggressiveSpecPolicy::specializeOn(Function* F,
-					  std::vector<PrevirtType>::const_iterator begin,
-					  std::vector<PrevirtType>::const_iterator end,
-					  SmallBitVector& slice) const {
-    bool specialize = false;
-    for (unsigned int i = 0; begin != end; ++begin, ++i) {
-      if (begin->isConcrete()) {
-        specialize = true;
-        slice.set(i);
-      }
+bool AggressiveSpecPolicy::specializeOn(CallSite CS,
+                                        std::vector<Value *> &slice) const {
+  bool specialize = false;
+  slice.reserve(CS.arg_size());
+  for (unsigned i = 0, e = CS.arg_size(); i < e; ++i) {
+    Constant *cst = dyn_cast<Constant>(CS.getArgument(i));
+    // XXX: cst can be nullptr
+    if (SpecializationPolicy::isConstantSpecializable(cst)) {
+      slice.push_back(cst);
+      specialize = true;
+    } else {
+      slice.push_back(nullptr);
     }
-    return specialize;
   }
-  
-} // end namespace
+  return specialize;
+}
+
+bool AggressiveSpecPolicy::specializeOn(Function *F, const PrevirtType *begin,
+                                        const PrevirtType *end,
+                                        SmallBitVector &slice) const {
+  bool specialize = false;
+  for (unsigned int i = 0; begin != end; ++begin, ++i) {
+    if (begin->isConcrete()) {
+      specialize = true;
+      slice.set(i);
+    }
+  }
+  return specialize;
+}
+
+bool AggressiveSpecPolicy::specializeOn(
+    Function *F, std::vector<PrevirtType>::const_iterator begin,
+    std::vector<PrevirtType>::const_iterator end, SmallBitVector &slice) const {
+  bool specialize = false;
+  for (unsigned int i = 0; begin != end; ++begin, ++i) {
+    if (begin->isConcrete()) {
+      specialize = true;
+      slice.set(i);
+    }
+  }
+  return specialize;
+}
+
+} // namespace previrt
