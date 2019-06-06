@@ -15,7 +15,7 @@ INTER_SPEC="none"
 INTRA_SPEC="machine-learning"
 DEVIRT="dsa"
 OPT_OPTIONS=""
-
+DATABASE="/tmp/tree/db.csv"
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -83,7 +83,7 @@ echo AAAAAAAAAA $LD_LIBRARY_PATH
 rm -rf slash
 
 # OCCAM
-SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS"
+SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE}"
 echo "============================================================"
 echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"

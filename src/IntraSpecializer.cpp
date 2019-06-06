@@ -64,7 +64,7 @@ using namespace previrt;
 static cl::opt<bool>
     OptSpecialized("Ppeval-opt", cl::Hidden, cl::init(false),
                    cl::desc("Optimize new specialized functions"));
-
+static cl::opt<std::string> LogFilename("Ppeval-database", cl::desc("Specify output database filename"), cl::value_desc("database"));
 static cl::opt<SpecializationPolicyType> SpecPolicy(
     "Ppeval-policy", cl::desc("Intra-module specialization policy"),
     cl::values(clEnumValN(NOSPECIALIZE, "nospecialize",
@@ -218,7 +218,7 @@ public:
 };
 
 bool SpecializerPass::runOnModule(Module &M) {
-
+  std::cerr<<"call runOnModule from IntraSpecializer.cpp::SpecializerPass"<<std::endl;
   // -- Create the specialization policy. Bail out if no policy.
   SpecializationPolicy *policy = nullptr;
   switch (SpecPolicy) {
@@ -236,7 +236,7 @@ bool SpecializerPass::runOnModule(Module &M) {
   case ML: {
     SpecializationPolicy *subpolicy = new AggressiveSpecPolicy();
     CallGraph &cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();
-    policy = new MLPolicy(subpolicy, cg);
+    policy = new MLPolicy(subpolicy, cg, LogFilename);
     break;
   }
   }
