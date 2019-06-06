@@ -36,7 +36,10 @@
 #include "llvm/Analysis/CallGraph.h"
 
 #include "SpecializationPolicy.h"
-
+#include <sstream>
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "torch/torch.h"
 #define NO_OF_FEATS 3
 
@@ -74,7 +77,8 @@ namespace previrt
 
     llvm::CallGraph& cg;
     SpecializationPolicy* const delegate;
-    std::string const database;
+    std::string* database = new std::string();
+    std::string* s = new std::string();
     FunctionSet rec_functions;
     
     void markRecursiveFunctions();
