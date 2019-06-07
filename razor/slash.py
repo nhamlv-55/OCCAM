@@ -290,9 +290,8 @@ class Slash(object):
 
         def add_profile_map(title):
             profile_map = collections.OrderedDict()
-            for m in files.values():
-                _, name = tempfile.mkstemp()
-                profile_map[m.get()] = name
+            for i, m in enumerate(files.values()):
+                profile_map[m.get()] = database+str(i)+"_results.txt"
             def _profile(m):
                 "Profiling "
                 passes.profile(m.get(), profile_map[m.get()])
@@ -302,6 +301,7 @@ class Slash(object):
             profile_map_titles.extend([title])
 
         def print_profile_maps(f = lambda x: x):
+
             def print_file(f, v, when):
                 sys.stderr.write('\nStatistics for {0} {1}\n'.format(f, when))
                 fd = open(v, 'r')
@@ -309,7 +309,7 @@ class Slash(object):
                     sys.stderr.write('\t')
                     sys.stderr.write(line)
                 fd.close()
-                os.remove(v)
+                #os.remove(v)
             for ll in map(lambda t: list(t),
                           zip(*map(lambda OrdDic: OrdDic.iteritems(), profile_maps))):
                 k, j = None, 0

@@ -131,6 +131,7 @@ def profile(input_file, output_file):
         ,'-profile-loops=false'
         #,'-profile-safe-pointers=false'
     ]
+    print "profiling to", output_file
     args += ['-profile-outfile={0}'.format(output_file)]
     return driver.previrt(input_file, '/dev/null', args)
 
