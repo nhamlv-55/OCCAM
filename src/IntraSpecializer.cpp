@@ -236,6 +236,7 @@ bool SpecializerPass::runOnModule(Module &M) {
   case ML: {
     SpecializationPolicy *subpolicy = new AggressiveSpecPolicy();
     CallGraph &cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();
+
     policy = new MLPolicy(subpolicy, cg, LogFilename);
     break;
   }

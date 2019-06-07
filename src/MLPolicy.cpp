@@ -114,7 +114,7 @@ unsigned getInstructionCount(llvm::Function *f) {
   return NumInstrs;
 }
 
-  bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice, std::shared_ptr<torch::jit::script::Module> module) const {
+bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
   llvm::Function *callee = CS.getCalledFunction();
 
   if (callee && allowSpecialization(callee)) {
