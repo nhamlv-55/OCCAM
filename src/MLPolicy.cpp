@@ -62,10 +62,8 @@ MLPolicy::~MLPolicy() {
   }
   std::ofstream outFile(*database);
   std::cerr<<"calling destructor with file "<<*database<<std::endl;
-  outFile << "blah";
   outFile<<*s;
   outFile.flush();
-  std::cerr << "print out s"<<*s<<std::endl;
   outFile.close();
   std::cerr<<"file closed"<<std::endl;
 }
