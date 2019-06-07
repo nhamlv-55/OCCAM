@@ -1,18 +1,27 @@
 import os
 import glob
 import numpy as np
-class DataCollector:
-    def __init__(self, folder):
+class Dataset:
+    def __init__(self, folder, no_of_feats = 2):
         self.folder = folder
-
+        self.no_of_feats = no_of_feats
+        self.collect()
+        
+    
     def merge_csv(self, csv_files):
-        data  = []
+        raw_data  = []
+        input = []
+        output = []
         for fname in csv_files:
             with open(fname, "r") as f:
                 for l in f.readlines():
                     tokens = l.strip().split(',')
-                    data.append([float(t) for t in tokens])
-        return data
+                    tokens = [float(t) for t in tokens]
+                    raw_data.append(tokens)
+                    input.append(tokens[:self.no_of_feats])
+                    output.append(int(tokens[-1]))
+
+        return raw_data, input, output
 
     def get_stat(self, run):
         result = []
@@ -28,18 +37,28 @@ class DataCollector:
     
 
     def collect(self):
-        all_data = []
+        self.all_data = []
         runs = glob.glob(self.folder+"/run*")
         print(runs)
         for r in runs:
+            run_data = {}
             print(r)
             csv_files = glob.glob(r+"/*.csv")
-            data = self.merge_csv(csv_files)
+            _, input, output = self.merge_csv(csv_files)
             result = self.get_stat(r)
-            all_data.append((data, result, self.score(result)))
-        all_data.sort(key=lambda x: x[2])
-        print(all_data)
+            run_data["input"] = input
+            run_data["output"] = output
+            run_data["score"] = self.score(result)
+            run_data["raw_result"] = result
+            self.all_data.append(run_data)
+        self.all_data.sort(key=lambda x: x["score"])
 
+
+    def dump(self):
+        for r in self.all_data:
+            for i in range(len(r["input"])):
+                print(r["input"][i], ":", r["output"][i])
+            print(r["score"])
 if __name__== "__main__":
-    dataCollector = DataCollector("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash")
-    dataCollector.collect()
+    dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash")
+    dataset.dump()
