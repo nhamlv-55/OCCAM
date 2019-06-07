@@ -132,10 +132,10 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     std::vector<float> features;
     features.push_back((float)CS.arg_size());
     features.push_back((float)getInstructionCount(callee));
-    features.push_back(1.0);
+    features.push_back(0.0);
     std::cerr << "Feature vector: " << features << std::endl;
 
-    if (sample > 0.7) { // use the policy
+    if (sample > 0) { // use the policy if sample > k . k =0 means always use policy
     
       torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
       // std::cerr<<"size x:"<<x<<std::endl;
