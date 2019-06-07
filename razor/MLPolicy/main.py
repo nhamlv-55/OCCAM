@@ -3,10 +3,16 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import Dataset
+import os
+
+import torch.optim as optim
+
+model_path = "/Users/e32851/workspace/OCCAM/razor/MLPolicy/model"
 
 dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash/", no_of_feats = 3).all_data[0]
 print(dataset["input"][:4])
 print(dataset["output"][:4])
+print("best score for this batch: ", dataset["score"])
 X = torch.FloatTensor(dataset["input"])
 Y = torch.LongTensor(dataset["output"])
 print(X.size())
@@ -34,16 +40,17 @@ class Net(nn.Module):
             num_features *= s
         return num_features
 
-
-net = Net()
-print(net)
+#load latest model
+if not os.path.exists(model_path):
+    print("No existing model. Create a new one.")
+    net = Net()
+else:
+    print("Found an existing model. Load %s"%model_path)
+    net = torch.load(model_path)
 
 Y_target = Y
 
 criterion = nn.CrossEntropyLoss()
-
-import torch.optim as optim
-
 # create your optimizer
 optimizer = optim.SGD(net.parameters(), lr=0.01)
 
@@ -56,7 +63,7 @@ for i in range(400):
         print(loss)
     loss.backward()
     optimizer.step()    # Does the update
-
+torch.save(net, model_path)
 example = torch.rand(1, 3)
 traced_script_module = torch.jit.trace(net, example)
 
