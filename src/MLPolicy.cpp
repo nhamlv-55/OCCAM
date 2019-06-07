@@ -48,7 +48,7 @@ MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg,
   database->assign(_database);
   assert(delegate);
   torch::Tensor tensor = torch::eye(3);
-  std::cerr << "database:" << _database << std::endl;
+  //  std::cerr << "database:" << _database << std::endl;
   std::cerr << "Print a tensor" << tensor << std::endl;
   std::cerr << "Hello ML" << std::endl;
   // randomize weight
@@ -114,7 +114,7 @@ unsigned getInstructionCount(llvm::Function *f) {
   return NumInstrs;
 }
 
-bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
+  bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice, std::shared_ptr<torch::jit::script::Module> module) const {
   llvm::Function *callee = CS.getCalledFunction();
 
   if (callee && allowSpecialization(callee)) {
@@ -140,8 +140,15 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
       torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
       // std::cerr<<"size x:"<<x<<std::endl;
       x = x.reshape({1, x.size(0)});
+      std::vector<torch::jit::IValue> inputs;
+      inputs.push_back(x);
+      std::cerr<<x<<std::endl;
       // std::cerr<<"after reshaping"<<x<<std::endl;
-      torch::Tensor prediction = this->net->forward(x);
+      std::cerr<< "call prediction"<<std::endl;
+      assert(module != nullptr);
+      std::cerr << "ok\n";
+      at::Tensor prediction = module->forward(inputs).toTensor();
+      //torch::Tensor prediction = this->net->forward(x);
 
       std::cerr << "prediction: " << prediction << std::endl;
       sample = dist(e2);

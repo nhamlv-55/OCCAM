@@ -41,6 +41,7 @@
 #include <fstream>
 #include <string>
 #include "torch/torch.h"
+#include "torch/script.h"
 #define NO_OF_FEATS 3
 
 struct Net : torch::nn::Module {
@@ -87,6 +88,7 @@ namespace previrt
 
     // Generate the net
     Net* net = new Net();
+    std::shared_ptr<torch::jit::script::Module> module = nullptr;
   public:
     
     MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, std::string database);
