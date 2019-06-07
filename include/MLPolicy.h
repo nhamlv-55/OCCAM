@@ -88,7 +88,7 @@ namespace previrt
 
     // Generate the net
     Net* net = new Net();
-    std::shared_ptr<torch::jit::script::Module> module = nullptr;
+    std::shared_ptr<torch::jit::script::Module> module = torch::jit::load("/Users/e32851/workspace/OCCAM/model.pt");
   public:
     
     MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, std::string database);
