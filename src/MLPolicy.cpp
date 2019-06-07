@@ -35,6 +35,9 @@
 #include "MLPolicy.h"
 #include "llvm/ADT/SCCIterator.h"
 #include <random>
+#include <sys/types.h>
+#include <unistd.h>
+
 using namespace llvm;
 using namespace torch;
 namespace previrt {
@@ -60,7 +63,8 @@ MLPolicy::~MLPolicy() {
   if (delegate) {
     delete delegate;
   }
-  database->append("collected_data.csv");
+  pid_t pid = getpid();
+  database->append(std::to_string(pid)).append("collected_data.csv");
   std::ofstream outFile(*database);
   std::cerr<<"calling destructor with file "<<*database<<std::endl;
   outFile<<*s;
