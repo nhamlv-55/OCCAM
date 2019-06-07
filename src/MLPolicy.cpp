@@ -42,7 +42,7 @@ namespace previrt {
 MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg,
                    std::string _database)
   : cg(_cg), delegate(_delegate) {
-
+  database->assign(_database);
   assert(delegate);
   torch::Tensor tensor = torch::eye(3);
   std::cerr << "database:" << _database << std::endl;
@@ -60,6 +60,7 @@ MLPolicy::~MLPolicy() {
   if (delegate) {
     delete delegate;
   }
+  database->append("collected_data.csv");
   std::ofstream outFile(*database);
   std::cerr<<"calling destructor with file "<<*database<<std::endl;
   outFile<<*s;
@@ -119,7 +120,7 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     std::uniform_real_distribution<> dist(0, 1);
 
     float sample = dist(e2);
-    database->assign(std::to_string(sample));
+    //database->assign(std::to_string(sample));
     std::cerr << "sample:" << sample << std::endl;
 
     float threshold = 0.5; // sampling a random number. If it is less than
@@ -156,11 +157,14 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     sample = dist(e2);
 
     std::cerr << "result:" << (sample < threshold) << std::endl;
-    s->append(std::to_string(sample < threshold)).append("\n");
+    s->append(std::to_string(sample < threshold)).append(",");
     if (sample < threshold) {
-      return delegate->specializeOn(CS, slice);
+      bool final_result = delegate->specializeOn(CS, slice);
+      s->append(std::to_string(final_result)).append("\n");
+      return final_result;
     }
     else {
+      s->append("0").append("\n");
       return false;
     }
   } else {

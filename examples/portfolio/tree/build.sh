@@ -15,7 +15,6 @@ INTER_SPEC="none"
 INTRA_SPEC="machine-learning"
 DEVIRT="dsa"
 OPT_OPTIONS=""
-DATABASE="/tmp/tree/db.csv"
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -26,8 +25,13 @@ case $key in
 	shift # past argument
 	shift # past value
 	;;
+    -folder|--folder)
+	      PREFIX="$2"
+	      shift # past argument
+	      shift # past value
+        ;;
     -intra-spec|--intra-spec)
-	INTRA_SPEC="$2"
+  INTRA_SPEC="$2"
 	shift # past argument
 	shift # past value
 	;;
@@ -77,11 +81,12 @@ done
 echo "Linking tree_from_bc"
 clang++ tree.bc -o tree_from_bc
 
+DATABASE=${PWD}/slash/$PREFIX/
 export OCCAM_LOGLEVEL=INFO
-export OCCAM_LOGFILE=${PWD}/slash/occam.log
+export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
 echo AAAAAAAAAA $LD_LIBRARY_PATH
-rm -rf slash
 
+mkdir -p $DATABASE
 # OCCAM
 SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE}"
 echo "============================================================"
