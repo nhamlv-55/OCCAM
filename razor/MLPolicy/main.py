@@ -6,6 +6,8 @@ from utils import Dataset
 import os
 
 import torch.optim as optim
+DEBUG = False
+
 
 model_path = "/Users/e32851/workspace/OCCAM/razor/MLPolicy/model"
 
@@ -14,7 +16,7 @@ print(dataset["input"][:4])
 print(dataset["output"][:4])
 print("best score for this batch: ", dataset["score"])
 X = torch.FloatTensor(dataset["input"])
-Y = torch.LongTensor(dataset["output"])
+Y = torch.FloatTensor(dataset["output"])
 print(X.size())
 print(Y.size())
 
@@ -50,7 +52,7 @@ else:
 
 Y_target = Y
 
-criterion = nn.CrossEntropyLoss()
+criterion = nn.MSELoss()
 # create your optimizer
 optimizer = optim.SGD(net.parameters(), lr=0.01)
 
@@ -61,6 +63,10 @@ for i in range(400):
     loss = criterion(Y_pred, Y_target)
     if i%20==0:
         print(loss)
+        if DEBUG:
+            print(Y_pred)
+            for params in net.parameters():
+                print(params)
     loss.backward()
     optimizer.step()    # Does the update
 torch.save(net, model_path)
