@@ -181,3 +181,6 @@ This material is based upon work supported by the National Science Foundation un
 
 # Using Pytorch
 `install_name_tool -rpath @rpath/libcaffe2.dylib /Users/e32851/workspace/libtorchmac/libtorch/lib/libcaffe2.dylib libcaffe2.dylib`
+
+# Using controller.sh
+The code make use of `GNU Parallel` to collect training data. Make sure you have it on your system
