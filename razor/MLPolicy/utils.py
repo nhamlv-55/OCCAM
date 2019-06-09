@@ -9,18 +9,29 @@ class Dataset:
         
     
     def merge_csv(self, csv_files):
+        dist = {}
         raw_data  = []
         input = []
         output = []
+        total = 0
         for fname in csv_files:
             with open(fname, "r") as f:
                 for l in f.readlines():
+                    total+=1
                     tokens = l.strip().split(',')
                     tokens = [float(t) for t in tokens]
                     raw_data.append(tokens)
-                    input.append(tokens[:self.no_of_feats])
-                    output.append(int(tokens[-1]))
+                    key = tuple(tokens[:self.no_of_feats])
+                    if key in dist:
+                        dist[key]+=1
+                    else:
+                        dist[key]=1
 
+        for k in dist:
+            dist[k] = dist[k]*1.0/total
+            input.append(k)
+            output.append((dist[k], 1-dist[k]))
+        
         return raw_data, input, output
 
     def get_stat(self, run):
