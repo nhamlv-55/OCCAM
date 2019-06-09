@@ -26,7 +26,7 @@ case $key in
 	shift # past value
 	;;
     -folder|--folder)
-	      PREFIX="$2"
+	      PREFIX="run$2"
 	      shift # past argument
 	      shift # past value
         ;;
