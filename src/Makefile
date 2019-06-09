@@ -64,6 +64,7 @@ LDLIBS := \
      $(PYTORCH_LIBS)
 
 CXX_FLAGS += \
+		 -Wfatal-errors \
      -I $(PYTORCH_INSTALL)/include/torch/csrc/api/include \
      -I $(PYTORCH_INSTALL)/include \
      -std=c++11 \
