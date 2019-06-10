@@ -44,7 +44,7 @@ namespace previrt {
 
 MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg,
                    std::string _database)
-  : cg(_cg), delegate(_delegate) {
+    : cg(_cg), delegate(_delegate) {
   database->assign(_database);
   assert(delegate);
   torch::Tensor tensor = torch::eye(3);
@@ -66,11 +66,11 @@ MLPolicy::~MLPolicy() {
   pid_t pid = getpid();
   database->append(std::to_string(pid)).append("collected_data.csv");
   std::ofstream outFile(*database);
-  std::cerr<<"calling destructor with file "<<*database<<std::endl;
-  outFile<<*s;
+  std::cerr << "calling destructor with file " << *database << std::endl;
+  outFile << *s;
   outFile.flush();
   outFile.close();
-  std::cerr<<"file closed"<<std::endl;
+  std::cerr << "file closed" << std::endl;
 }
 
 void MLPolicy::markRecursiveFunctions() {
@@ -124,7 +124,7 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     std::uniform_real_distribution<> dist(0, 1);
 
     float sample = dist(e2);
-    //database->assign(std::to_string(sample));
+    // database->assign(std::to_string(sample));
     std::cerr << "sample:" << sample << std::endl;
 
     float threshold = 0.5; // sampling a random number. If it is less than
@@ -135,49 +135,50 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     features.push_back(0.0);
     std::cerr << "Feature vector: " << features << std::endl;
 
-    if (sample > 0) { // use the policy if sample > k . k =0 means always use policy
-    
-      torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
-      // std::cerr<<"size x:"<<x<<std::endl;
-      x = x.reshape({1, x.size(0)});
-      std::vector<torch::jit::IValue> inputs;
-      inputs.push_back(x);
-      std::cerr<<x<<std::endl;
-      // std::cerr<<"after reshaping"<<x<<std::endl;
-      std::cerr<< "call prediction"<<std::endl;
-      assert(module != nullptr);
-      std::cerr << "ok\n";
-      at::Tensor prediction = module->forward(inputs).toTensor();
-      //torch::Tensor prediction = this->net->forward(x);
+    if (delegate->specializeOn(CS, slice)) {
+      if (sample >
+          0) { // use the policy if sample > k . k =0 means always use policy
+        torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
+        // std::cerr<<"size x:"<<x<<std::endl;
+        x = x.reshape({1, x.size(0)});
+        std::vector<torch::jit::IValue> inputs;
+        inputs.push_back(x);
+        std::cerr << x << std::endl;
+        // std::cerr<<"after reshaping"<<x<<std::endl;
+        std::cerr << "call prediction" << std::endl;
+        assert(module != nullptr);
+        std::cerr << "ok\n";
+        at::Tensor prediction = module->forward(inputs).toTensor();
+        // torch::Tensor prediction = this->net->forward(x);
 
-      std::cerr << "prediction: " << prediction << std::endl;
+        std::cerr << "prediction: " << prediction << std::endl;
+        sample = dist(e2);
+        std::cerr << "sample: " << sample << std::endl;
+        threshold = prediction[0][0].item<float>();
+        for (float f : features)
+          s->append(std::to_string(f)).append(",");
+        for (int i = 0; i < 2; i++)
+          s->append(std::to_string(prediction[0][i].item<float>())).append(",");
+      } else {
+        for (float f : features)
+          s->append(std::to_string(f)).append(",");
+        for (int i = 0; i < 2; i++)
+          s->append("-1").append(",");
+      }
+
       sample = dist(e2);
-      std::cerr << "sample: " << sample << std::endl;
-      threshold = prediction[0][0].item<float>();
-      for (float f: features)
-        s->append(std::to_string(f)).append(",");
-      for (int i=0; i < 2; i++)
-        s->append(std::to_string(prediction[0][i].item<float>())).append(",");
-      
-    }else{
-      for (float f: features)
-        s->append(std::to_string(f)).append(",");
-      for (int i=0; i < 2; i++)
-        s->append("-1").append(",");
-    }
-    sample = dist(e2);
+      std::cerr << sample << " --- " << threshold << std::endl;
 
-    std::cerr << "result:" << (sample < threshold) << std::endl;
-    s->append(std::to_string(sample < threshold)).append(",");
-    if (sample < threshold) {
-      bool final_result = delegate->specializeOn(CS, slice);
-      s->append(std::to_string(final_result)).append("\n");
-      return final_result;
-    }
-    else {
-      s->append("0").append("\n");
+      s->append(std::to_string(sample < threshold)).append("\n");
+      if (sample < threshold) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
       return false;
     }
+
   } else {
     std::cerr << "not callee or not allowSpecialization" << std::endl;
     return false;
