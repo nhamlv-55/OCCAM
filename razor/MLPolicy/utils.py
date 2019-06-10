@@ -35,16 +35,19 @@ class Dataset:
         return raw_data, input, output
 
     def get_stat(self, run):
-        result = []
+        result = {}
         with open(run+"/0_results.txt", "r") as f:
             for l in f.readlines():
                 if "[" in l:
                     continue
-                result.append(int(l.strip().split()[0]))
+                tokens = l.strip().split()
+                v = int(tokens[0])
+                k = " ".join(tokens[1:])
+                result[k] = v
         return result
             
     def score(self, result):
-        return result[3]
+        return result["Number of instructions"]
     
 
     def collect(self):
