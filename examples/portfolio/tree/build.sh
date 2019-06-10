@@ -84,7 +84,6 @@ clang++ tree.bc -o tree_from_bc
 DATABASE=${PWD}/slash/$PREFIX/
 export OCCAM_LOGLEVEL=INFO
 export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
-echo AAAAAAAAAA $LD_LIBRARY_PATH
 
 mkdir -p $DATABASE
 # OCCAM
@@ -92,12 +91,12 @@ SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} 
 echo "============================================================"
 echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"
-slash ${SLASH_OPTS} --work-dir=slash tree.manifest.constraints
+slash ${SLASH_OPTS} --work-dir=slash/$PREFIX tree.manifest.constraints
 
 status=$?
 if [ $status -eq 0 ]
 then
-    cp slash/tree tree_slashed
+    cp slash/$PREFIX/tree tree_slashed
 else
     echo "Something failed while running slash"
 fi    
