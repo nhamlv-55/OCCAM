@@ -22,15 +22,20 @@ class Dataset:
                     tokens = [float(t) for t in tokens]
                     raw_data.append(tokens)
                     key = tuple(tokens[:self.no_of_feats])
+                    label = tokens[-1]
                     if key in dist:
-                        dist[key]+=1
+                        dist[key][int(label)]+=1
                     else:
-                        dist[key]=1
-
+                        dist[key]=[0,0]
+                        dist[key][int(label)]+=1
+        print(dist)
         for k in dist:
-            dist[k] = dist[k]*1.0/total
+            label_0 = dist[key][0]
+            label_1 = dist[key][1]
+            label_0 = label_0/(label_0 + label_1)
+            label_1 = 1 - label_0
             input.append(k)
-            output.append((dist[k], 1-dist[k]))
+            output.append((label_0, label_1))
         
         return raw_data, input, output
 
@@ -74,5 +79,5 @@ class Dataset:
                 print(r["input"][i], ":", r["output"][i])
             print(r["score"])
 if __name__== "__main__":
-    dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash")
+    dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash", no_of_feats = 8)
     dataset.dump()
