@@ -108,11 +108,34 @@ bool MLPolicy::allowSpecialization(llvm::Function *F) const {
   return (!isRecursive(F));
 }
 
-unsigned MLPolicy::getInstructionCount(llvm::Function *f) const {
-  unsigned NumInstrs = 0;
-  for (const BasicBlock &BB : *f)
-    NumInstrs += BB.size();
-  return NumInstrs;
+  std::vector<unsigned> MLPolicy::getInstructionCount(llvm::Function *f) const {
+    std::vector<unsigned> counts;
+  unsigned total_int_count = 0;
+  unsigned total_bb_count = 0;
+  unsigned load_int_count = 0;
+  unsigned store_int_count = 0;
+  unsigned call_int_count = 0;
+  unsigned branch_int_count = 0;
+
+  for (const BasicBlock &BB : *f){
+    total_bb_count ++;
+    total_int_count += BB.size();
+    for (const Instruction &I: BB){
+      if(llvm::isa<llvm::LoadInst>(I)) load_int_count++;
+      if(llvm::isa<llvm::StoreInst>(I)) store_int_count++;
+      if(llvm::isa<llvm::CallInst>(I)) call_int_count++;
+      if(llvm::isa<llvm::BranchInst>(I)) branch_int_count++;
+    }
+  }
+
+  counts.push_back(total_bb_count);
+  counts.push_back(total_int_count);
+  counts.push_back(load_int_count);
+  counts.push_back(store_int_count);
+  counts.push_back(call_int_count);
+  counts.push_back(branch_int_count);
+
+  return counts;
 }
 
 unsigned handleLoop(llvm::Loop *L, unsigned loopcounter) {
@@ -149,16 +172,18 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
 
     float threshold = 0.5; // sampling a random number. If it is less than
                            // threshold, specialize
-    std::vector<float> features;
-    features.push_back((float)CS.arg_size());
-    features.push_back((float)getInstructionCount(callee));
-    features.push_back((float)getLoopCount(callee));
+    std::vector<unsigned> features;
+    features.push_back(CS.arg_size());
+    std::vector<unsigned> counts = getInstructionCount(callee);
+    features.insert( features.end(), counts.begin(), counts.end() );
+    //    features.push_back((float)getInstructionCount(callee));
+    features.push_back((unsigned)getLoopCount(callee));
     std::cerr << "Feature vector: " << features << std::endl;
 
     if (delegate->specializeOn(CS, slice)) {
       if (sample >
           0) { // use the policy if sample > k . k =0 means always use policy
-        torch::Tensor x = torch::tensor(at::ArrayRef<float>(features));
+        torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.end())));
         // std::cerr<<"size x:"<<x<<std::endl;
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
@@ -174,13 +199,13 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
         std::cerr << "prediction: " << prediction << std::endl;
         sample = dist(e2);
         std::cerr << "sample: " << sample << std::endl;
-        threshold = prediction[0][0].item<float>();
-        for (float f : features)
+        threshold = prediction[0][0].item<double>();
+        for (double f : features)
           s->append(std::to_string(f)).append(",");
         for (int i = 0; i < 2; i++)
-          s->append(std::to_string(prediction[0][i].item<float>())).append(",");
+          s->append(std::to_string(prediction[0][i].item<double>())).append(",");
       } else {
-        for (float f : features)
+        for (double f : features)
           s->append(std::to_string(f)).append(",");
         for (int i = 0; i < 2; i++)
           s->append("-1").append(",");

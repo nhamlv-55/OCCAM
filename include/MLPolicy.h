@@ -42,6 +42,7 @@
 #include <string>
 #include "torch/torch.h"
 #include "torch/script.h"
+#include <vector>
 #define NO_OF_FEATS 3
 
 struct Net : torch::nn::Module {
@@ -86,7 +87,7 @@ namespace previrt
     void markRecursiveFunctions();
     bool isRecursive(llvm::Function* f) const;    
     bool allowSpecialization(llvm::Function* f) const;
-    unsigned getInstructionCount(llvm::Function* f) const;
+    std::vector<unsigned> getInstructionCount(llvm::Function* f) const;
     unsigned getLoopCount(llvm::Function* f) const;
     // Generate the net
     //Net* net = new Net();
