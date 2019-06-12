@@ -38,6 +38,7 @@
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Analysis/CallGraph.h"
+#include "llvm/Analysis/LoopInfo.h"
 #include "llvm/IR/CallSite.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/Function.h"
@@ -131,6 +132,7 @@ static bool trySpecializeFunction(Function *f, SpecializationTable &table,
     //                 c if the i-th parameter of the callsite is a
     //                   constant c
     std::vector<Value *> specScheme;
+
     bool specialize = policy->specializeOn(cs, specScheme);
 
     if (!specialize) {
@@ -236,8 +238,7 @@ bool SpecializerPass::runOnModule(Module &M) {
   case ML: {
     SpecializationPolicy *subpolicy = new AggressiveSpecPolicy();
     CallGraph &cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();
-
-    policy = new MLPolicy(subpolicy, cg, LogFilename);
+    policy = new MLPolicy(subpolicy, cg, *this, LogFilename);
     break;
   }
   }
@@ -295,6 +296,7 @@ bool SpecializerPass::runOnModule(Module &M) {
 
 void SpecializerPass::getAnalysisUsage(AnalysisUsage &AU) const {
   AU.addRequired<CallGraphWrapperPass>();
+  AU.addRequired<LoopInfoWrapperPass>();
   AU.setPreservesAll();
 }
 
