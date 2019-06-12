@@ -1,14 +1,17 @@
 import torch.nn as nn
 import torch.nn.functional as F
-
+import torch
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(3, 3)  # 6*6 from image dimension 
-        self.fc2 = nn.Linear(3, 2)
-
+        self.INPUT_DIM = 8
+        self.fc1 = nn.Linear(self.INPUT_DIM, self.INPUT_DIM//2, bias = True)  # 6*6 from image dimension 
+        self.fc1.to(torch.double)
+        self.fc2 = nn.Linear(self.INPUT_DIM//2, 2, bias = True)
+        self.fc2.to(torch.double)
+        
     def forward(self, x):
-        x = x.view(-1, self.num_flat_features(x))
+        x = x.view(-1, self.INPUT_DIM)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.softmax(x, dim = 1)
