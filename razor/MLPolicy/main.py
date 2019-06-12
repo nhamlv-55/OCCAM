@@ -18,7 +18,7 @@ if not os.path.exists(model_path):
     for params in net.parameters():
         print(params)
     torch.save(net, model_path)
-    example = torch.rand(1, 3)
+    example = torch.rand(1, net.INPUT_DIM, dtype=torch.double)
     traced_script_module = torch.jit.trace(net, example)
 
     traced_script_module.save("model.pt")
@@ -27,18 +27,18 @@ else:
     print("Found an existing model. Load %s"%model_path)
     net = torch.load(model_path)
 
-dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash/", no_of_feats = 3).all_data[0]
-print(dataset["input"][:4])
-print(dataset["output"][:4])
+dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash/", no_of_feats = net.INPUT_DIM).all_data[0]
+for i in range(len(dataset["input"])):
+    print(dataset["input"][i], dataset["output"][i])
 print("best score for this batch: ", dataset["score"])
 X = dataset["input"]
 #normalize input
 min_max_scaler = preprocessing.MinMaxScaler()
 X = min_max_scaler.fit_transform(X)
 
-X = torch.FloatTensor(X)
+X = torch.DoubleTensor(X)
 print(X)
-Y_target = torch.FloatTensor(dataset["output"])
+Y_target = torch.DoubleTensor(dataset["output"])
 
 #trial run
 Y_pred = net.forward(X)
@@ -69,7 +69,7 @@ print("Final model")
 for params in net.parameters():
     print(params)
 torch.save(net, model_path)
-example = torch.rand(1, 3)
+example = torch.rand(1, net.INPUT_DIM, dtype = torch.double)
 traced_script_module = torch.jit.trace(net, example)
 
 traced_script_module.save("model.pt")
