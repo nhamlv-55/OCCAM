@@ -34,7 +34,7 @@
 
 #include "llvm/ADT/SmallSet.h"
 #include "llvm/Analysis/CallGraph.h"
-
+#include "llvm/Analysis/LoopInfo.h"
 #include "SpecializationPolicy.h"
 #include <sstream>
 #include <iostream>
@@ -77,6 +77,7 @@ namespace previrt
     typedef llvm::SmallSet<llvm::Function*, 32> FunctionSet;
 
     llvm::CallGraph& cg;
+    llvm::Pass& pass;
     SpecializationPolicy* const delegate;
     std::string* database = new std::string();
     std::string* s = new std::string();
@@ -85,13 +86,14 @@ namespace previrt
     void markRecursiveFunctions();
     bool isRecursive(llvm::Function* f) const;    
     bool allowSpecialization(llvm::Function* f) const;
-
+    unsigned getInstructionCount(llvm::Function* f) const;
+    unsigned getLoopCount(llvm::Function* f) const;
     // Generate the net
-    Net* net = new Net();
+    //Net* net = new Net();
     std::shared_ptr<torch::jit::script::Module> module = torch::jit::load("/Users/e32851/workspace/OCCAM/model.pt");
   public:
     
-    MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, std::string database);
+    MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, llvm::Pass& pass, std::string database);
 
     virtual ~MLPolicy();
     
