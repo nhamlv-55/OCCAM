@@ -43,6 +43,7 @@
 #include "torch/torch.h"
 #include "torch/script.h"
 #include <vector>
+#include <cstdlib>
 #define NO_OF_FEATS 3
 
 struct Net : torch::nn::Module {
@@ -91,7 +92,7 @@ namespace previrt
     unsigned getLoopCount(llvm::Function* f) const;
     // Generate the net
     //Net* net = new Net();
-    std::shared_ptr<torch::jit::script::Module> module = torch::jit::load("/Users/e32851/workspace/OCCAM/model.pt");
+    std::shared_ptr<torch::jit::script::Module> module = torch::jit::load( std::string(std::getenv("OCCAM_HOME")).append("/model.pt"));
   public:
     
     MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, llvm::Pass& pass, std::string database);
