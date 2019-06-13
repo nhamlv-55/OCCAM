@@ -30,7 +30,7 @@ echo Running training with $NO_OF_ITERATION iterations, $NO_OF_SAMPLING sampling
 echo at $WORKDIR
 
 #bootstrap
-python3 /Users/e32851/workspace/OCCAM/razor/MLPolicy/main.py
+python3 /Users/e32851/workspace/OCCAM/razor/MLPolicy/main.py -dataset_path=${WORKDIR}slash
 
 cd $WORKDIR
 
@@ -38,7 +38,7 @@ for i in $( seq 0 $NO_OF_ITERATION)
 do
          echo Iteration $i
          seq -w -s "_${i}\n" 0 $NO_OF_SAMPLING | parallel ./build.sh -folder {}
-         python3 /Users/e32851/workspace/OCCAM/razor/MLPolicy/main.py
+         python3 /Users/e32851/workspace/OCCAM/razor/MLPolicy/main.py -dataset_path=${WORKDIR}slash
 done
 
 cd $CURRENT_DIR

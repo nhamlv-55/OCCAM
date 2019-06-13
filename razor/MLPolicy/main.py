@@ -10,7 +10,14 @@ import torch.optim as optim
 DEBUG = False
 
 model_path = "/Users/e32851/workspace/OCCAM/razor/MLPolicy/model"
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-dataset_path', default="/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash/", help='s')
+
+args = parser.parse_args()
+dataset_path = args.dataset_path
+print("dataset_path=%s"%dataset_path)
 #load latest model or create a new one
 if not os.path.exists(model_path):
     print("No existing model. Create a new one.")
@@ -27,7 +34,7 @@ else:
     print("Found an existing model. Load %s"%model_path)
     net = torch.load(model_path)
 
-dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash/", no_of_feats = net.INPUT_DIM).all_data[0]
+dataset = Dataset(dataset_path, no_of_feats = net.INPUT_DIM).all_data[0]
 for i in range(len(dataset["input"])):
     print(dataset["input"][i], dataset["output"][i])
 print("best score for this batch: ", dataset["score"])
