@@ -4,16 +4,17 @@ import torch.nn.functional as F
 from utils import Dataset
 from net import Net
 import os
-
 from sklearn import preprocessing
 import torch.optim as optim
-DEBUG = False
-
-model_path = "/Users/e32851/workspace/OCCAM/razor/MLPolicy/model"
 import argparse
 
+DEBUG = False
+OCCAM_HOME = os.environ['OCCAM_HOME']
+model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model")
+
 parser = argparse.ArgumentParser()
-parser.add_argument('-dataset_path', default="/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash/", help='s')
+parser.add_argument('-dataset_path', default=os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash/"), help='s')
+
 
 args = parser.parse_args()
 dataset_path = args.dataset_path
