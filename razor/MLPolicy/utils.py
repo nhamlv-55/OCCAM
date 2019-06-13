@@ -28,13 +28,15 @@ class Dataset:
                     else:
                         dist[key]=[0,0]
                         dist[key][int(label)]+=1
-        print(dist)
-        for k in dist:
+        print(dist, "\n")
+        for key in dist:
             label_0 = dist[key][0]
             label_1 = dist[key][1]
+            print(label_0, label_1)
             label_0 = label_0/(label_0 + label_1)
             label_1 = 1 - label_0
-            input.append(k)
+            print(label_0, label_1)
+            input.append(key)
             output.append((label_0, label_1))
         
         return raw_data, input, output
@@ -79,5 +81,5 @@ class Dataset:
                 print(r["input"][i], ":", r["output"][i])
             print(r["score"])
 if __name__== "__main__":
-    dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/tree/slash", no_of_feats = 8)
+    dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/curl/slash", no_of_feats = 8)
     dataset.dump()
