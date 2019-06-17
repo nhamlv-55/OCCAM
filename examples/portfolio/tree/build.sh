@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/Users/e32851/workspace/libtorchmac/libtorch/lib:/Users/e32851/Downloads/mklml_mac_2019.0.5.20190502/lib
 # Make sure we exit if there is a failure
 set -e
 
