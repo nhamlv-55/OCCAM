@@ -49,8 +49,6 @@ OTHERLIBS =  -lpthread -lprotobuf
 endif
 
 # torch
-PYTORCH_INSTALL=/Users/e32851/workspace/libtorchmac/libtorch
-
 PYTORCH_LIBS = $(PYTORCH_INSTALL)/lib/libtorch.${DYLIB}
 
 PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libcaffe2.${DYLIB}
