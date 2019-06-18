@@ -11,7 +11,7 @@ function usage() {
 
 #default values
 INTER_SPEC="none"
-INTRA_SPEC="none"
+INTRA_SPEC="machine-learning"
 DEVIRT="none"
 OPT_OPTIONS=""
 
@@ -30,6 +30,11 @@ case $key in
 	shift # past argument
 	shift # past value
 	;;
+    -folder|--folder)
+	      PREFIX="run$2"
+	      shift # past argument
+	      shift # past value
+        ;;
     -disable-inlining|--disable-inlining)
 	OPT_OPTIONS="${OPT_OPTIONS} --disable-inlining"
 	shift # past argument
@@ -83,16 +88,19 @@ do
 done
 
 
-SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --stats $OPT_OPTIONS"
+DATABASE=${PWD}/slash/$PREFIX/
+
+SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --stats $OPT_OPTIONS --database=${DATABASE}"
 
 # OCCAM with program and libraries dynamically linked
 function dynamic_link() {
 
     export OCCAM_LOGLEVEL=INFO
-    export OCCAM_LOGFILE=${PWD}/slash_specialized/occam.log
+    export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
 
-    rm -rf slash_specialized curl_slashed
+    rm -rf slash curl_slashed
 
+    mkdir -p $DATABASE
     # Build the manifest file
     cat > curl.manifest.specialized <<EOF
 { "main" : "curl.bc"
@@ -109,8 +117,8 @@ EOF
     echo "Running httpd with dynamic libraries "
     echo "slash options ${SLASH_OPTS}"
     echo "============================================================"
-    slash ${SLASH_OPTS} --work-dir=slash_specialized \
-	  --amalgamate=slash_specialized/amalgamation.bc \
+    slash ${SLASH_OPTS} --work-dir=slash/$PREFIX \
+	  --amalgamate=slash/$PREFIX/amalgamation.bc \
 	  curl.manifest.specialized
     status=$?
     if [ $status -ne 0 ]
@@ -118,7 +126,7 @@ EOF
 	echo "Something failed while running slash"
 	exit 1
     fi     
-    cp ./slash_specialized/curl_slashed .
+    cp ./slash/$PREFIX/curl_slashed .
 }
 
 dynamic_link
