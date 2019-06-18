@@ -159,7 +159,7 @@ unsigned MLPolicy::getLoopCount(llvm::Function *f) const {
 
 bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
   llvm::Function *callee = CS.getCalledFunction();
-
+  llvm::Function *caller = CS.getCaller();
   if (callee && allowSpecialization(callee)) {
     // setting up random devices and engines
     std::random_device rd;
@@ -174,13 +174,20 @@ bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
                            // threshold, specialize
     std::vector<unsigned> features;
     features.push_back(CS.arg_size());
-    std::vector<unsigned> counts = getInstructionCount(callee);
-    features.insert( features.end(), counts.begin(), counts.end() );
-    //    features.push_back((float)getInstructionCount(callee));
+    std::vector<unsigned> callee_features = getInstructionCount(callee);
+    std::vector<unsigned> caller_features;
+    if(caller != nullptr){
+      caller_features = getInstructionCount(caller);
+    }else{
+      //init caller's features to all 0
+      caller_features = std::vector<unsigned>(callee_features.size(), 0);
+    }
+    features.insert( features.end(), callee_features.begin(), callee_features.end() );
+    features.insert( features.end(), caller_features.begin(), caller_features.end() );
     features.push_back((unsigned)getLoopCount(callee));
     std::cerr << "Feature vector: " << features << std::endl;
 
-    if (delegate->specializeOn(CS, slice)) {
+    if (true /*delegate->specializeOn(CS, slice)*/) {
       if (sample >
           0) { // use the policy if sample > k . k =0 means always use policy
         torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.end())));
