@@ -183,10 +183,10 @@ class Slash(object):
         def check_spec_policy(policy):
             """ Supported policies: none, aggressive, nonrec-aggressive """
 
-            if policy <> 'none' and \
-               policy <> 'aggressive' and \
-               policy <> 'nonrec-aggressive' and\
-               policy <> 'machine-learning':
+            if policy != 'none' and \
+               policy != 'aggressive' and \
+               policy != 'nonrec-aggressive' and\
+               policy != 'machine-learning':
                 sys.stderr.write('Error: unsupported specialization policy. ' + \
                                  'Valid policies: none, aggressive, nonrec-aggressive')
                 return False
@@ -196,9 +196,9 @@ class Slash(object):
         def check_devirt_method(method):
             """ Supported methods: none, dsa, cha_dsa """
 
-            if method <> 'none' and \
-               method <> 'dsa' and \
-               method <> 'cha_dsa':
+            if method != 'none' and \
+               method != 'dsa' and \
+               method != 'cha_dsa':
                 sys.stderr.write('Error: unsupported devirtualization method. ' + \
                                  'Valid methods: none, dsa, cha_dsa')
                 return False
@@ -420,7 +420,7 @@ class Slash(object):
             interface.writeInterface(iface, iface_before_file.new())
 
             # Inter-specialize
-            if inter_spec_policy <> 'none':
+            if inter_spec_policy != 'none':
                 def inter_spec((nm, m)):
                     "Inter-module module specialization"
                     pre = m.get()
