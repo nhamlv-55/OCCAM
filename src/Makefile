@@ -52,13 +52,7 @@ endif
 # torch
 PYTORCH_LIBS = $(PYTORCH_INSTALL)/lib/libtorch.${DYLIB}
 
-PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libcaffe2.${DYLIB}
-
-PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libtorch.1.${DYLIB}
-
 PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libc10.${DYLIB}
-PYTORCH_LIBS += /Users/e32851/Downloads/mklml_mac_2019.0.5.20190502/lib/libmklml.${DYLIB}
-PYTORCH_LIBS += /Users/e32851/Downloads/mklml_mac_2019.0.5.20190502/lib/libiomp5.${DYLIB}
 LDLIBS := \
      $(PYTORCH_LIBS)
 
