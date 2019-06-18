@@ -44,6 +44,7 @@ OTHERLIBS = -L/usr/local/lib -lpthread -lprotobuf
 else
 # LINUX
 LIBRARY = ${LIBRARYNAME}.so
+DYLIB = so
 LIBFLAGS = -shared -Wl,-soname,${LIBRARY}
 OTHERLIBS =  -lpthread -lprotobuf 
 endif
@@ -65,7 +66,7 @@ CXX_FLAGS += \
 		 -Wfatal-errors \
      -I $(PYTORCH_INSTALL)/include/torch/csrc/api/include \
      -I $(PYTORCH_INSTALL)/include \
-     -std=c++11 \
+     -std=c++11
 # end torch stuff
 
 PROTOC = $(shell which protoc)
