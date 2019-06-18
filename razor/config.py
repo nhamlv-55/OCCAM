@@ -167,7 +167,6 @@ def get_torch_paths():
         return paths
     if __libext is not None:
         paths.append(os.path.join(home, 'lib', 'libc10.{0}'.format(__libext)))
-        paths.append(os.path.join(home, 'lib', 'libcaffe2.{0}'.format(__libext)))
         paths.append(os.path.join(home, 'lib', 'libtorch.{0}'.format(__libext)))
     else:
         sys.stderr.write('Unsupported platform: {0}\n'.format(__system))
