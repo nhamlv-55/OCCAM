@@ -2,7 +2,7 @@
 
 NO_OF_ITERATION=1
 NO_OF_SAMPLING=2
-WORKDIR="/Users/e32851/workspace/OCCAM/examples/portfolio/tree/"
+WORKDIR="${OCCAM_HOME}/examples/portfolio/tree/"
 CURRENT_DIR=${PWD}
 while [[ $# -gt 0 ]]
 do

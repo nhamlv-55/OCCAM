@@ -38,13 +38,19 @@ all: sanity_check dist occam_lib
 # consistency would be good.
 #
 #
-sanity_check:  occam_home  llvm_home
+sanity_check:  occam_home  llvm_home pytorch_home
 
 occam_home:
 ifeq ($(OCCAM_HOME),)
 	$(error OCCAM_HOME is undefined)
 endif
 	$(MKDIR_P) $(OCCAM_LIB)
+
+pytorch_home:
+ifeq ($(PYTORCH_INSTALL),)
+	$(error PYTORCH_INSTALL is undefined)
+endif
+
 
 llvm_home:
 ifeq ($(LLVM_HOME),)
