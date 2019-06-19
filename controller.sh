@@ -36,8 +36,12 @@ cd $WORKDIR
 
 for i in $( seq 0 $NO_OF_ITERATION)
 do
-         echo Iteration $i
-         seq -w -s "_${i}\n" 0 $NO_OF_SAMPLING | parallel ./build.sh -folder {}
+    echo Iteration $i
+    start=$((i*NO_OF_SAMPLING))
+    echo $start
+    end=$(((i+1)*NO_OF_SAMPLING-1))
+    echo $start $end
+         parallel ./build.sh -folder {} ::: $start .. $end
          python2 ${OCCAM_HOME}/razor/MLPolicy/main.py -dataset_path=${WORKDIR}slash
 done
 
