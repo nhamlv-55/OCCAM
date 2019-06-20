@@ -1,6 +1,8 @@
+from __future__ import print_function
 import os
 import glob
 import numpy as np
+
 class Dataset:
     def __init__(self, folder, no_of_feats = 2):
         self.folder = folder
@@ -81,5 +83,7 @@ class Dataset:
                 print(r["input"][i], ":", r["output"][i])
             print(r["score"])
 if __name__== "__main__":
-    dataset = Dataset("/Users/e32851/workspace/OCCAM/examples/portfolio/curl/slash", no_of_feats = 8)
+    OCCAM_HOME = os.environ['OCCAM_HOME']
+    datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
+    dataset = Dataset(datapath, no_of_feats = 14)
     dataset.dump()
