@@ -41,8 +41,8 @@ do
     echo $start
     end=$(((i+1)*NO_OF_SAMPLING-1))
     echo $start $end
-         parallel ./build.sh -folder {} ::: $start .. $end
-         python2 ${OCCAM_HOME}/razor/MLPolicy/main.py -dataset_path=${WORKDIR}slash
+    parallel ./build.sh -folder {} ::: $(seq $start $end)
+    python2 ${OCCAM_HOME}/razor/MLPolicy/main.py -dataset_path=${WORKDIR}slash
 done
 
 cd $CURRENT_DIR
