@@ -236,55 +236,6 @@ namespace previrt {
       s->append("\n");
 
       return final_decision;
-      //      if (delegate->specializeOn(CS, slice)) {
-      //        std::cerr<<"DELEGATE SPECIALIZE ON ***AAA***"<<std::endl;
-      //        
-      //        if (sample >                                                                                                    //
-      //            10) { // use the policy if sample > k . k =0 means always use policy. 10 means always use random            //
-      //          torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.end()))); //
-      //          // std::cerr<<"size x:"<<x<<std::endl;                                                                        //
-      //          x = x.reshape({1, x.size(0)});                                                                                //
-      //          std::vector<torch::jit::IValue> inputs;                                                                       //
-      //          inputs.push_back(x);                                                                                          //
-      //          std::cerr << x << std::endl;                                                                                  //
-      //          // std::cerr<<"after reshaping"<<x<<std::endl;                                                                //
-      //          std::cerr << "call prediction" << std::endl;                                                                  //
-      //          assert(module != nullptr);                                                                                    //
-      //          std::cerr << "ok\n";                                                                                          //
-      //          at::Tensor prediction = module->forward(inputs).toTensor();                                                   //
-      //          // torch::Tensor prediction = this->net->forward(x);                                                          //
-      //                                                                                                                        //
-      //          std::cerr << "prediction: " << prediction << std::endl;                                                       //
-      //          sample = dist(e2);                                                                                            //
-      //          std::cerr << "sample: " << sample << std::endl;                                                               //
-      //          threshold = prediction[0][0].item<double>();                                                                  //
-      //          for (double f : features)                                                                                     //
-      //            s->append(std::to_string(f)).append(",");                                                                   //
-      //          for (int i = 0; i < 2; i++)                                                                                   //
-      //            s->append(std::to_string(prediction[0][i].item<double>())).append(",");                                     //
-      //        } else {                                                                                                        //
-      //          for (double f : features)                                                                                     //
-      //            s->append(std::to_string(f)).append(",");                                                                   //
-      //          for (int i = 0; i < 2; i++)                                                                                   //
-      //            s->append("-1").append(",");                                                                                //
-      //        }                                                                                                               //
-      //        
-      //
-      //        sample = dist(e2);
-      //        std::cerr << sample << " --- " << threshold << std::endl;
-      //
-      //        s->append(std::to_string(sample < threshold)).append("\n");
-      //
-      //        if (sample < threshold) {
-      //          return true;
-      //        } else {
-      //          return false;
-      //        }
-      //      } else {
-      //        std::cerr<<"DELEGATE NOT SPECIALIZE ON ***BBB***"<<std::endl;
-      //                                                           return false;
-      //      }
-
     } else {
         std::cerr << "not callee or not allowSpecialization" << std::endl;
         return false;
