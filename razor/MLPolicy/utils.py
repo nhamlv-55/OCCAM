@@ -19,6 +19,8 @@ class Dataset:
         for fname in csv_files:
             with open(fname, "r") as f:
                 for l in f.readlines():
+                    if l.startswith("TOUCH A CALL"):
+                        continue
                     total+=1
                     tokens = l.strip().split(',')
                     tokens = [float(t) for t in tokens]
