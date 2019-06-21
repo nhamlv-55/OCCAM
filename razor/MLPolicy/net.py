@@ -4,7 +4,7 @@ import torch
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.INPUT_DIM = 8
+        self.INPUT_DIM = 14
         self.fc1 = nn.Linear(self.INPUT_DIM, self.INPUT_DIM//2, bias = True)  # 6*6 from image dimension 
         self.fc1.to(torch.double)
         self.fc2 = nn.Linear(self.INPUT_DIM//2, 2, bias = True)
@@ -14,7 +14,6 @@ class Net(nn.Module):
         x = x.view(-1, self.INPUT_DIM)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = F.softmax(x, dim = 1)
         return x
 
     def num_flat_features(self, x):
