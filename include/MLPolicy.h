@@ -44,6 +44,7 @@
 #include "torch/script.h"
 #include <vector>
 #include <cstdlib>
+#include <random>
 #define NO_OF_FEATS 3
 
 struct Net : torch::nn::Module {
@@ -83,6 +84,8 @@ namespace previrt
     SpecializationPolicy* const delegate;
     std::string* database = new std::string();
     std::string* s = new std::string();
+    std::shared_ptr<torch::jit::script::Module> module = torch::jit::load( std::string(std::getenv("OCCAM_HOME")).append("/model.pt"));
+
     FunctionSet rec_functions;
     
     void markRecursiveFunctions();
@@ -90,9 +93,12 @@ namespace previrt
     bool allowSpecialization(llvm::Function* f) const;
     std::vector<unsigned> getInstructionCount(llvm::Function* f) const;
     unsigned getLoopCount(llvm::Function* f) const;
+    bool random_with_prob(const double prob) const;
     // Generate the net
     //Net* net = new Net();
-    std::shared_ptr<torch::jit::script::Module> module = torch::jit::load( std::string(std::getenv("OCCAM_HOME")).append("/model.pt"));
+
+
+
   public:
     
     MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, llvm::Pass& pass, std::string database);
