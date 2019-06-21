@@ -35,13 +35,13 @@ class Dataset:
             label_0 = dist[key][0]
             label_1 = dist[key][1]
             print(label_0, label_1)
-            label_0 = label_0/(label_0 + label_1)
-            label_1 = 1 - label_0
+#            label_0 = label_0/(label_0 + label_1)
+#            label_1 = 1 - label_0
             print(label_0, label_1)
             input.append(key)
             output.append((label_0, label_1))
         
-        return raw_data, input, output
+        return raw_data, input, output, total
 
     def get_stat(self, run):
         result = {}
@@ -67,12 +67,13 @@ class Dataset:
             run_data = {}
             print(r)
             csv_files = glob.glob(r+"/*.csv")
-            _, input, output = self.merge_csv(csv_files)
+            _, input, output, total = self.merge_csv(csv_files)
             result = self.get_stat(r)
             run_data["input"] = input
             run_data["output"] = output
             run_data["score"] = self.score(result)
             run_data["raw_result"] = result
+            run_data["total"] = total
             self.all_data.append(run_data)
         self.all_data.sort(key=lambda x: x["score"])
 
@@ -81,7 +82,8 @@ class Dataset:
         for r in self.all_data:
             for i in range(len(r["input"])):
                 print(r["input"][i], ":", r["output"][i])
-            print(r["score"])
+            print("score:",r["score"],"total number of callsites:", r["total"])
+
 if __name__== "__main__":
     OCCAM_HOME = os.environ['OCCAM_HOME']
     datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
