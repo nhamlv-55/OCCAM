@@ -172,7 +172,7 @@ namespace previrt {
 
   bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     std::cerr<<"TOUCH A CALL SITE"<<std::endl;
-    //    return false;
+    //s->append("TOUCH A CALL SITE\n");
     const bool explore = true;
     llvm::Function *callee = CS.getCalledFunction();
     llvm::Function *caller = CS.getCaller();
@@ -197,7 +197,7 @@ namespace previrt {
       // return false immediately
       if(specialize==false){std::cerr<<"all arguemnts are not specializable"<<std::endl; return false;}
       // only invoke MLPolicy after this point
-           float threshold = 0.5; // sampling a random number. If it is less than threshold, specialize
+      float threshold = 0.5; // sampling a random number. If it is less than threshold, specialize
       std::vector<unsigned> features;
       std::vector<unsigned> callee_features = getInstructionCount(callee);
       std::vector<unsigned> caller_features = getInstructionCount(caller);
@@ -208,6 +208,8 @@ namespace previrt {
       //features.insert( features.end(), argument_features.begin(), argument_features.end());
       std::cerr << "Feature vector: " << features << std::endl;
       std::cerr << "Invoke MLpolicy" <<std::endl;
+      //      return false;
+      //return random_with_prob(0.5);
 
       torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.end()))); 
       x = x.reshape({1, x.size(0)});
