@@ -302,9 +302,14 @@ def peval(input_file, output_file, \
             shutil.copy(tmp.name, done.name)
             
     if policy <> 'none':
+        if policy == 'machine-learning':
+            max_intra_specializer_iteration = 1
+        else:
+            max_intra_specializer_iteration = 9999999
         out = ['']
         iteration = 0
-        while True:
+        while True and iteration < max_intra_specializer_iteration:
+            print("Intra specialization iteration:", iteration)
             iteration += 1
             if iteration > 1 or \
                (use_llpe or use_ipdse):
