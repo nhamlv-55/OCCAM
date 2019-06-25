@@ -4,11 +4,11 @@ import glob
 import numpy as np
 
 class Dataset:
-    def __init__(self, folder, no_of_feats = 2):
+    def __init__(self, folder, n_unused_stat = 3):
         self.folder = folder
-        self.no_of_feats = no_of_feats
+        self.n_unused_stat = n_unused_stat
+        self.all_data = []
         self.collect()
-        
     
     def merge_csv(self, csv_files):
         episode_data = []
@@ -27,7 +27,7 @@ class Dataset:
                     tokens = l.strip().split(',')
                     tokens = [float(t) for t in tokens]
                     raw_data.append(tokens)
-                    key = tuple(tokens[:self.no_of_feats])
+                    key = tuple(tokens[:-self.n_unused_stat])
                     label = tokens[-1]
                     run.append((key, label))
             episode_data.append(run)
@@ -50,7 +50,6 @@ class Dataset:
     
 
     def collect(self):
-        self.all_data = []
         runs = glob.glob(self.folder+"/run*")
         sorted(runs)
         for r in runs:
@@ -81,5 +80,5 @@ class Dataset:
 if __name__== "__main__":
     OCCAM_HOME = os.environ['OCCAM_HOME']
     datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
-    dataset = Dataset(datapath, no_of_feats = 14)
+    dataset = Dataset(datapath, n_unused_stat = 3)
     dataset.dump()
