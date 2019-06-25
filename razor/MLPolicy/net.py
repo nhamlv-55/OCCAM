@@ -1,10 +1,18 @@
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-class Net(nn.Module):
-    def __init__(self):
+
+def neural_net(type):
+    if type=="FeedForward":
+        return FeedForward()
+    if type=="RNN":
+        return RNN()
+
+
+class FeedForward(nn.Module):
+    def __init__(self, input_dim = 14):
         super(Net, self).__init__()
-        self.INPUT_DIM = 14
+        self.INPUT_DIM = input_dim
         self.fc1 = nn.Linear(self.INPUT_DIM, self.INPUT_DIM//2, bias = True)  # 6*6 from image dimension 
         self.fc1.to(torch.double)
         self.fc2 = nn.Linear(self.INPUT_DIM//2, 2, bias = True)
@@ -22,3 +30,19 @@ class Net(nn.Module):
         for s in size:
             num_features *= s
         return num_features
+
+
+class RNN(nn.Module):
+    def __init__(self, input_dim = 14, hidden_dim = 10, type = "LSTM"):
+        super(RNN, self).__init__()
+        self.INPUT_DIM = input_dim
+        if type=="LSTM":
+            self.rnn = nn.LSTM(input_dim, hidden_dim)
+        self.fc1 = nn.Linear(hidden_dim, 10, bias = True)
+        self.fc2 = nn.Linear(10, 1, bias = True)
+
+    def forward(self, inputs):
+        _, (last_h, last_c) = self.rnn(inputs)
+        fc1 = F.relu(self.fc1(last_h))
+        prediction = self.fc2(fc1)
+        return prediction

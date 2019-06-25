@@ -2,11 +2,25 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import Dataset
-from net import Net
+from net import FeedForward, RNN, neural_net
 import os
 from sklearn import preprocessing
 import torch.optim as optim
 import argparse
+
+# LSTM in pytorch expects input in form (seq_len, batch_size, input_size), hence we use view(len, 1, -1)
+# Before getting to the example, note a few things. Pytorch's LSTM expects all of its inputs to be 3D tensors.
+# The semantics of the axes of these tensors is important.
+# The first axis is the sequence itself,
+# the second indexes instances in the mini-batch,
+# and the third indexes elements of the input.
+# We havent discussed mini-batching, so lets just ignore that and assume we will always have just 1
+# dimension on the second axis. If we want to run the sequence model over the sentence The cow jumped, our input should look like
+# |The  [0.3, 0.4, ...] |
+# |cow  [0.2, 0.5, ...] |
+# |jumped[.7, 0.8, ...]|
+# Except remember there is an additional 2nd dimension with size 1.
+
 
 DEBUG = False
 OCCAM_HOME = os.environ['OCCAM_HOME']
@@ -22,12 +36,16 @@ print("dataset_path=%s"%dataset_path)
 #load latest model or create a new one
 if not os.path.exists(model_path):
     print("No existing model. Create a new one.")
-    net = Net()
+    net = neural_net("RNN")
     for params in net.parameters():
         print(params)
     torch.save(net, model_path)
-    example = torch.rand(1, net.INPUT_DIM, dtype=torch.double)
-    traced_script_module = torch.jit.trace(net, example)
+    inputs = [torch.rand(1, net.INPUT_DIM, dtype=torch.float)]
+    inputs = torch.cat(inputs).view(len(inputs), 1, -1)
+    print("example inputs:", inputs)
+    trial = net.forward(inputs)
+    print(trial)
+    traced_script_module = torch.jit.trace(net, inputs)
 
     traced_script_module.save("model.pt")
     quit()
@@ -35,41 +53,36 @@ else:
     print("Found an existing model. Load %s"%model_path)
     net = torch.load(model_path)
 
-dataset = Dataset(dataset_path, no_of_feats = net.INPUT_DIM).all_data[0]
-for i in range(len(dataset["input"])):
-    print(dataset["input"][i], dataset["output"][i])
-print("best score for this batch: ", dataset["score"])
-X = dataset["input"]
+dataset = Dataset(dataset_path)
+X_train, X_test, Y_train, Y_test = dataset.split_dataset()
+print(X_train[0])
+print(Y_train[0])
 #normalize input
-min_max_scaler = preprocessing.MinMaxScaler()
-X = min_max_scaler.fit_transform(X)
+#min_max_scaler = preprocessing.MinMaxScaler()
+#X = min_max_scaler.fit_transform(X)
 
-X = torch.DoubleTensor(X)
-print(X)
-Y_target = torch.DoubleTensor(dataset["output"])
 
 #trial run
-Y_pred = net.forward(X)
+print(X_train[0].size())
+Y_pred = net(X_train[0])
 print("trial running: \n", Y_pred)
 
-
-criterion = nn.MSELoss()
-# create your optimizer
-optimizer = optim.Adam(net.parameters(), lr=0.001)
+loss_function = nn.MSELoss()
+optimizer = optim.Adam(net.parameters(), lr=0.1)
 
 for i in range(400):
-# in your training loop:
-    optimizer.zero_grad()   # zero the gradient buffers
-    Y_pred = net(X)
-    loss = criterion(Y_pred, Y_target)
-    if i%20==0:
-        print(loss)
-        if DEBUG:
-            print(Y_pred)
-            for params in net.parameters():
-                print(params)
-    loss.backward()
-    optimizer.step()    # Does the update
+    for j in range(len(X_train)):
+        optimizer.zero_grad()   # zero the gradient buffers
+        Y_pred = net(X_train[j])
+        loss = loss_function(Y_pred, Y_train[j])
+        if i%100==0:
+            print(loss)
+            if DEBUG:
+                print(Y_pred)
+                for params in net.parameters():
+                    print(params)
+        loss.backward()
+        optimizer.step()    # Does the update
 
 
 #print out the model for debugging purpose
@@ -77,8 +90,7 @@ print("Final model")
 for params in net.parameters():
     print(params)
 torch.save(net, model_path)
-example = torch.rand(1, net.INPUT_DIM, dtype = torch.double)
-traced_script_module = torch.jit.trace(net, example)
+traced_script_module = torch.jit.trace(net, X_train[0])
 
 traced_script_module.save("model.pt")
 

@@ -2,6 +2,9 @@ from __future__ import print_function
 import os
 import glob
 import numpy as np
+import numpy as np
+import torch
+from sklearn.model_selection import train_test_split
 
 class Dataset:
     def __init__(self, folder, n_unused_stat = 3):
@@ -27,7 +30,7 @@ class Dataset:
                     tokens = l.strip().split(',')
                     tokens = [float(t) for t in tokens]
                     raw_data.append(tokens)
-                    key = tuple(tokens[:-self.n_unused_stat])
+                    key = tokens[:-self.n_unused_stat]
                     label = tokens[-1]
                     run.append((key, label))
             episode_data.append(run)
@@ -46,7 +49,7 @@ class Dataset:
         return result
             
     def score(self, result):
-        return result["Number of instructions"]
+        return result["Number of instructions"]/1000
     
 
     def collect(self):
@@ -65,6 +68,34 @@ class Dataset:
             self.all_data.append(run_data)
         self.all_data.sort(key=lambda x: x["score"])
 
+    def split_dataset(self, test_size=0.33):
+        #TODO: for now, we are using just the first 14 features
+        self.X = []
+        self.Y = []
+        USE_ALL = False
+        for r in self.all_data:
+            _x = []
+            for run in r["episode_data"]:
+                if USE_ALL:
+                    for callsite in run:
+                        features = []
+                        features.extend(callsite[0])
+                        features.append(callsite[1])
+                        _x.append(features[:14])
+                else:
+                    for callsite in run:
+                        if callsite[1]==0:
+                            continue
+                        else:
+                            features = []
+                            features.extend(callsite[0])
+                            _x.append(features[:14])
+            seq_len = len(_x)
+            self.X.append(torch.FloatTensor(_x).view(seq_len, 1, -1))
+            self.Y.append(torch.FloatTensor([r["score"]]).view(1, 1, 1))
+            print(len(_x), r["score"])
+        self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X, self.Y, test_size = test_size, random_state=42)
+        return self.X_train, self.X_test, self.Y_train, self.Y_test
 
     def dump(self):
         for r in self.all_data:
