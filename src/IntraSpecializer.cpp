@@ -277,6 +277,8 @@ bool SpecializerPass::runOnModule(Module &M) {
     M.getFunctionList().push_back(f);
   }
 
+  if(SpecPolicy == ML)
+    errs() << "Done 1 pass of MLPolicy. Early break. ";
   if (modified) {
     errs() << "...progress...\n";
   } else {

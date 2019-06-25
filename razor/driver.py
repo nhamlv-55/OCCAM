@@ -112,6 +112,8 @@ def previrt_progress(fin, fout, args, output=None):
                               'progress' : progress})
     if output != None:
         output[0] = progress
+    if "Done 1 pass of MLPolicy. Early break. " in progress: #temp fix to early break MLPolicy
+        return False
     return '...progress...' in progress
 
 
