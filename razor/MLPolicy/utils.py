@@ -76,6 +76,8 @@ class Dataset:
                 for callsite in run:
                     print(callsite)
                 print("------")
+        print("best score", self.all_data[0]["score"])
+        print("worst score", self.all_data[-1]["score"])
 if __name__== "__main__":
     OCCAM_HOME = os.environ['OCCAM_HOME']
     datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 

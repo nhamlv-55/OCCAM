@@ -205,13 +205,13 @@ namespace previrt {
       // features = callee_features concat caller_features concat argument_features
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
-      //features.insert( features.end(), argument_features.begin(), argument_features.end());
+      features.insert( features.end(), argument_features.begin(), argument_features.end());
       std::cerr << "Feature vector: " << features << std::endl;
       std::cerr << "Invoke MLpolicy" <<std::endl;
       //      return false;
       //return random_with_prob(0.5);
 
-      torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.end()))); 
+      torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.begin()+14)));
       x = x.reshape({1, x.size(0)});
       std::vector<torch::jit::IValue> inputs;
       inputs.push_back(x);
