@@ -7,11 +7,11 @@ import torch
 from sklearn.model_selection import train_test_split
 
 class Dataset:
-    def __init__(self, folder, n_unused_stat = 3):
+    def __init__(self, folder, n_unused_stat = 3, size=-1):
         self.folder = folder
         self.n_unused_stat = n_unused_stat
         self.all_data = []
-        self.collect()
+        self.collect(size)
     
     def merge_csv(self, csv_files):
         episode_data = []
@@ -49,13 +49,13 @@ class Dataset:
         return result
             
     def score(self, result):
-        return result["Number of instructions"]/1000
+        return result["Number of instructions"]*1.0/1000
     
 
-    def collect(self):
+    def collect(self, size):
         runs = glob.glob(self.folder+"/run*")
         sorted(runs)
-        for r in runs:
+        for r in runs[:size]:
             run_data = {}
             print(r)
             csv_files = glob.glob(r+"/*.csv")
@@ -63,25 +63,46 @@ class Dataset:
             result = self.get_stat(r)
             run_data["episode_data"] = episode_data
             run_data["score"] = self.score(result)
+            run_data["discounted_r"] = self.calculate_discounted_r(run_data["score"])
             run_data["raw_result"] = result
             run_data["total"] = total
             self.all_data.append(run_data)
         self.all_data.sort(key=lambda x: x["score"])
 
+
+    def calculate_discounted_r(self, score, gamma = 0.99):
+        r = [0]*21
+        r[-1] = score
+        """ take 1D float array of rewards and compute discounted reward """
+        discounted_r = np.zeros_like(r)
+        running_add = 0
+        for t in reversed(xrange(0, len(r))):
+            running_add = running_add * gamma + r[t]
+            discounted_r[t] = running_add
+        discounted_r -= np.mean(discounted_r)
+        discounted_r /= np.std(discounted_r)
+        return discounted_r
+
+
     def split_dataset(self, test_size=0.33):
         #TODO: for now, we are using just the first 14 features
         self.X = []
         self.Y = []
-        USE_ALL = False
+        USE_ALL = True
         for r in self.all_data:
             _x = []
             for run in r["episode_data"]:
+                trace = []
                 if USE_ALL:
                     for callsite in run:
                         features = []
-                        features.extend(callsite[0])
-                        features.append(callsite[1])
-                        _x.append(features[:14])
+                        features.extend(callsite[0][:14])
+                        trace.append(callsite[1])
+                        full_trace = []
+                        full_trace.extend(trace)
+                        full_trace.extend([0]*(21-len(full_trace)))
+                        features.extend(full_trace)
+                        _x.append(features)
                 else:
                     for callsite in run:
                         if callsite[1]==0:
@@ -108,8 +129,9 @@ class Dataset:
                 print("------")
         print("best score", self.all_data[0]["score"])
         print("worst score", self.all_data[-1]["score"])
+        print("discounted r all_data[0]", self.all_data[0]["discounted_r"])
 if __name__== "__main__":
     OCCAM_HOME = os.environ['OCCAM_HOME']
     datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
-    dataset = Dataset(datapath, n_unused_stat = 3)
+    dataset = Dataset(datapath, n_unused_stat = 3, size = 4)
     dataset.dump()
