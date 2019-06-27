@@ -170,13 +170,26 @@ namespace previrt {
     return loopcounter;
   }
 
+  void MLPolicy::pushToTrace(const int v) const{
+    int i = 0;
+    for(std::vector<int>::iterator it = trace->begin(); it !=trace->end(); it++,i++ )    {
+      // found nth element..print and break.
+      if(*it == 0) {
+        *it = v;
+        break;
+      }
+    }
+  }
+
   bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     std::cerr<<"TOUCH A CALL SITE"<<std::endl;
     //s->append("TOUCH A CALL SITE\n");
     const bool explore = true;
+    const int type = 0; //Policy gradient
     llvm::Function *callee = CS.getCalledFunction();
     llvm::Function *caller = CS.getCaller();
-
+    double q_Yes = -1;
+    double q_No = -1;
     if (callee && allowSpecialization(callee)) {
       // directly borrow from AggressiveSpecPolicy
       bool specialize = false;
@@ -189,7 +202,7 @@ namespace previrt {
           slice.push_back(cst);
           argument_features.push_back(1);
           specialize = true;
-        } else {
+        } else { 
           slice.push_back(nullptr);
           argument_features.push_back(0);
         }
@@ -197,33 +210,40 @@ namespace previrt {
       // return false immediately
       if(specialize==false){std::cerr<<"all arguemnts are not specializable"<<std::endl; return false;}
       // only invoke MLPolicy after this point
-      float threshold = 0.5; // sampling a random number. If it is less than threshold, specialize
+      float threshold = -1; // sampling a random number. If it is less than threshold, specialize
       std::vector<unsigned> features;
       std::vector<unsigned> callee_features = getInstructionCount(callee);
       std::vector<unsigned> caller_features = getInstructionCount(caller);
-
       // features = callee_features concat caller_features concat argument_features
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
       features.insert( features.end(), argument_features.begin(), argument_features.end());
+      std::cerr << "trace so far:"<<(*trace)<<std::endl;
       std::cerr << "Feature vector: " << features << std::endl;
       std::cerr << "Invoke MLpolicy" <<std::endl;
       //      return false;
       //return random_with_prob(0.5);
-
-      torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.begin()+14)));
-      x = x.reshape({1, x.size(0)});
-      std::vector<torch::jit::IValue> inputs;
-      inputs.push_back(x);
-      std::cerr << x << std::endl;
-      at::Tensor prediction = module->forward(inputs).toTensor();
-      double q_No  = prediction[0][0].item<double>();
-      double q_Yes = prediction[0][1].item<double>();
-
       bool final_decision;
-      if(random_with_prob(threshold))
-        final_decision =  q_Yes>q_No;
-      else{
+      if(random_with_prob(threshold)){
+        torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.begin()+14)));
+        x = x.reshape({1, x.size(0)});
+        std::vector<torch::jit::IValue> inputs;
+        inputs.push_back(x);
+        std::cerr << x << std::endl;
+        at::Tensor prediction = module->forward(inputs).toTensor();
+        q_No  = prediction[0][0].item<double>();
+        q_Yes = prediction[0][1].item<double>();
+        switch(type){
+        case 0:
+          final_decision = random_with_prob(q_Yes);
+          break;
+        case 1:
+          final_decision = q_Yes > q_No;
+          break;
+        default:
+          final_decision = random_with_prob(0.5);
+        }
+      }else{
         q_Yes = -1;
         q_No = -1;
         final_decision = random_with_prob(0.5); 
@@ -234,9 +254,9 @@ namespace previrt {
       s->append(",");
       s->append(std::to_string(q_Yes));
       s->append(",");
-      s->append(std::to_string(final_decision));
+      s->append(std::to_string((int)final_decision+1));
       s->append("\n");
-
+      pushToTrace((int)final_decision+1);
       return final_decision;
     } else {
         std::cerr << "not callee or not allowSpecialization" << std::endl;
