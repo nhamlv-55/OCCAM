@@ -11,8 +11,8 @@ class Dataset:
         self.folder = folder
         self.n_unused_stat = n_unused_stat
         self.all_data = []
+        self.gamma = 0.99
         self.collect(size)
-    
     def merge_csv(self, csv_files):
         episode_data = []
         raw_data  = []
@@ -31,8 +31,9 @@ class Dataset:
                     tokens = [float(t) for t in tokens]
                     raw_data.append(tokens)
                     key = tokens[:-self.n_unused_stat]
+                    prob = tokens[-3:-1]
                     label = tokens[-1]
-                    run.append((key, label))
+                    run.append((key, label, prob))
             episode_data.append(run)
         return raw_data, episode_data, total
 
@@ -63,25 +64,57 @@ class Dataset:
             result = self.get_stat(r)
             run_data["episode_data"] = episode_data
             run_data["score"] = self.score(result)
-            run_data["discounted_r"] = self.calculate_discounted_r(run_data["score"])
+            run_data["discounted_r"] = self.discounted_rewards(run_data["score"])
             run_data["raw_result"] = result
             run_data["total"] = total
             self.all_data.append(run_data)
-        self.all_data.sort(key=lambda x: x["score"])
+        #self.all_data.sort(key=lambda x: x["score"])
 
 
-    def calculate_discounted_r(self, score, gamma = 0.99):
+    def discounted_rewards(self, score):
         r = [0]*21
         r[-1] = score
         """ take 1D float array of rewards and compute discounted reward """
         discounted_r = np.zeros_like(r)
         running_add = 0
         for t in reversed(xrange(0, len(r))):
-            running_add = running_add * gamma + r[t]
+            running_add = running_add * self.gamma + r[t]
             discounted_r[t] = running_add
         discounted_r -= np.mean(discounted_r)
         discounted_r /= np.std(discounted_r)
         return discounted_r
+
+    def get_run_data(self):
+        #TODO: for now, we are using just the first 14 features
+        batch_states = []
+        batch_actions = []
+        batch_rewards = []
+        batch_probs = []
+        USE_ALL = True
+        for r in self.all_data:
+            _x = []
+            for run in r["episode_data"]:
+                trace = []
+                states = []
+                actions = []
+                probs = []
+                if USE_ALL:
+                    for callsite in run:
+                        state = []
+                        state.extend(callsite[0][:14])
+                        trace.append(callsite[1])
+                        full_trace = []
+                        full_trace.extend(trace)
+                        full_trace.extend([0]*(21-len(full_trace)))
+                        state.extend(full_trace)
+                        states.append(state)
+                        actions.append(callsite[1])
+                        probs.append(callsite[2])
+                    batch_states.extend(states)
+                    batch_actions.extend(actions)
+                    batch_rewards.extend(self.discounted_rewards(r["score"]))
+                    batch_probs.extend(probs)
+        return batch_states, batch_actions, batch_rewards, batch_probs 
 
 
     def split_dataset(self, test_size=0.33):
