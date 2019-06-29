@@ -100,13 +100,7 @@ class Dataset:
                 probs = []
                 if USE_ALL:
                     for callsite in run:
-                        state = []
-                        state.extend(callsite[0][:14])
-                        trace.append(callsite[1])
-                        full_trace = []
-                        full_trace.extend(trace)
-                        full_trace.extend([0]*(21-len(full_trace)))
-                        state.extend(full_trace)
+                        state = callsite[0][0:35]
                         states.append(state)
                         actions.append(callsite[1])
                         probs.append(callsite[2])

@@ -18,6 +18,7 @@ class FeedForwardSingleInput(nn.Module):
         self.fc2 = nn.Linear(self.features_dim/2, 2, bias = True)
         
     def forward(self, x):
+        print("x[-1] in forward:", x[-1])
         h_1 = F.relu(self.fc1(x))
         h_2 = F.relu(self.fc2(h_1))
         output =  F.softmax(h_2, dim = -1)
