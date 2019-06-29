@@ -106,7 +106,7 @@ namespace previrt {
   bool MLPolicy::random_with_prob(const double prob) const {
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 eng(rd()); // seed the generator
-    std::uniform_int_distribution<> distr(0, 1); // define the range
+    std::uniform_real_distribution<> distr(0, 1); // define the range
 
     //return true;
     double sample = distr(eng);
@@ -188,8 +188,8 @@ namespace previrt {
     const int type = 0; //Policy gradient
     llvm::Function *callee = CS.getCalledFunction();
     llvm::Function *caller = CS.getCaller();
-    double q_Yes = -1;
-    double q_No = -1;
+    float q_Yes = -1;
+    float q_No = -1;
     if (callee && allowSpecialization(callee)) {
       // directly borrow from AggressiveSpecPolicy
       bool specialize = false;
@@ -210,13 +210,14 @@ namespace previrt {
       // return false immediately
       if(specialize==false){std::cerr<<"all arguemnts are not specializable"<<std::endl; return false;}
       // only invoke MLPolicy after this point
-      float threshold = -1; // sampling a random number. If it is less than threshold, specialize
+      float threshold = 1; // sampling a random number. If it is less than threshold, specialize
       std::vector<unsigned> features;
       std::vector<unsigned> callee_features = getInstructionCount(callee);
       std::vector<unsigned> caller_features = getInstructionCount(caller);
       // features = callee_features concat caller_features concat argument_features
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
+      features.insert( features.end(), (*trace).begin(), (*trace).end());
       features.insert( features.end(), argument_features.begin(), argument_features.end());
       std::cerr << "trace so far:"<<(*trace)<<std::endl;
       std::cerr << "Feature vector: " << features << std::endl;
@@ -225,14 +226,14 @@ namespace previrt {
       //return random_with_prob(0.5);
       bool final_decision;
       if(random_with_prob(threshold)){
-        torch::Tensor x = torch::tensor(at::ArrayRef<double>(std::vector<double>(features.begin(), features.begin()+14)));
+        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.begin()+35)));
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
         inputs.push_back(x);
         std::cerr << x << std::endl;
         at::Tensor prediction = module->forward(inputs).toTensor();
-        q_No  = prediction[0][0].item<double>();
-        q_Yes = prediction[0][1].item<double>();
+        q_No  = prediction[0][0].item<float>();
+        q_Yes = prediction[0][1].item<float>();
         switch(type){
         case 0:
           final_decision = random_with_prob(q_Yes);
@@ -254,8 +255,9 @@ namespace previrt {
       s->append(",");
       s->append(std::to_string(q_Yes));
       s->append(",");
-      s->append(std::to_string((int)final_decision+1));
+      s->append(std::to_string((int)final_decision));
       s->append("\n");
+      //note: currently +1 because we use a fixed size vector for trace with value 0 used as mask.
       pushToTrace((int)final_decision+1);
       return final_decision;
     } else {
