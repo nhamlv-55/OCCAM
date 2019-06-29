@@ -31,37 +31,36 @@ model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model")
 parser = argparse.ArgumentParser()
 parser.add_argument('-workdir', default=os.path.join(OCCAM_HOME, "examples/portfolio/tree/"), help='s')
 parser.add_argument('-action', default="bootstrap")
+parser.add_argument('-s', default = 10, type=int, help='no of sampling')
+parser.add_argument('-i', default = 3, type=int, help ='no of iteration')
 
 args = parser.parse_args()
 workdir = args.workdir
 dataset_path = os.path.join(workdir, "slash")
 action = args.action
 print("dataset_path=%s"%dataset_path)
+no_of_sampling = args.s
+no_of_iter = args.i
 #load latest model or create a new one
-
+SAMPLE = torch.tensor([[41.000000,176.000000,63.000000,0.000000,18.000000,39.000000,1.000000,79.000000,398.000000,98.000000,8.000000,64.000000,78.000000,1.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000]])
+ 
 def bootstrap(model_path):
     net = neural_net("FeedForwardSingleInput")
-    for params in net.parameters():
-        print(params)
-    torch.save(net, model_path)
-    inputs = torch.rand(2, net.features_dim, dtype=torch.float)
-    print("example inputs:", inputs, inputs.size())
-    trial = net.forward(inputs)
-    print(trial)
-    traced_script_module = torch.jit.trace(net, inputs)
-    traced_script_module.save("model.pt")
+#    for params in net.parameters():
+#        print(params)
+    print("example inputs:", SAMPLE, SAMPLE.size())
+    trial = net.forward(SAMPLE)
+    print("trial in bootstrap:", trial)
+    save_model(net, model_path)
     return net
 
-def loss_function(history, reward):
-    product = torch.mul(history, reward)
-    print("product:", product)
-    negation = product.mul(-1)
-    print("negation:", negation)
-    loss = torch.sum(negation, -1)
-    print("loss:", loss)
-    return loss
+def save_model(net, model_path):
+    torch.save(net, model_path)
+    inputs = SAMPLE
+    traced_script_module = torch.jit.trace(net, inputs)
+    traced_script_module.save(os.path.join(OCCAM_HOME,"model.pt"))
 
-def train(model_path, no_of_sampling = 3, no_of_iter = 3):
+def train(model_path, no_of_sampling, no_of_iter):
     if not os.path.exists(model_path):
         print("No existing model. Create a new one.")
         net = bootstrap(model_path)
@@ -85,16 +84,19 @@ def train(model_path, no_of_sampling = 3, no_of_iter = 3):
         runners = subprocess.check_output(runners_cmd.split(), cwd = workdir)
         dataset = Dataset(dataset_path, size = no_of_sampling)
         batch_states, batch_actions, batch_rewards, batch_probs = dataset.get_run_data()
-        print("batch_states:", batch_states)
+        print("batch_states:", )
+        for s in batch_states:
+            print(s)
         print("batch_actions:", batch_actions)
         print("batch_rewards:", batch_rewards)
-        print("batch_probs:", batch_probs)
         optimizer.zero_grad()
         state_tensor = torch.FloatTensor(batch_states)
         reward_tensor = torch.FloatTensor(batch_rewards)
         # Actions are used as indices, must be LongTensor
         action_tensor = torch.LongTensor(batch_actions)
         prob_tensor = net.forward(state_tensor)
+        trial = net.forward(SAMPLE)
+        print("trial:", trial)
         print("prob_tensor:", prob_tensor)
         print("batch_probs:", batch_probs)
         print("Check if the 2 above tensors are the same")
@@ -115,74 +117,14 @@ def train(model_path, no_of_sampling = 3, no_of_iter = 3):
         # # Apply gradients
         optimizer.step()
 
-        # batch_rewards = []
-        # batch_actions = []
-        # batch_states = []
-        # batch_counter = 1
+        #save model
+        save_model(net, model_path)
 
         print(loss_stack)
-
-
-
-
-
-
-
-
-
-def train_old(model_path):
-    if not os.path.exists(model_path):
-        print("No existing model. Create a new one.")
-        net = bootstrap(model_path)
-    else:
-        net = torch.load(model_path)
-
-    dataset = Dataset(dataset_path)
-    X_train, X_test, Y_train, Y_test = dataset.split_dataset()
-    print(X_train[0])
-    print(Y_train[0])
-    #normalize input
-    #min_max_scaler = preprocessing.MinMaxScaler()
-    #X = min_max_scaler.fit_transform(X)
-
-
-    #trial run
-    print(X_train[0].size())
-    Y_pred = net(X_train[0])
-    print("trial running: \n", Y_pred)
-
-    loss_function = nn.MSELoss()
-    optimizer = optim.Adam(net.parameters(), lr=0.01)
-
-    for i in range(0):
-        for j in range(len(X_train)):
-            optimizer.zero_grad()   # zero the gradient buffers
-            Y_pred = net(X_train[j])
-            loss = loss_function(Y_pred, Y_train[j])
-            if i%100==0:
-                print("---------------------")
-                print(loss)
-                if DEBUG:
-                    print(Y_pred)
-                    for params in net.parameters():
-                        print(params)
-            loss.backward()
-            optimizer.step()    # Does the update
-
-
-    #print out the model for debugging purpose
-    print("Final model")
-    for params in net.parameters():
-        print(params)
-    torch.save(net, model_path)
-    traced_script_module = torch.jit.trace(net, X_train[0])
-
-    traced_script_module.save("model.pt")
-
 
 if __name__=="__main__":
     if action=="bootstrap":
         bootstrap(model_path)
     elif action=="train":
-        train(model_path)
+        train(model_path, no_of_sampling, no_of_iter)
 

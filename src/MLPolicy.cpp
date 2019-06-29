@@ -218,7 +218,7 @@ namespace previrt {
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
       features.insert( features.end(), (*trace).begin(), (*trace).end());
-      features.insert( features.end(), argument_features.begin(), argument_features.end());
+      //features.insert( features.end(), argument_features.begin(), argument_features.end());
       std::cerr << "trace so far:"<<(*trace)<<std::endl;
       std::cerr << "Feature vector: " << features << std::endl;
       std::cerr << "Invoke MLpolicy" <<std::endl;
