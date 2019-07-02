@@ -84,7 +84,7 @@ namespace previrt
     SpecializationPolicy* const delegate;
     std::string* database = new std::string();
     std::string* s = new std::string();
-    std::vector<int>* trace = new std::vector<int>(21, 0);
+    std::vector<float>* trace = new std::vector<float>();
     std::shared_ptr<torch::jit::script::Module> module = torch::jit::load( std::string(std::getenv("OCCAM_HOME")).append("/model.pt"));
 
     FunctionSet rec_functions;
@@ -92,8 +92,8 @@ namespace previrt
     void markRecursiveFunctions();
     bool isRecursive(llvm::Function* f) const;    
     bool allowSpecialization(llvm::Function* f) const;
-    std::vector<unsigned> getInstructionCount(llvm::Function* f) const;
-    unsigned getLoopCount(llvm::Function* f) const;
+    std::vector<float> getInstructionCount(llvm::Function* f) const;
+    float getLoopCount(llvm::Function* f) const;
     bool random_with_prob(const double prob) const;
     void pushToTrace(const int v) const;
     // Generate the net
