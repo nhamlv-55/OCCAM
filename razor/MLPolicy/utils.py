@@ -50,7 +50,7 @@ class Dataset:
         return result
             
     def score(self, result):
-        return result["Number of instructions"]*1.0/1000
+        return result["Number of instructions"]*1.0
     
 
     def collect(self, size):
@@ -58,7 +58,7 @@ class Dataset:
         sorted(runs)
         for r in runs[:size]:
             run_data = {}
-            print(r)
+            #print(r)
             csv_files = glob.glob(r+"/*.csv")
             _, episode_data, total = self.merge_csv(csv_files)
             result = self.get_stat(r)
@@ -100,7 +100,7 @@ class Dataset:
                 probs = []
                 if USE_ALL:
                     for callsite in run:
-                        state = callsite[0][0:35]
+                        state = callsite[0][0:(16+42)]
                         states.append(state)
                         actions.append(callsite[1])
                         probs.append(callsite[2])
