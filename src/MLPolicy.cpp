@@ -119,14 +119,14 @@ namespace previrt {
     return (!isRecursive(F));
   }
 
-  std::vector<unsigned> MLPolicy::getInstructionCount(llvm::Function *f) const {
-    std::vector<unsigned> counts;
-    unsigned total_int_count = 0;
-    unsigned total_bb_count = 0;
-    unsigned load_int_count = 0;
-    unsigned store_int_count = 0;
-    unsigned call_int_count = 0;
-    unsigned branch_int_count = 0;
+  std::vector<float> MLPolicy::getInstructionCount(llvm::Function *f) const {
+    std::vector<float> counts;
+    float total_int_count = 0;
+    float total_bb_count = 0;
+    float load_int_count = 0;
+    float store_int_count = 0;
+    float call_int_count = 0;
+    float branch_int_count = 0;
 
     for (const BasicBlock &BB : *f){
       total_bb_count ++;
@@ -139,14 +139,14 @@ namespace previrt {
       }
     }
 
-    counts.push_back(total_bb_count);
-    counts.push_back(total_int_count);
-    counts.push_back(load_int_count);
-    counts.push_back(store_int_count);
-    counts.push_back(call_int_count);
-    counts.push_back(branch_int_count);
+    counts.push_back(total_bb_count == 0 ? 0 : log10(total_bb_count));
+    counts.push_back(total_int_count== 0 ? 0 : log10(total_int_count));
+    counts.push_back(load_int_count == 0 ? 0 : log10(load_int_count));
+    counts.push_back(store_int_count== 0 ? 0 : log10(store_int_count));
+    counts.push_back(call_int_count  ==0 ? 0 : log10(call_int_count));
+    counts.push_back(branch_int_count==0 ? 0 : log10(branch_int_count));
 
-    counts.push_back(getLoopCount(f));
+    counts.push_back(getLoopCount(f)==0  ? 0 : log10((float)getLoopCount(f)));
 
     return counts;
   }
@@ -159,8 +159,8 @@ namespace previrt {
     return loopcounter;
   }
 
-  unsigned MLPolicy::getLoopCount(llvm::Function *f) const {
-    unsigned loopcounter = 0;
+  float MLPolicy::getLoopCount(llvm::Function *f) const {
+    float loopcounter = 0;
 
     llvm::LoopInfo &li = pass.getAnalysis<LoopInfoWrapperPass>(*f).getLoopInfo();
     for (llvm::LoopInfo::iterator LIT = li.begin(), LEND = li.end(); LIT != LEND;
@@ -171,14 +171,16 @@ namespace previrt {
   }
 
   void MLPolicy::pushToTrace(const int v) const{
-    int i = 0;
-    for(std::vector<int>::iterator it = trace->begin(); it !=trace->end(); it++,i++ )    {
-      // found nth element..print and break.
-      if(*it == 0) {
-        *it = v;
-        break;
-      }
-    }
+    std::vector<int> onehot = std::vector<int>(2, 0);
+    onehot[v] = 1;
+    trace->insert(trace->end(), onehot.begin(), onehot.end());
+  //   for(std::vector<int>::iterator it = trace->begin(); it !=trace->end(); it++,i++ )    {
+  //     // found nth element..print and break.
+  //     if(*it == 0) {
+  //       *it = v;
+  //       break;
+  //     }
+  //   }
   }
 
   bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
@@ -190,6 +192,8 @@ namespace previrt {
     llvm::Function *caller = CS.getCaller();
     float q_Yes = -1;
     float q_No = -1;
+    float no_of_arg = CS.arg_size();
+    float no_of_const = 0;
     if (callee && allowSpecialization(callee)) {
       // directly borrow from AggressiveSpecPolicy
       bool specialize = false;
@@ -202,6 +206,7 @@ namespace previrt {
           slice.push_back(cst);
           argument_features.push_back(1);
           specialize = true;
+          no_of_const++;
         } else { 
           slice.push_back(nullptr);
           argument_features.push_back(0);
@@ -211,13 +216,17 @@ namespace previrt {
       if(specialize==false){std::cerr<<"all arguemnts are not specializable"<<std::endl; return false;}
       // only invoke MLPolicy after this point
       float threshold = 1; // sampling a random number. If it is less than threshold, specialize
-      std::vector<unsigned> features;
-      std::vector<unsigned> callee_features = getInstructionCount(callee);
-      std::vector<unsigned> caller_features = getInstructionCount(caller);
+      std::vector<float> features;
+      std::vector<float> callee_features = getInstructionCount(callee);
+      std::vector<float> caller_features = getInstructionCount(caller);
       // features = callee_features concat caller_features concat argument_features
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
+      features.push_back(no_of_const);
+      features.push_back(no_of_arg);
       features.insert( features.end(), (*trace).begin(), (*trace).end());
+      std::vector<float> trace_mask = std::vector<float>(42-(*trace).size(), 0);
+      features.insert( features.end(), trace_mask.begin(), trace_mask.end());
       //features.insert( features.end(), argument_features.begin(), argument_features.end());
       std::cerr << "trace so far:"<<(*trace)<<std::endl;
       std::cerr << "Feature vector: " << features << std::endl;
@@ -226,7 +235,7 @@ namespace previrt {
       //return random_with_prob(0.5);
       bool final_decision;
       if(random_with_prob(threshold)){
-        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.begin()+35)));
+        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.begin()+(16+2*21))));
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
         inputs.push_back(x);
@@ -258,7 +267,7 @@ namespace previrt {
       s->append(std::to_string((int)final_decision));
       s->append("\n");
       //note: currently +1 because we use a fixed size vector for trace with value 0 used as mask.
-      pushToTrace((int)final_decision+1);
+      pushToTrace((int)final_decision);
       return final_decision;
     } else {
         std::cerr << "not callee or not allowSpecialization" << std::endl;
