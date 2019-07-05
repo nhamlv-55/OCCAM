@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from utils import Dataset
 from net import FeedForwardSingleInput, RNN, neural_net
+from DQN import DQNPolicy
 import os
 from sklearn import preprocessing
 import torch.optim as optim
@@ -86,7 +87,7 @@ def train(model_path, no_of_sampling, no_of_iter, from_scratch):
         print("No existing model. Create a new one.")
         net = bootstrap(model_path)
     else:
-        net = torch.load(model_path, state = total_state )
+        net = torch.load(model_path)
 
     # For debugging only
     loss_stack = []
@@ -162,7 +163,8 @@ if __name__=="__main__":
     if action=="bootstrap":
         bootstrap(model_path)
     elif action=="train-scratch":
-        train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
+        policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
+        policy.train(model_path, no_of_sampling, no_of_iter, True)
     elif action=="train-continue":
         train(model_path, no_of_sampling, no_of_iter, from_scratch = False)
     elif action=="eval":
