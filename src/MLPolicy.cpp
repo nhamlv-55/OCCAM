@@ -216,7 +216,6 @@ namespace previrt {
       // return false immediately
       if(specialize==false){std::cerr<<"all arguemnts are not specializable"<<std::endl; return false;}
       // only invoke MLPolicy after this point
-      float threshold = 1; // sampling a random number. If it is less than threshold, specialize
       std::vector<float> features;
       std::vector<float> callee_features = getInstructionCount(callee);
       std::vector<float> caller_features = getInstructionCount(caller);
@@ -235,7 +234,7 @@ namespace previrt {
       //      return false;
       //return random_with_prob(0.5);
       bool final_decision;
-      if(random_with_prob(threshold)){
+      if(!random_with_prob(epsilon)){ //if random<epsilon -> random, if not, call the policy
         torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.begin()+(16+2*21))));
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
