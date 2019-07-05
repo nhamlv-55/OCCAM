@@ -265,7 +265,7 @@ class Slash(object):
             return 1
 
         database = utils.get_flag(self.flags, 'database', 'none')
-        epsilon  = utils.get_flag(self.flags, 'epsilon', 2)
+        epsilon  = utils.get_flag(self.flags, 'epsilon', '2')
         no_inlining = utils.get_flag(self.flags, 'disable-inlining', None)
 
         sys.stderr.write('\nslash working on {0} wrt {1} ...\n'.format(module, ' '.join(libs)))

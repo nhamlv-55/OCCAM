@@ -224,9 +224,11 @@ namespace previrt {
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
       features.push_back(no_of_const);
       features.push_back(no_of_arg);
-      features.insert( features.end(), (*trace).begin(), (*trace).end());
-      std::vector<float> trace_mask = std::vector<float>(42-(*trace).size(), 0);
-      features.insert( features.end(), trace_mask.begin(), trace_mask.end());
+      llvm::Module  *M = CS.getParent()->getModule();
+      //      features.push_back((float)M->getInstructionCount ());
+      //features.insert( features.end(), (*trace).begin(), (*trace).end());
+      //std::vector<float> trace_mask = std::vector<float>(42-(*trace).size(), 0);
+      //features.insert( features.end(), trace_mask.begin(), trace_mask.end());
       //features.insert( features.end(), argument_features.begin(), argument_features.end());
       std::cerr << "trace so far:"<<(*trace)<<std::endl;
       std::cerr << "Feature vector: " << features << std::endl;
@@ -235,7 +237,7 @@ namespace previrt {
       //return random_with_prob(0.5);
       bool final_decision;
       if(!random_with_prob(epsilon)){ //if random<epsilon -> random, if not, call the policy
-        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.begin()+(16+2*21))));
+        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.begin()+14)));
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
         inputs.push_back(x);
