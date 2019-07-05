@@ -44,8 +44,8 @@ using namespace torch;
 namespace previrt {
 
   MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg,
-                     llvm::Pass &_pass, std::string _database)
-    : cg(_cg), delegate(_delegate), pass(_pass){
+                     llvm::Pass &_pass, std::string _database, const float _epsilon)
+    : cg(_cg), delegate(_delegate), pass(_pass), epsilon(_epsilon){
     database->assign(_database);
     assert(delegate);
     torch::Tensor tensor = torch::eye(3);

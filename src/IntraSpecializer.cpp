@@ -76,6 +76,7 @@ static cl::opt<SpecializationPolicyType> SpecPolicy(
                           "aggressive + non-recursive function"),
                clEnumValN(ML, "machine-learning", "using machine learning policy")),
     cl::init(ML));
+static cl::opt<float> Epsilon("Epsilon", cl::desc("Epsilon for MLPolicy"));
 
 namespace previrt {
 
@@ -238,7 +239,7 @@ bool SpecializerPass::runOnModule(Module &M) {
   case ML: {
     SpecializationPolicy *subpolicy = new AggressiveSpecPolicy();
     CallGraph &cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();
-    policy = new MLPolicy(subpolicy, cg, *this, LogFilename);
+    policy = new MLPolicy(subpolicy, cg, *this, LogFilename, Epsilon);
     break;
   }
   }
