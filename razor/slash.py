@@ -84,6 +84,7 @@ instructions = """slash has three modes of use:
         --ai-dce                   : Use invariants inferred by abstract interpretation for intra-module dce (experimental)
         --amalgamate=<file>        : Amalgamate the bitcode into a single <file> before linking (used to deal with duplicate symbols)
         --database=<file>          : Database to train ML model
+        --epsilon=<float>          : Epsilon to control MLpolicy
     """
 
 def entrypoint():
@@ -131,7 +132,8 @@ class Slash(object):
                         'verbose',
                         'keep-external=',
                         'amalgamate=',
-                        'database=']
+                        'database=',
+                        'epsilon=']
 
             parsedargs = getopt.getopt(argv[1:], None, cmdflags)
             (self.flags, self.args) = parsedargs
@@ -263,6 +265,7 @@ class Slash(object):
             return 1
 
         database = utils.get_flag(self.flags, 'database', 'none')
+        epsilon  = utils.get_flag(self.flags, 'epsilon', 2)
         no_inlining = utils.get_flag(self.flags, 'disable-inlining', None)
 
         sys.stderr.write('\nslash working on {0} wrt {1} ...\n'.format(module, ' '.join(libs)))
@@ -410,7 +413,7 @@ class Slash(object):
                              intra_spec_policy, \
                              devirt, \
                              use_llpe, use_ipdse, use_ai_dce, \
-                             log=open(fn, 'w'), database = database)
+                             log=open(fn, 'w'), database = database, epsilon = epsilon)
 
             pool.InParallel(intra, files.values(), self.pool)
 

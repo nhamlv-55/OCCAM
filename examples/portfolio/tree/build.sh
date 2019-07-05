@@ -24,9 +24,14 @@ case $key in
 	shift # past value
 	;;
     -folder|--folder)
-	      PREFIX="run$2"
-	      shift # past argument
+        PREFIX="run$2"
+        shift # past argument
 	      shift # past value
+        ;;
+    -epsilon|--epsilon)
+        EPSILON="$2"
+        shift
+        shift
         ;;
     -intra-spec|--intra-spec)
   INTRA_SPEC="$2"
@@ -85,7 +90,7 @@ export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
 
 mkdir -p $DATABASE
 # OCCAM
-SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE}"
+SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE} --epsilon=$EPSILON"
 echo "============================================================"
 echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"
