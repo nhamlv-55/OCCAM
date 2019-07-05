@@ -76,7 +76,7 @@ static cl::opt<SpecializationPolicyType> SpecPolicy(
                           "aggressive + non-recursive function"),
                clEnumValN(ML, "machine-learning", "using machine learning policy")),
     cl::init(ML));
-static cl::opt<float> Epsilon("Epsilon", cl::desc("Epsilon for MLPolicy"));
+static cl::opt<float> Epsilon("Ppeval-epsilon", cl::desc("Epsilon for MLPolicy"));
 
 namespace previrt {
 

@@ -185,6 +185,7 @@ namespace previrt {
 
   bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
     std::cerr<<"TOUCH A CALL SITE"<<std::endl;
+    std::cerr<<"EPSILON:"<<epsilon<<std::endl;
     //s->append("TOUCH A CALL SITE\n");
     const bool explore = true;
     const int type = 0; //Policy gradient
