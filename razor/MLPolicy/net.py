@@ -30,20 +30,21 @@ class FeedForwardSingleInput(nn.Module):
         print(self.state.size())
         self.state_dim = self.state.size()[-1]
         #fc for state
-        self.fc_s1 = nn.Linear(self.state_dim, self.state_dim/2, bias = True)
-        self.fc_s2 = nn.Linear(self.state_dim/2, self.state_dim/4, bias = True)
+        #self.fc_s1 = nn.Linear(self.state_dim, self.state_dim/2, bias = True)
+        #self.fc_s2 = nn.Linear(self.state_dim/2, self.state_dim/4, bias = True)
         #fc for features
         self.fc_f1 = nn.Linear(self.features_dim, self.features_dim/2, bias = True)  # 6*6 from image dimension 
         self.fc_f2 = nn.Linear(self.features_dim/2, self.features_dim/4, bias = True)
         self.fc_f3 = nn.Linear(self.features_dim/4, 2, bias = True)
         #fc for trace
-        self.fc_t1 = nn.Linear(self.trace_dim, self.trace_dim/2, bias = True)
+        #self.fc_t1 = nn.Linear(self.trace_dim, self.trace_dim/2, bias = True)
 
         #output
-        self.fc_o = nn.Linear(self.state_dim/4 + self.features_dim/4 + self.trace_dim/2, 2, bias = True)
+        #self.fc_o = nn.Linear(self.state_dim/4 + self.features_dim/4 + self.trace_dim/2, 2, bias = True)
         
         
     def forward(self, x): 
+        print(x, x.size())
         features = x[:, :self.features_dim]
         trace = x[:,self.features_dim:]
         batch_size = x.size()[0]
