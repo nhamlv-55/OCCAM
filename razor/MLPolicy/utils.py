@@ -5,7 +5,7 @@ import numpy as np
 import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
-
+import random
 from collections import namedtuple
 
 Transition = namedtuple('Transition',
@@ -130,15 +130,15 @@ class Dataset(object):
                     else:
                         next_step = sub_episode[j+1]
                         #next_level = i
-                    state = step[0][:14]
+                    state = torch.tensor(step[0][:14]).view(1, -1)
                     #state.append(i)
-                    action = step[1]
+                    action = torch.tensor(step[1], dtype=torch.long).view(1,1)
                     if i==len(eps["episode_data"])-1 and j==len(sub_episode)-1:
-                        reward = eps["score"]
+                        reward = torch.tensor([eps["score"]])
                     else:
-                        reward = 0
+                        reward = torch.tensor([0.0])
                     if next_step is not None:
-                        next_state = next_step[0][:14]
+                        next_state = torch.tensor(next_step[0][:14]).view(1, -1)
                         #next_state.append(next_level)
                     else:
                         next_state = None
