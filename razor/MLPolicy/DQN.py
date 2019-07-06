@@ -4,9 +4,9 @@ from basePolicy import BasePolicy
 import os
 import subprocess
 import math
-from utils import Dataset
-
-BATCH_SIZE = 128
+from utils import *
+import torch.optim as optim
+BATCH_SIZE = 10
 GAMMA = 0.999
 EPS_START = 0.9
 EPS_END = 0.05
@@ -16,12 +16,19 @@ TARGET_UPDATE = 10
 class DQNPolicy(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp)
-        
+        if network_hp is not None:
+            self.target_net = network_type(network_hp)
+        else:
+            self.target_net = network_type()
+        self.target_net.load_state_dict(self.net.state_dict())
+
     def train(self, model_path, no_of_sampling, no_of_iter, from_scratch):
         if from_scratch:
             print("Create a new model")
         else:
             self.net = torch.load(model_path)
+        self.optimizer = optim.RMSprop(self.net.parameters())
+
         for i in range(no_of_iter):
             if i%5==1:
                 print("performance at iteration %s"%str(i))
@@ -40,12 +47,16 @@ class DQNPolicy(BasePolicy):
             runners = subprocess.check_output(runners_cmd.split(), cwd = self.workdir)
             dataset = Dataset(self.dataset_path, size = no_of_sampling)
             dataset.push_to_memory(self.memory)
-
+            self.optimize()
+            self.save_model(model_path)
+            # Update the target network
+            if (i*no_of_sampling) % TARGET_UPDATE == 0:
+                self.target_net.load_state_dict(self.net.state_dict())
 
     def optimize(self):
-        if len(self.memory) < self.BATCH_SIZE:
+        if len(self.memory) < BATCH_SIZE:
             return
-        transitions = self.memory.sample(self.BATCH_SIZE)
+        transitions = self.memory.sample(BATCH_SIZE)
         # Transpose the batch (see http://stackoverflow.com/a/19343/3343043 for
         # detailed explanation).
         batch = Transition(*zip(*transitions))
@@ -57,24 +68,27 @@ class DQNPolicy(BasePolicy):
                                                     if s is not None])
         state_batch = torch.cat(batch.state)
         action_batch = torch.cat(batch.action)
+        print("batch.reward:", batch.reward)
         reward_batch = torch.cat(batch.reward)
 
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken
-        state_action_values = policy_net(state_batch).gather(1, action_batch)
-
+        state_action_values = self.net(state_batch).gather(1, action_batch)
+        print("state_action_values:", state_action_values)
         # Compute V(s_{t+1}) for all next states.
         next_state_values = torch.zeros(BATCH_SIZE, device=self.device)
-        next_state_values[non_final_mask] = target_net(non_final_next_states).max(1)[0].detach()
+        next_state_values[non_final_mask] = self.target_net(non_final_next_states).max(1)[0].detach()
         # Compute the expected Q values
+        print(next_state_values)
         expected_state_action_values = (next_state_values * GAMMA) + reward_batch
 
         # Compute Huber loss
         loss = F.smooth_l1_loss(state_action_values, expected_state_action_values.unsqueeze(1))
-
+        print("loss", loss)
         # Optimize the model
-        optimizer.zero_grad()
+        self.optimizer.zero_grad()
         loss.backward()
-        for param in policy_net.parameters():
+        for param in self.net.parameters():
+            print(param)
             param.grad.data.clamp_(-1, 1)
-        optimizer.step()
+        self.optimizer.step()
