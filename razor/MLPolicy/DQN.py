@@ -6,7 +6,7 @@ import subprocess
 import math
 from utils import *
 import torch.optim as optim
-BATCH_SIZE = 10
+BATCH_SIZE = 128
 GAMMA = 0.999
 EPS_START = 0.9
 EPS_END = 0.05
@@ -39,7 +39,7 @@ class DQNPolicy(BasePolicy):
             job_ids = ""
             for jid in range(no_of_sampling):
                 job_ids +=" %s"%str(jid)
-            steps_done = i*no_of_sampling*self.trace_len
+            steps_done = i
             eps_threshold = EPS_END + (EPS_START - EPS_END) * \
                             math.exp(-1. * steps_done / EPS_DECAY)
             runners_cmd = "parallel %s -epsilon %s -folder {} 2>/dev/null  ::: %s"%(self.run_command, eps_threshold, job_ids)
@@ -68,20 +68,20 @@ class DQNPolicy(BasePolicy):
                                                     if s is not None])
         state_batch = torch.cat(batch.state)
         action_batch = torch.cat(batch.action)
-        print("batch.reward:", batch.reward)
+        #print("batch.reward:", batch.reward)
         reward_batch = torch.cat(batch.reward)
 
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken
         state_action_values = self.net(state_batch).gather(1, action_batch)
-        print("state_action_values:", state_action_values)
+        #print("state_action_values:", state_action_values)
         # Compute V(s_{t+1}) for all next states.
         next_state_values = torch.zeros(BATCH_SIZE, device=self.device)
         next_state_values[non_final_mask] = self.target_net(non_final_next_states).max(1)[0].detach()
         # Compute the expected Q values
-        print(next_state_values)
+        #print(next_state_values)
         expected_state_action_values = (next_state_values * GAMMA) + reward_batch
-
+        print("expected_state_action_values", expected_state_action_values)
         # Compute Huber loss
         loss = F.smooth_l1_loss(state_action_values, expected_state_action_values.unsqueeze(1))
         print("loss", loss)
@@ -89,6 +89,6 @@ class DQNPolicy(BasePolicy):
         self.optimizer.zero_grad()
         loss.backward()
         for param in self.net.parameters():
-            print(param)
+            #print(param)
             param.grad.data.clamp_(-1, 1)
         self.optimizer.step()

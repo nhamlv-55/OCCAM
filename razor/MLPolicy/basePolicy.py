@@ -24,7 +24,8 @@ class BasePolicy(object):
         else:
             self.net = self.network_type()
         print(self.net)
-        trail = self.net(self.sample_inputs)
+        trial = self.net(self.sample_inputs)
+        print("trial:", trial)
         self.save_model(model_path)
 
     def load(self, model_path):
