@@ -44,13 +44,13 @@ class FeedForwardSingleInput(nn.Module):
         
         
     def forward(self, x): 
-        print(x, x.size())
+        #print(x, x.size())
         features = x[:, :self.features_dim]
         trace = x[:,self.features_dim:]
         batch_size = x.size()[0]
-        print("batch_size", batch_size)
+        #print("batch_size", batch_size)
         state_tiled = self.state.repeat((batch_size, 1))
-        print(self.state.size())
+        #print(self.state.size())
         #trace = trace.view(-1, 21, 2)
         #print("trace", trace)
         #print("x[-1] in forward:", x[-1])
