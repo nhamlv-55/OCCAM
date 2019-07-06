@@ -40,7 +40,7 @@ class Dataset(object):
     def merge_csv(self, csv_files):
         episode_data = []
         raw_data  = []
-        print(csv_files)
+        #print(csv_files)
         input = []
         output = []
         total = 0
@@ -58,7 +58,8 @@ class Dataset(object):
                     prob = tokens[-3:-1]
                     label = tokens[-1]
                     run.append((key, label, prob))
-            episode_data.append(run)
+            if len(run)>0:
+                episode_data.append(run)
         return raw_data, episode_data, total
 
     def get_stat(self, run):
@@ -74,7 +75,7 @@ class Dataset(object):
         return result
             
     def score(self, result):
-        return result["Number of instructions"]*1.0
+        return 1.0-result["Number of instructions"]
     
 
     def collect(self, size):
@@ -82,7 +83,7 @@ class Dataset(object):
         sorted(runs)
         for r in runs[:size]:
             run_data = {}
-            print(r)
+            #print(r)
             csv_files = glob.glob(r+"/*.csv")
             _, episode_data, total = self.merge_csv(csv_files)
             result = self.get_stat(r)
@@ -115,8 +116,9 @@ class Dataset(object):
 
         for eps in self.all_data:
             for i in range(len(eps["episode_data"])):
-                print("run %s"%str(i))
+                #print("run %s"%str(i))
                 sub_episode = eps["episode_data"][i]
+                
                 if i==len(eps["episode_data"])-1:
                     next_sub_episode = (None, None, None)
                 else:
@@ -142,8 +144,8 @@ class Dataset(object):
                         #next_state.append(next_level)
                     else:
                         next_state = None
-                    if reward!=0:
-                        print(state, action, next_state, reward, "<<<")
+                    #if reward!=0:
+                    #    print(state, action, next_state, reward, "<<<")
                     memory.push(state, action, next_state, reward)
         
 
@@ -235,9 +237,9 @@ class Dataset(object):
 if __name__== "__main__":
     OCCAM_HOME = os.environ['OCCAM_HOME']
     datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
-    dataset = Dataset(datapath, n_unused_stat = 3, size = 1)
+    dataset = Dataset(datapath, n_unused_stat = 3, size = 49)
     memory = ReplayMemory(1000)
-    dataset.dump()
+#    dataset.dump()
     dataset.push_to_memory(memory)
     print("len memory:", len(memory.memory))
     print(memory.memory[22])
