@@ -66,7 +66,7 @@ class FeedForwardSingleInput(nn.Module):
         #concat = torch.cat((h_f2, h_t, h_s2), 1)
         
         #output =  F.softmax(self.fc_o(concat), dim = -1)
-        output = F.softmax(self.fc_f3(h_f2), dim = -1)
+        output = self.fc_f3(h_f2)
         return output
 
     def num_flat_features(self, x):
