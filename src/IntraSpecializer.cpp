@@ -82,10 +82,28 @@ static cl::opt<float> Epsilon("Ppeval-epsilon", cl::desc("Epsilon for MLPolicy")
 
 namespace previrt {
 
+/* Intra-module specialization */
+class SpecializerPass : public llvm::ModulePass {
+private:
+  bool optimize;
+  bool trySpecializeFunction(Function *f, llvm::Module &M, SpecializationTable &table,
+                                SpecializationPolicy *policy,
+                               std::vector<Function *> &to_add);
+public:
+  static char ID;
+
+  SpecializerPass(bool);
+  virtual ~SpecializerPass();
+  virtual void getAnalysisUsage(llvm::AnalysisUsage &AU) const;
+  virtual bool runOnModule(llvm::Module &M);
+  virtual llvm::StringRef getPassName() const {
+    return "Intra-module specializer";
+  }
+};
 /**
    Return true if any callsite in f is specialized using policy.
 **/
-static bool trySpecializeFunction(Function *f, SpecializationTable &table,
+  bool SpecializerPass::trySpecializeFunction(Function *f, llvm::Module &M, SpecializationTable &table,
                                   SpecializationPolicy *policy,
                                   std::vector<Function *> &to_add) {
 
@@ -135,9 +153,25 @@ static bool trySpecializeFunction(Function *f, SpecializationTable &table,
     //                 c if the i-th parameter of the callsite is a
     //                   constant c
     std::vector<Value *> specScheme;
-
-    bool specialize = policy->specializeOn(cs, specScheme);
-
+    bool specialize = false;
+    if(SpecPolicy==ML){
+      ProfilerPass &p = getAnalysis<ProfilerPass>();
+      p.runOnModule(M);
+      std::vector<float> module_features ;
+      module_features.push_back((float)p.getNumFuncs());
+      module_features.push_back((float)p.getNumSpecFuncs());
+      module_features.push_back((float)p.getNumLoops());
+      module_features.push_back((float)p.getTotalInst());
+      module_features.push_back((float)p.getTotalBlocks());
+      module_features.push_back((float)p.getTotalDirectCalls());
+      module_features.push_back((float)p.getTotalIndirectCalls());
+      module_features.push_back((float)p.getTotalMemInst());
+      module_features.push_back((float)p.getTotalSafeMemInst());
+      std::cerr<<"module_features:"<<module_features<<std::endl;
+      specialize = policy->specializeOn(cs, specScheme);
+    }else{
+      specialize = policy->specializeOn(cs, specScheme);
+    }
     if (!specialize) {
       continue;
     }
@@ -205,22 +239,6 @@ static bool trySpecializeFunction(Function *f, SpecializationTable &table,
   return modified;
 }
 
-/* Intra-module specialization */
-class SpecializerPass : public llvm::ModulePass {
-private:
-  bool optimize;
-
-public:
-  static char ID;
-
-  SpecializerPass(bool);
-  virtual ~SpecializerPass();
-  virtual void getAnalysisUsage(llvm::AnalysisUsage &AU) const;
-  virtual bool runOnModule(llvm::Module &M);
-  virtual llvm::StringRef getPassName() const {
-    return "Intra-module specializer";
-  }
-};
 
 bool SpecializerPass::runOnModule(Module &M) {
   std::cerr<<"call runOnModule from IntraSpecializer.cpp::SpecializerPass"<<std::endl;
@@ -253,7 +271,7 @@ bool SpecializerPass::runOnModule(Module &M) {
   for (auto &f : M) {
     if (f.isDeclaration())
       continue;
-    modified |= trySpecializeFunction(&f, table, policy, to_add);
+    modified |= trySpecializeFunction(&f, M, table, policy, to_add);
   }
 
   // -- Optimize new function and add it into the module
