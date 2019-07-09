@@ -31,7 +31,7 @@ class ReplayMemory(object):
         return len(self.memory)
 
 class Dataset(object):
-    def __init__(self, folder, n_unused_stat = 3, size=-1):
+    def __init__(self, folder, n_unused_stat = 3, size=99999999):
         self.folder = folder
         print(self.folder)
         self.n_unused_stat = n_unused_stat
@@ -83,10 +83,12 @@ class Dataset(object):
         print(len(raw_data_np))
         self.mean = np.mean(raw_data_np, 0)
         self.std  = np.std(raw_data_np, 0)
+
     def collect(self, size):
         self.raw_data = []
         runs = glob.glob(self.folder+"/run*")
         sorted(runs)
+        size = min(len(runs), size)
         for r in runs[:size]:
             run_data = {}
             #print(r)
@@ -169,33 +171,6 @@ class Dataset(object):
         discounted_r /= np.std(discounted_r)
         return discounted_r
 
-    def get_run_data(self):
-        #TODO: for now, we are using just the first 14 features
-        batch_states = []
-        batch_actions = []
-        batch_rewards = []
-        batch_probs = []
-        USE_ALL = True
-        for r in self.all_data:
-            _x = []
-            for run in r["episode_data"]:
-                trace = []
-                states = []
-                actions = []
-                probs = []
-                if USE_ALL:
-                    for callsite in run:
-                        state = callsite[0][0:(16+42)]
-                        states.append(state)
-                        actions.append(callsite[1])
-                        probs.append(callsite[2])
-                    batch_states.extend(states)
-                    batch_actions.extend(actions)
-                    batch_rewards.extend(self.discounted_rewards(r["score"]))
-                    batch_probs.extend(probs)
-        return batch_states, batch_actions, batch_rewards, batch_probs 
-
-
     def dump(self):
         for r in self.all_data:
             print("score:", r["score"])
@@ -210,7 +185,7 @@ class Dataset(object):
 if __name__== "__main__":
     OCCAM_HOME = os.environ['OCCAM_HOME']
     datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
-    dataset = Dataset(datapath, n_unused_stat = 3, size = 49)
+    dataset = Dataset(datapath, n_unused_stat = 3)
     memory = ReplayMemory(1000)
 #    dataset.dump()
     dataset.push_to_memory(memory)
