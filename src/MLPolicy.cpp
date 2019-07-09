@@ -119,6 +119,12 @@ namespace previrt {
     return (!isRecursive(F));
   }
 
+  std::vector<float> normalizeFeatures(const std::vector<float> features){
+    std::vector<float> normalized;
+    return normalized;
+  }
+
+
   std::vector<float> MLPolicy::getInstructionCount(llvm::Function *f) const {
     std::vector<float> counts;
     float total_int_count = 0;
@@ -139,14 +145,14 @@ namespace previrt {
       }
     }
 
-    counts.push_back(total_bb_count == 0 ? 0 : log10(total_bb_count));
-    counts.push_back(total_int_count== 0 ? 0 : log10(total_int_count));
-    counts.push_back(load_int_count == 0 ? 0 : log10(load_int_count));
-    counts.push_back(store_int_count== 0 ? 0 : log10(store_int_count));
-    counts.push_back(call_int_count  ==0 ? 0 : log10(call_int_count));
-    counts.push_back(branch_int_count==0 ? 0 : log10(branch_int_count));
+    counts.push_back(total_bb_count);
+    counts.push_back(total_int_count);
+    counts.push_back(load_int_count);
+    counts.push_back(store_int_count);
+    counts.push_back(call_int_count);
+    counts.push_back(branch_int_count);
 
-    counts.push_back(getLoopCount(f)==0  ? 0 : log10((float)getLoopCount(f)));
+    counts.push_back((float)getLoopCount(f));
 
     return counts;
   }
@@ -223,11 +229,11 @@ namespace previrt {
       std::vector<float> features;
       std::vector<float> callee_features = getInstructionCount(callee);
       std::vector<float> caller_features = getInstructionCount(caller);
-      // features = callee_features concat caller_features concat argument_features
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
       features.push_back(no_of_const);
       features.push_back(no_of_arg);
+      features.insert( features.end(), module_features.begin(), module_features.end() );
       llvm::Module  *M = CS.getParent()->getModule();
       //      features.push_back((float)M->getInstructionCount ());
       //features.insert( features.end(), (*trace).begin(), (*trace).end());
@@ -242,7 +248,7 @@ namespace previrt {
       //return random_with_prob(0.5);
       bool final_decision;
       if(!random_with_prob(epsilon)){ //if random<epsilon -> random, if not, call the policy
-        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.begin()+14)));
+        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
         inputs.push_back(x);
