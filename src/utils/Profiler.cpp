@@ -29,50 +29,83 @@ using namespace llvm;
 
 static llvm::cl::opt<std::string>
 OutputFile("profile-outfile",
-	llvm::cl::desc("Dump all counters to output filename"),
-	llvm::cl::init(""));
+           llvm::cl::desc("Dump all counters to output filename"),
+           llvm::cl::init(""));
 
 static llvm::cl::opt<bool>
 ShowCallGraphInfo("profile-callgraph",
-        llvm::cl::desc("Show call graph information"),
-        llvm::cl::init(false));
+                  llvm::cl::desc("Show call graph information"),
+                  llvm::cl::init(false));
 
 static llvm::cl::opt<bool>
 PrintDetails("profile-details",
-        llvm::cl::desc("Show more detailed statistics"),
-        llvm::cl::init(false));
+             llvm::cl::desc("Show more detailed statistics"),
+             llvm::cl::init(false));
 
 static llvm::cl::opt<bool>
 DisplayDeclarations("profile-list-declarations",
-        llvm::cl::desc("List all the function declarations"),
-	llvm::cl::init(false),
-	llvm::cl::Hidden);
+                    llvm::cl::desc("List all the function declarations"),
+                    llvm::cl::init(false),
+                    llvm::cl::Hidden);
 
 static llvm::cl::opt<bool>
 ProfileLoops("profile-loops",
-        llvm::cl::desc("Show some stats about loops"),
-        llvm::cl::init(false));
+             llvm::cl::desc("Show some stats about loops"),
+             llvm::cl::init(false));
 
 static llvm::cl::opt<bool>
 ProfileSafePointers("profile-safe-pointers",
-        llvm::cl::desc("Show whether a pointer access is statically safe or not"),
-	llvm::cl::init(false));
+                    llvm::cl::desc("Show whether a pointer access is statically safe or not"),
+                    llvm::cl::init(false));
 
 static llvm::cl::opt<bool>
 ProfileVerbose("profile-verbose",
-        llvm::cl::desc("Print some verbose information"),
-        llvm::cl::init(false));
+               llvm::cl::desc("Print some verbose information"),
+               llvm::cl::init(false));
 
 namespace previrt {
 
+  void ProfilerPass::resetCounters(){
+    // -- individual counters
+    TotalFuncs.reset();
+    TotalSpecFuncs.reset();
+    TotalBlocks.reset();
+    TotalJoins.reset();
+    TotalInsts.reset();
+    TotalDirectCalls.reset();
+    TotalIndirectCalls.reset();
+    TotalExternalCalls.reset();
+    TotalLoops.reset();
+    TotalBoundedLoops.reset();
+    
+    SafeIntDiv.reset();
+    SafeFPDiv.reset();
+    UnsafeIntDiv.reset();
+    UnsafeFPDiv.reset();
+    DivIntUnknown.reset();
+    DivFPUnknown.reset();
+    
+    TotalMemInst.reset();
+    MemUnknown.reset();
+    SafeMemAccess.reset();
+    TotalAllocations.reset();
+    InBoundGEP.reset();
+    MemCpy.reset();
+    MemMove.reset();
+    MemSet.reset();
+    
+    SafeLeftShift.reset();
+    UnsafeLeftShift.reset();
+    UnknownLeftShift.reset();
+  }
+
   void ProfilerPass::formatCounters(std::vector<Counter>& counters, 
-				    unsigned& MaxNameLen, unsigned& MaxValLen, bool sort) {
+                                    unsigned& MaxNameLen, unsigned& MaxValLen, bool sort) {
     // Figure out how long the biggest Value and Name fields are.
     for (auto c: counters) {
       MaxValLen  = std::max(MaxValLen,  (unsigned)utostr(c.getValue()).size());
       MaxNameLen = std::max(MaxNameLen, (unsigned)c.getName().size());
     }
-    
     if (sort) {
       // Sort the fields by name.
       std::stable_sort(counters.begin(), counters.end());
@@ -112,15 +145,15 @@ namespace previrt {
   void ProfilerPass::processMemoryIntrinsicsPtrOperand(Value* V, Value*N) {
     if (ProfileSafePointers) {
       if (ConstantInt *CI = dyn_cast<ConstantInt>(N)) {
-	int64_t n = CI->getSExtValue();
-	uint64_t size;
-	ObjectSizeOpts opt;      
-	if (getObjectSize(V, size, *DL, TLI, opt)) {
-	  if (n >= 0 && ((uint64_t) n < size)) {
-	    ++SafeMemAccess;
-	    return;
-	  }
-	}
+        int64_t n = CI->getSExtValue();
+        uint64_t size;
+        ObjectSizeOpts opt;      
+        if (getObjectSize(V, size, *DL, TLI, opt)) {
+          if (n >= 0 && ((uint64_t) n < size)) {
+            ++SafeMemAccess;
+            return;
+          }
+        }
       }
     }
     ++MemUnknown;              
@@ -144,10 +177,10 @@ namespace previrt {
       LoopInfo& LI = getAnalysis<LoopInfoWrapperPass>(F).getLoopInfo();
       ScalarEvolution& SE = getAnalysis<ScalarEvolutionWrapperPass>(F).getSE();      
       for (auto L: LI) {
-	++TotalLoops;
-	if (SE.getSmallConstantTripCount(L)) {
-	  ++TotalBoundedLoops;
-	}
+        ++TotalLoops;
+        if (SE.getSmallConstantTripCount(L)) {
+          ++TotalBoundedLoops;
+        }
       }
     }
   }
@@ -166,13 +199,13 @@ namespace previrt {
     if (callee) {
       ++TotalDirectCalls;
       if (callee->isDeclaration()) {
-	++TotalExternalCalls;
-	ExtFuncs.insert(callee->getName());
+        ++TotalExternalCalls;
+        ExtFuncs.insert(callee->getName());
       }
     } else {
       ++TotalIndirectCalls;
       if (ProfileVerbose) {
-	llvm::errs() << "Indirect call found: " << *CS.getInstruction() << "\n";
+        llvm::errs() << "Indirect call found: " << *CS.getInstruction() << "\n";
       }
     }
     
@@ -186,48 +219,48 @@ namespace previrt {
     ++TotalInsts;
     // TODO: incrInstCounter(#OPCODE, 1);     
     if (BI.getOpcode() == BinaryOperator::SDiv || 
-	BI.getOpcode() == BinaryOperator::UDiv ||
-	BI.getOpcode() == BinaryOperator::SRem ||
-	BI.getOpcode() == BinaryOperator::URem ||
-	BI.getOpcode() == BinaryOperator::FDiv || 
-	BI.getOpcode() == BinaryOperator::FRem) {
+        BI.getOpcode() == BinaryOperator::UDiv ||
+        BI.getOpcode() == BinaryOperator::SRem ||
+        BI.getOpcode() == BinaryOperator::URem ||
+        BI.getOpcode() == BinaryOperator::FDiv || 
+        BI.getOpcode() == BinaryOperator::FRem) {
       const Value* divisor = BI.getOperand(1);
       if (const ConstantInt *CI = dyn_cast<const ConstantInt>(divisor)) {
-	if (CI->isZero()) ++UnsafeIntDiv;
-	else ++SafeIntDiv;
+        if (CI->isZero()) ++UnsafeIntDiv;
+        else ++SafeIntDiv;
       } else if (const ConstantFP *CFP = dyn_cast<const ConstantFP>(divisor)) {
-	if (CFP->isZero()) {
-	  ++UnsafeFPDiv;
-	} else {
-	  ++SafeFPDiv;
-	}
+        if (CFP->isZero()) {
+          ++UnsafeFPDiv;
+        } else {
+          ++SafeFPDiv;
+        }
       } else {
-	// cannot figure out statically
-	if (BI.getOpcode() == BinaryOperator::SDiv ||
-	    BI.getOpcode() == BinaryOperator::UDiv ||
-	    BI.getOpcode() == BinaryOperator::SRem ||
-	    BI.getOpcode() == BinaryOperator::URem) {
-	  ++DivIntUnknown;
-	} else {
-	  ++DivFPUnknown;
-	}
+        // cannot figure out statically
+        if (BI.getOpcode() == BinaryOperator::SDiv ||
+            BI.getOpcode() == BinaryOperator::UDiv ||
+            BI.getOpcode() == BinaryOperator::SRem ||
+            BI.getOpcode() == BinaryOperator::URem) {
+          ++DivIntUnknown;
+        } else {
+          ++DivFPUnknown;
+        }
       }
     } else if (BI.getOpcode() == BinaryOperator::Shl) {
       // Check for oversized shift amounts
       if (const ConstantInt *CI = dyn_cast<const ConstantInt>(BI.getOperand(1))) {
-	APInt shift = CI->getValue();
-	if (CI->getType()->isIntegerTy()) {
-	  APInt bitwidth(shift.getBitWidth(), CI->getType()->getIntegerBitWidth(), true);
-	  if (shift.slt(bitwidth)) {
-	    ++SafeLeftShift;
-	  } else {
-	    ++UnsafeLeftShift;
-	  }
-	} else {
-	  ++UnknownLeftShift;
-	}
+        APInt shift = CI->getValue();
+        if (CI->getType()->isIntegerTy()) {
+          APInt bitwidth(shift.getBitWidth(), CI->getType()->getIntegerBitWidth(), true);
+          if (shift.slt(bitwidth)) {
+            ++SafeLeftShift;
+          } else {
+            ++UnsafeLeftShift;
+          }
+        } else {
+          ++UnknownLeftShift;
+        }
       } else {
-	++UnknownLeftShift;
+        ++UnknownLeftShift;
       }
     }
   }
@@ -295,14 +328,14 @@ namespace previrt {
     , TotalExternalCalls("TotalExternalCalls","Number of external calls")
     , TotalLoops("TotalLoops", "Number of loops")
     , TotalBoundedLoops("TotalBoundedLoops", "Number of bounded loops")
-    ////////
+      ////////
     , SafeIntDiv("SafeIntDiv","Number of safe integer div/rem")
     , SafeFPDiv("SafeFPDiv","Number of safe FP div/rem")
     , UnsafeIntDiv("UnsafeIntDiv","Number of definite unsafe integer div/rem")
     , UnsafeFPDiv("UnsafeFPDiv","Number of definite unsafe FP div/rem")
     , DivIntUnknown("DivIntUnknown","Number of unknown integer div/rem")
     , DivFPUnknown("DivFPUnknown","Number of unknown FP div/rem")
-    /////////
+      /////////
     , TotalMemInst("TotalMemInst","Number of memory instructions")
     , MemUnknown("MemUnknown","Statically unknown memory accesses")
     , SafeMemAccess("SafeMemAccess","Statically safe memory accesses")
@@ -311,7 +344,7 @@ namespace previrt {
     , MemCpy("MemCpy")
     , MemMove("MemMove")
     , MemSet("MemSet")
-    /////////
+      /////////
     , SafeLeftShift("SafeLeftShift","Number of safe left shifts")
     , UnsafeLeftShift("UnsafeLeftShift", "Number of definite unsafe left shifts")
     , UnknownLeftShift("UnknownLeftShift", "Number of unknown left shifts") {
@@ -324,7 +357,8 @@ namespace previrt {
   }
   
   bool ProfilerPass::runOnModule(Module &M) {
-    
+    errs()<<"Call runOnModule from ProfilerPass\n";
+    resetCounters();
     DL = &M.getDataLayout();
     TLI = &getAnalysis<TargetLibraryInfoWrapperPass>().getTLI();
     Ctx = &M.getContext();
@@ -340,48 +374,48 @@ namespace previrt {
       std::vector<func_ty> funcs;
       errs() << "[Call graph information]\n";
       errs() << "Total number of functions="
-	     << std::distance(M.begin(), M.end()) << "\n";
+             << std::distance(M.begin(), M.end()) << "\n";
       for (auto it = scc_begin(&CG); !it.isAtEnd(); ++it) {
-	auto &scc = *it;
-	for (CallGraphNode *cgn : scc) {
-	  if (cgn->getFunction() && !cgn->getFunction()->isDeclaration()) {
-	    funcs.push_back(
-	      {cgn->getFunction(),
-	        {cgn->getNumReferences(), std::distance(cgn->begin(), cgn->end())}}); 
-	  }
-	}
+        auto &scc = *it;
+        for (CallGraphNode *cgn : scc) {
+          if (cgn->getFunction() && !cgn->getFunction()->isDeclaration()) {
+            funcs.push_back(
+                            {cgn->getFunction(),
+                                {cgn->getNumReferences(), std::distance(cgn->begin(), cgn->end())}}); 
+          }
+        }
       }
         
       bool has_rec_func = false;
       for (auto it = scc_begin(&CG); !it.isAtEnd(); ++it) {
-	auto &scc = *it;
-	if (std::distance(scc.begin(), scc.end()) > 1) {
-	  has_rec_func = true;
-	  errs() << "Found recursive SCC={";
-	  for (CallGraphNode *cgn : scc) {
-	    if (cgn->getFunction())
-                errs () << cgn->getFunction()->getName() << ";";
-	  }
-	}
+        auto &scc = *it;
+        if (std::distance(scc.begin(), scc.end()) > 1) {
+          has_rec_func = true;
+          errs() << "Found recursive SCC={";
+          for (CallGraphNode *cgn : scc) {
+            if (cgn->getFunction())
+              errs () << cgn->getFunction()->getName() << ";";
+          }
+        }
       }
       
       if (!has_rec_func) {
-	errs() << "No recursive functions found\n";
+        errs() << "No recursive functions found\n";
       }
         
       std::sort(funcs.begin(), funcs.end(), 
-		[](func_ty p1, func_ty p2) { 
-		  return  (p1.second.first + p1.second.second) > 
-		    (p2.second.first + p2.second.second);
-		});
+                [](func_ty p1, func_ty p2) { 
+                  return  (p1.second.first + p1.second.second) > 
+                    (p2.second.first + p2.second.second);
+                });
       
       for(auto&p: funcs){
-	Function* F = p.first;
-	unsigned numInsts = std::distance(inst_begin(F), inst_end(F));
-	errs() << F->getName() << ":" 
-	       << " num of instructions=" << numInsts
-	       << " num of callers=" << p.second.first 
-	       << " num of callees=" << p.second.second << "\n";
+        Function* F = p.first;
+        unsigned numInsts = std::distance(inst_begin(F), inst_end(F));
+        errs() << F->getName() << ":" 
+               << " num of instructions=" << numInsts
+               << " num of callers=" << p.second.first 
+               << " num of callees=" << p.second.second << "\n";
       }           
     }
     
@@ -391,13 +425,13 @@ namespace previrt {
       std::error_code ec;
       llvm::tool_output_file out(OutputFile.c_str(), ec, sys::fs::F_Text);
       if (ec) {
-	errs() << "ERROR: Cannot open file: " << ec.message() << "\n";
+        errs() << "ERROR: Cannot open file: " << ec.message() << "\n";
       } else {
-	printCounters(out.os());
-	out.keep();
+        printCounters(out.os());
+        out.keep();
       }
     } else {
-      printCounters(errs());
+      //printCounters(errs());
     }
     
     // if (DisplayDeclarations) {
@@ -430,8 +464,8 @@ namespace previrt {
     
     std::vector<Counter> cfg_counters 
     {TotalFuncs, TotalSpecFuncs,
-     TotalBlocks, TotalInsts,
-     TotalDirectCalls, TotalExternalCalls, TotalIndirectCalls};
+        TotalBlocks, TotalInsts,
+        TotalDirectCalls, TotalExternalCalls, TotalIndirectCalls};
     
     if (ProfileLoops) {
       cfg_counters.push_back(TotalLoops);
@@ -442,11 +476,11 @@ namespace previrt {
     std::string tsf_str("TotalSpecFuncs");
     for (auto c: cfg_counters) {
       if (c == tsf_str && c.getValue() == 0) {
-	continue;
+        continue;
       }
       O << format("%*u %-*s\n",
-		  MaxValLen, c.getValue(), 
-		  MaxNameLen, c.getDesc().c_str());
+                  MaxValLen, c.getValue(), 
+                  MaxNameLen, c.getDesc().c_str());
     }
     
     if (PrintDetails) {
@@ -457,14 +491,14 @@ namespace previrt {
       for(auto &p: instCounters) { inst_counters.push_back(p.second); }
       formatCounters(inst_counters, MaxNameLen, MaxValLen);
       if (inst_counters.empty()) {
-	O << "No information about each kind of instruction\n";
+        O << "No information about each kind of instruction\n";
       } else {
-	O << "Number of each kind of instructions:\n";
-	for (auto c: inst_counters) {
-	  O << format("%*u %-*s\n",
-		      MaxValLen, c.getValue(),
-		      MaxNameLen, c.getDesc().c_str());
-	}
+        O << "Number of each kind of instructions:\n";
+        for (auto c: inst_counters) {
+          O << format("%*u %-*s\n",
+                      MaxValLen, c.getValue(),
+                      MaxNameLen, c.getDesc().c_str());
+        }
       }
     }
     
@@ -473,11 +507,11 @@ namespace previrt {
     std::vector<Counter> mem_counters;
     if (PrintDetails) {
       mem_counters = 
-	{TotalMemInst,instCounters["Store"],instCounters["Load"],
-	 MemCpy,MemMove,MemSet,
-	 instCounters["GetElementPtr"],InBoundGEP,
-	 instCounters["Alloca"], TotalAllocations,
-	 SafeMemAccess,MemUnknown};
+        {TotalMemInst,instCounters["Store"],instCounters["Load"],
+         MemCpy,MemMove,MemSet,
+         instCounters["GetElementPtr"],InBoundGEP,
+         instCounters["Alloca"], TotalAllocations,
+         SafeMemAccess,MemUnknown};
     } else {
       mem_counters= {TotalMemInst, SafeMemAccess, MemUnknown};
     }
@@ -486,8 +520,8 @@ namespace previrt {
     O << "[Memory analysis]\n";
     for (auto c: mem_counters) {
       O << format("%*u %-*s\n",
-		  MaxValLen, c.getValue(),
-		  MaxNameLen, c.getDesc().c_str());
+                  MaxValLen, c.getValue(),
+                  MaxNameLen, c.getDesc().c_str());
     }
     
     // { // Division counters
