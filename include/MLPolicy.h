@@ -109,7 +109,12 @@ namespace previrt
     virtual ~MLPolicy();
     
     virtual bool specializeOn(llvm::CallSite CS,
-			      std::vector<llvm::Value*>& slice) const override;
+                              std::vector<llvm::Value*>& slice
+                              ) const override;
+
+    virtual bool specializeOn(llvm::CallSite CS,
+                              std::vector<llvm::Value*>& slice,
+                              const std::vector<float> module_features) const override;
 
     virtual bool specializeOn(llvm::Function* F,
 			      const PrevirtType* begin,

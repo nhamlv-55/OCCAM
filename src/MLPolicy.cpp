@@ -183,7 +183,10 @@ namespace previrt {
   //   }
   }
 
-  bool MLPolicy::specializeOn(CallSite CS, std::vector<Value *> &slice) const {
+  bool MLPolicy::specializeOn(llvm::CallSite, std::vector<llvm::Value*>&) const {return false;};
+  bool MLPolicy::specializeOn(CallSite CS,
+                              std::vector<Value *> &slice,
+                              const std::vector<float> module_features) const {
     std::cerr<<"TOUCH A CALL SITE"<<std::endl;
     std::cerr<<"EPSILON:"<<epsilon<<std::endl;
     //s->append("TOUCH A CALL SITE\n");
@@ -234,6 +237,7 @@ namespace previrt {
       std::cerr << "trace so far:"<<(*trace)<<std::endl;
       std::cerr << "Feature vector: " << features << std::endl;
       std::cerr << "Invoke MLpolicy" <<std::endl;
+      std::cerr << "Module feature: " << module_features <<std::endl;
       //      return false;
       //return random_with_prob(0.5);
       bool final_decision;
