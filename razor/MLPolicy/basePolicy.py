@@ -18,7 +18,20 @@ class BasePolicy(object):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.trace_len = 40 #a raw estimate of total number of steps in 1 episode. only use to decay epsilon
 
-    def bootstrap(self, model_path):
+    def bootstrap(self, model_path, check_format = True):
+        # run slash without the model to see how many features we are using
+        if check_format:
+            #clear previous runs
+            if os.path.exists(self.dataset_path):
+                clear_prev_runs = subprocess.check_output(("rm -r %s"%self.dataset_path).split())
+            #build 1 2 3 4 ... k
+            job_ids = ""
+            for jid in range(10):
+                job_ids +=" %s"%str(jid)
+            #run the jobs
+            runners_cmd = "parallel %s -epsilon 10 -folder {} 2>/dev/null  ::: %s"%(self.run_command, job_ids)
+            print(runners_cmd)
+            runners = subprocess.check_output(runners_cmd.split(), cwd = self.workdir)
         if self.network_hp is not None:
             self.net = self.network_type(network_hp)
         else:
