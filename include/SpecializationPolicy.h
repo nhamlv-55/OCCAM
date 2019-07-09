@@ -76,6 +76,7 @@ namespace previrt
     
     virtual bool specializeOn(llvm::CallSite, std::vector<llvm::Value*>&) const = 0;
 			      
+    virtual bool specializeOn(llvm::CallSite, std::vector<llvm::Value*>&, const std::vector<float>) const = 0;
     virtual bool specializeOn(llvm::Function*,
 			      const PrevirtType*, const PrevirtType*,
 			      llvm::SmallBitVector&) const = 0;

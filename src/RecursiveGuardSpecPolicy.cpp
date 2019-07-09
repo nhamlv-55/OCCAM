@@ -55,6 +55,7 @@ namespace previrt
     }
   }
 
+  bool RecursiveGuardSpecPolicy::specializeOn(llvm::CallSite, std::vector<llvm::Value*>&, const std::vector<float>) const {return false;};
   void RecursiveGuardSpecPolicy::markRecursiveFunctions() {
     for (auto it = scc_begin(&cg); !it.isAtEnd(); ++it) {
       auto &scc = *it;

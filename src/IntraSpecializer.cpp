@@ -168,7 +168,7 @@ public:
       module_features.push_back((float)p.getTotalMemInst());
       module_features.push_back((float)p.getTotalSafeMemInst());
       std::cerr<<"module_features:"<<module_features<<std::endl;
-      specialize = policy->specializeOn(cs, specScheme);
+      specialize = policy->specializeOn(cs, specScheme, module_features);
     }else{
       specialize = policy->specializeOn(cs, specScheme);
     }
