@@ -37,6 +37,7 @@ class Dataset(object):
         self.n_unused_stat = n_unused_stat
         self.all_data = []
         self.collect(size)
+
     def merge_csv(self, csv_files):
         episode_data = []
         raw_data  = []
@@ -77,8 +78,13 @@ class Dataset(object):
     def score(self, result):
         return 1.0-result["Number of instructions"]
     
-
+    def calculate_std_mean(self):
+        raw_data_np = np.array(self.raw_data)
+        print(len(raw_data_np))
+        self.mean = np.mean(raw_data_np, 0)
+        self.std  = np.std(raw_data_np, 0)
     def collect(self, size):
+        self.raw_data = []
         runs = glob.glob(self.folder+"/run*")
         sorted(runs)
         for r in runs[:size]:
@@ -87,6 +93,7 @@ class Dataset(object):
             csv_files = glob.glob(r+"/*.csv")
             _, episode_data, total = self.merge_csv(csv_files)
             result = self.get_stat(r)
+            self.raw_data.extend(_)
             run_data["episode_data"] = episode_data
             run_data["score"] = self.score(result)
             #run_data["discounted_r"] = self.discounted_rewards(run_data["score"])
@@ -189,40 +196,6 @@ class Dataset(object):
         return batch_states, batch_actions, batch_rewards, batch_probs 
 
 
-    def split_dataset(self, test_size=0.33):
-        #TODO: for now, we are using just the first 14 features
-        self.X = []
-        self.Y = []
-        USE_ALL = True
-        for r in self.all_data:
-            _x = []
-            for run in r["episode_data"]:
-                trace = []
-                if USE_ALL:
-                    for callsite in run:
-                        features = []
-                        features.extend(callsite[0][:14])
-                        trace.append(callsite[1])
-                        full_trace = []
-                        full_trace.extend(trace)
-                        full_trace.extend([0]*(21-len(full_trace)))
-                        features.extend(full_trace)
-                        _x.append(features)
-                else:
-                    for callsite in run:
-                        if callsite[1]==0:
-                            continue
-                        else:
-                            features = []
-                            features.extend(callsite[0])
-                            _x.append(features[:14])
-            seq_len = len(_x)
-            self.X.append(torch.FloatTensor(_x).view(seq_len, 1, -1))
-            self.Y.append(torch.FloatTensor([r["score"]]).view(1, 1, 1))
-            print(len(_x), r["score"])
-        self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X, self.Y, test_size = test_size, random_state=42)
-        return self.X_train, self.X_test, self.Y_train, self.Y_test
-
     def dump(self):
         for r in self.all_data:
             print("score:", r["score"])
@@ -244,3 +217,7 @@ if __name__== "__main__":
     print("len memory:", len(memory.memory))
     for i in range(20):
         print(memory.memory[i])
+    dataset.calculate_std_mean()
+    np.set_printoptions(precision=6, suppress=True)
+    print(dataset.std)
+    print(dataset.mean)
