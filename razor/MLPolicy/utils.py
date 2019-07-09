@@ -10,7 +10,7 @@ from collections import namedtuple
 
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
-
+Step   = namedtuple('Step', ('state', 'prob', 'action'))
 class ReplayMemory(object):
     def __init__(self, capacity):
         self.capacity = capacity
@@ -54,10 +54,10 @@ class Dataset(object):
                     tokens = l.strip().split(',')
                     tokens = [float(t) for t in tokens]
                     raw_data.append(tokens)
-                    key = tokens[:-self.n_unused_stat]
+                    state = tokens[:-self.n_unused_stat]
                     prob = tokens[-3:-1]
-                    label = tokens[-1]
-                    run.append((key, label, prob))
+                    action = tokens[-1]
+                    run.append(Step(state, prob, action))
             if len(run)>0:
                 episode_data.append(run)
         return raw_data, episode_data, total
@@ -132,15 +132,15 @@ class Dataset(object):
                     else:
                         next_step = sub_episode[j+1]
                         #next_level = i
-                    state = torch.tensor(step[0][:14]).view(1, -1)
+                    state = torch.tensor(step.state).view(1, -1)
                     #state.append(i)
-                    action = torch.tensor(step[1], dtype=torch.long).view(1,1)
+                    action = torch.tensor(step.action, dtype=torch.long).view(1,1)
                     if i==len(eps["episode_data"])-1 and j==len(sub_episode)-1:
                         reward = torch.tensor([eps["score"]])
                     else:
                         reward = torch.tensor([0.0])
                     if next_step is not None:
-                        next_state = torch.tensor(next_step[0][:14]).view(1, -1)
+                        next_state = torch.tensor(next_step.state).view(1, -1)
                         #next_state.append(next_level)
                     else:
                         next_state = None
@@ -242,4 +242,5 @@ if __name__== "__main__":
 #    dataset.dump()
     dataset.push_to_memory(memory)
     print("len memory:", len(memory.memory))
-    print(memory.memory[22])
+    for i in range(20):
+        print(memory.memory[i])
