@@ -58,7 +58,9 @@
 #include "AggressiveSpecPolicy.h"
 #include "RecursiveGuardSpecPolicy.h"
 #include "MLPolicy.h"
-
+/* call profiler */
+#include "utils/Profiler.h"
+  
 using namespace llvm;
 using namespace previrt;
 
@@ -278,8 +280,13 @@ bool SpecializerPass::runOnModule(Module &M) {
     M.getFunctionList().push_back(f);
   }
 
-  if(SpecPolicy == ML)
-    errs() << "Done 1 pass of MLPolicy. Early break. ";
+  if(SpecPolicy == ML){
+      ProfilerPass &p  = getAnalysis<ProfilerPass>();
+      unsigned num_instr = p.getTotalInst();
+      std::cerr<<"Test getting num_instr by using ProfilerPass:"<<num_instr<<std::endl;
+      
+      errs() << "Done 1 pass of MLPolicy. Early break. ";
+  }
   if (modified) {
     errs() << "...progress...\n";
   } else {
@@ -300,6 +307,7 @@ bool SpecializerPass::runOnModule(Module &M) {
 void SpecializerPass::getAnalysisUsage(AnalysisUsage &AU) const {
   AU.addRequired<CallGraphWrapperPass>();
   AU.addRequired<LoopInfoWrapperPass>();
+  AU.addRequired<ProfilerPass>();
   AU.setPreservesAll();
 }
 
