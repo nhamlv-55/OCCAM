@@ -30,7 +30,9 @@ namespace previrt {
     Counter(std::string name): Name(name), Desc(name), Value(0) { }
     
     Counter(std::string name, std::string desc): Name(name), Desc(desc), Value(0) { }
-    
+
+    void reset(){Value = 0;}
+
     bool operator<(const Counter&o) const 
     { return (getName() < o.getName()); }
     
@@ -91,6 +93,8 @@ namespace previrt {
     Counter UnsafeLeftShift;
     Counter UnknownLeftShift;
 
+
+    void resetCounters();
     bool isSafeMemAccess(llvm::Value *V);
     void processPtrOperand(llvm::Value* V);
     void processMemoryIntrinsicsPtrOperand(llvm::Value* V, llvm::Value*N);
