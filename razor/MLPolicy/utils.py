@@ -11,6 +11,7 @@ from collections import namedtuple
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 Step   = namedtuple('Step', ('state', 'prob', 'action'))
+np.set_printoptions(precision=6, suppress=True)
 class ReplayMemory(object):
     def __init__(self, capacity):
         self.capacity = capacity
@@ -37,6 +38,10 @@ class Dataset(object):
         self.n_unused_stat = n_unused_stat
         self.all_data = []
         self.collect(size)
+        self.calculate_std_mean()
+        self.features_len = self.mean.shape[0] - n_unused_stat
+        self.mean = self.mean[:self.features_len]
+        self.std  = self.std[:self.features_len]
 
     def merge_csv(self, csv_files):
         episode_data = []
@@ -74,10 +79,16 @@ class Dataset(object):
                 k = " ".join(tokens[1:])
                 result[k] = v
         return result
-            
-    def score(self, result):
-        return 1.0-result["Number of instructions"]
     
+    def score(self, result):
+        return result["Number of instructions"]
+
+    def get_step_reward(self, current_state, next_state, final_score):
+        if next_state is not None:
+            return next_state[0][18]-current_state[0][18]
+        else:
+            return final_score-current_state[0][18]
+
     def calculate_std_mean(self):
         raw_data_np = np.array(self.raw_data)
         print(len(raw_data_np))
@@ -104,6 +115,9 @@ class Dataset(object):
             self.all_data.append(run_data)
         #self.all_data.sort(key=lambda x: x["score"])
 
+    def sort(self):
+        self.all_data.sort(key=lambda x: x["score"])
+    
     def push_to_memory(self, memory):
 
         ##################################################
@@ -142,21 +156,18 @@ class Dataset(object):
                         next_step = sub_episode[j+1]
                         #next_level = i
                     state = torch.tensor(step.state).view(1, -1)
-                    #state.append(i)
                     action = torch.tensor(step.action, dtype=torch.long).view(1,1)
-                    if i==len(eps["episode_data"])-1 and j==len(sub_episode)-1:
-                        reward = torch.tensor([eps["score"]])
-                    else:
-                        reward = torch.tensor([0.0])
                     if next_step is not None:
                         next_state = torch.tensor(next_step.state).view(1, -1)
                         #next_state.append(next_level)
                     else:
                         next_state = None
+
+                    reward = torch.tensor([self.get_step_reward(state, next_state, eps["score"])])
                     #if reward!=0:
                     #    print(state, action, next_state, reward, "<<<")
                     memory.push(state, action, next_state, reward)
-        
+        print("last entry in memory:", memory.memory[-1])
 
     def discounted_rewards(self, score):
         r = [0]*21
@@ -172,14 +183,16 @@ class Dataset(object):
         return discounted_r
 
     def dump(self):
-        for r in self.all_data:
-            print("score:", r["score"])
-            print("number of call sites:", r["total"])
-            print("number of passes:", len(r["episode_data"]))
-            for run in r["episode_data"]:
-                for callsite in run:
-                    print(callsite)
-                print("------")
+        ##########################################################
+        # for r in self.all_data:                                #
+        #     print("score:", r["score"])                        #
+        #     print("number of call sites:", r["total"])         #
+        #     print("number of passes:", len(r["episode_data"])) #
+        #     for run in r["episode_data"]:                      #
+        #         for callsite in run:                           #
+        #             print(callsite)                            #
+        ##########################################################
+        #        print("------")
         print("best score", self.all_data[0]["score"])
         print("worst score", self.all_data[-1]["score"])
 if __name__== "__main__":
@@ -187,12 +200,12 @@ if __name__== "__main__":
     datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
     dataset = Dataset(datapath, n_unused_stat = 3)
     memory = ReplayMemory(1000)
-#    dataset.dump()
+    dataset.dump()
     dataset.push_to_memory(memory)
     print("len memory:", len(memory.memory))
     for i in range(20):
         print(memory.memory[i])
     dataset.calculate_std_mean()
-    np.set_printoptions(precision=6, suppress=True)
     print(dataset.std)
     print(dataset.mean)
+    print("features_len:", dataset.features_len)
