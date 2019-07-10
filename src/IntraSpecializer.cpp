@@ -160,13 +160,13 @@ public:
       std::vector<float> module_features ;
       module_features.push_back((float)p.getNumFuncs());
       module_features.push_back((float)p.getNumSpecFuncs());
-      module_features.push_back((float)p.getNumLoops());
+      //module_features.push_back((float)p.getNumLoops());
       module_features.push_back((float)p.getTotalInst());
       module_features.push_back((float)p.getTotalBlocks());
       module_features.push_back((float)p.getTotalDirectCalls());
-      module_features.push_back((float)p.getTotalIndirectCalls());
+      //module_features.push_back((float)p.getTotalIndirectCalls());
       module_features.push_back((float)p.getTotalMemInst());
-      module_features.push_back((float)p.getTotalSafeMemInst());
+      //module_features.push_back((float)p.getTotalSafeMemInst());
       std::cerr<<"module_features:"<<module_features<<std::endl;
       specialize = policy->specializeOn(cs, specScheme, module_features);
     }else{
