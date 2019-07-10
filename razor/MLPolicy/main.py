@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from utils import Dataset
-from net import FeedForwardSingleInput, RNN, neural_net
+from net import * 
 from DQN import DQNPolicy
 import os
 from sklearn import preprocessing
@@ -51,7 +51,7 @@ def evaluate(model_path):
 if __name__=="__main__":
     policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
     if action=="bootstrap":
-        bootstrap(model_path)
+        pass
     elif action=="train-scratch":
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":
