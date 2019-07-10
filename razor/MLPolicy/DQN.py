@@ -1,3 +1,4 @@
+from __future__ import print_function
 import torch
 from net import *
 from basePolicy import BasePolicy
@@ -6,20 +7,20 @@ import subprocess
 import math
 from utils import *
 import torch.optim as optim
-BATCH_SIZE = 128
+BATCH_SIZE =32
 GAMMA = 0.999
 EPS_START = 0.9
 EPS_END = 0.05
 EPS_DECAY = 200
-TARGET_UPDATE = 10
+TARGET_UPDATE = 5
 
 class DQNPolicy(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp)
         if network_hp is not None:
-            self.target_net = network_type(network_hp)
+            self.target_net = network_type(self.dataset_bootstrap)
         else:
-            self.target_net = network_type()
+            self.target_net = network_type(self.dataset_bootstrap)
         self.target_net.load_state_dict(self.net.state_dict())
 
     def train(self, model_path, no_of_sampling, no_of_iter, from_scratch):
@@ -50,7 +51,8 @@ class DQNPolicy(BasePolicy):
             self.optimize()
             self.save_model(model_path)
             # Update the target network
-            if (i*no_of_sampling) % TARGET_UPDATE == 0:
+            if i% TARGET_UPDATE == 1:
+                print("Update target network...")
                 self.target_net.load_state_dict(self.net.state_dict())
 
     def optimize(self):
@@ -60,7 +62,7 @@ class DQNPolicy(BasePolicy):
         # Transpose the batch (see http://stackoverflow.com/a/19343/3343043 for
         # detailed explanation).
         batch = Transition(*zip(*transitions))
-
+        print("batch:", batch)
         # Compute a mask of non-final states and concatenate the batch elements
         non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
                                             batch.next_state)), device=self.device, dtype=torch.uint8)
@@ -71,16 +73,20 @@ class DQNPolicy(BasePolicy):
         #print("batch.reward:", batch.reward)
         reward_batch = torch.cat(batch.reward)
 
+        print("state_batch 0:",state_batch[0])
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken
         state_action_values = self.net(state_batch).gather(1, action_batch)
-        #print("state_action_values:", state_action_values)
         # Compute V(s_{t+1}) for all next states.
         next_state_values = torch.zeros(BATCH_SIZE, device=self.device)
         next_state_values[non_final_mask] = self.target_net(non_final_next_states).max(1)[0].detach()
         # Compute the expected Q values
-        #print(next_state_values)
         expected_state_action_values = (next_state_values * GAMMA) + reward_batch
+        # try using direct values
+        #expected_state_action_values = reward_batch
+        torch.set_printoptions(sci_mode = False)
+        print("next_state_values:", next_state_values)
+        print("state_action_values:", state_action_values)
         print("expected_state_action_values", expected_state_action_values)
         # Compute Huber loss
         loss = F.smooth_l1_loss(state_action_values, expected_state_action_values.unsqueeze(1))
