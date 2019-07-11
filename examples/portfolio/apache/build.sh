@@ -15,7 +15,7 @@ function usage() {
 #default values
 LINK="dynamic"
 INTER_SPEC="none"
-INTRA_SPEC="none"
+INTRA_SPEC="machine-learning"
 DEVIRT="dsa"
 OPT_OPTIONS=""
 
@@ -29,7 +29,17 @@ case $key in
 	shift # past argument
 	shift # past value
 	;;
-    -inter-spec|--inter-spec)
+    -folder|--folder)
+        PREFIX="run$2"
+        shift # past argument
+        shift # past value
+        ;;
+    -epsilon|--epsilon)
+        EPSILON="$2"
+        shift
+        shift
+        ;;
+-inter-spec|--inter-spec)
 	INTER_SPEC="$2"
 	shift # past argument
 	shift # past value
@@ -90,11 +100,15 @@ done
 
 SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --stats $OPT_OPTIONS"
 
+SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE} --epsilon=$EPSILON"
 # OCCAM with program and libraries dynamically linked
 function dynamic_link() {
 
+    DATABASE=${PWD}/slash/$PREFIX/
     export OCCAM_LOGLEVEL=INFO
-    export OCCAM_LOGFILE=${PWD}/slash/occam.log
+    export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
+
+    mkdir -p $DATABASE
 
     # Build the manifest file
     cat > httpd.manifest <<EOF
@@ -114,7 +128,7 @@ EOF
     echo " slash ${SLASH_OPTS} --work-dir=slash httpd.manifest        "
     echo "                                                            "
     echo "============================================================"
-    slash ${SLASH_OPTS} --work-dir=slash httpd.manifest
+    slash ${SLASH_OPTS} --work-dir=slash/$PREFIX httpd.manifest
 
     status=$?
     if [ $status -ne 0 ]
@@ -122,7 +136,7 @@ EOF
 	echo "Something failed while running slash"
 	exit 1
     fi
-    cp slash/httpd_slashed .
+    cp slash/$PREFIX/httpd_slashed .
  }
 
 # OCCAM with program and libraries statically linked

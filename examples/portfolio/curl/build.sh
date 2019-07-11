@@ -35,7 +35,12 @@ case $key in
 	      shift # past argument
 	      shift # past value
         ;;
-    -disable-inlining|--disable-inlining)
+    -epsilon|--epsilon)
+        EPSILON="$2"
+        shift
+        shift
+        ;;
+-disable-inlining|--disable-inlining)
 	OPT_OPTIONS="${OPT_OPTIONS} --disable-inlining"
 	shift # past argument
 	;;
@@ -92,6 +97,7 @@ DATABASE=${PWD}/slash/$PREFIX/
 
 SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --stats $OPT_OPTIONS --database=${DATABASE}"
 
+SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE} --epsilon=$EPSILON"
 # OCCAM with program and libraries dynamically linked
 function dynamic_link() {
 
@@ -126,7 +132,7 @@ EOF
 	echo "Something failed while running slash"
 	exit 1
     fi     
-    cp ./slash/$PREFIX/curl_slashed .
+    #cp ./slash/$PREFIX/curl_slashed .
 }
 
 dynamic_link
