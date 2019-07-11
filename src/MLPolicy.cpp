@@ -195,6 +195,7 @@ namespace previrt {
                               const std::vector<float> module_features) const {
     std::cerr<<"TOUCH A CALL SITE"<<std::endl;
     std::cerr<<"EPSILON:"<<epsilon<<std::endl;
+    const float coin_bias = epsilon > 10 ? epsilon - 10: 0.5;
     //s->append("TOUCH A CALL SITE\n");
     const bool explore = true;
     //const int type = 0; //Policy gradient
@@ -269,7 +270,7 @@ namespace previrt {
       }else{
         q_Yes = -1;
         q_No = -1;
-        final_decision = random_with_prob(0.5); 
+        final_decision = random_with_prob(coin_bias); 
       }
       //record data to file
       for (double f: features){ s->append(std::to_string(f).append(",")); }
