@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils import Dataset
+from utils import *
 from net import * 
 from DQN import DQNPolicy
 import os
@@ -46,15 +46,17 @@ DEBUG = args.DEBUG
 print("DEBUG=", DEBUG)
 #load latest model or create a new one
 def evaluate(model_path):
-    _ = subprocess.check_output("./build.sh --disable-inlining --devirt none -folder eval".split(), cwd = workdir)
-
+    _ = subprocess.check_output("./build.sh -folder eval 2>eval.log".split(), cwd = workdir)
+    print(_)
+    print("done evaluation")
 if __name__=="__main__":
-    policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
-    if action=="bootstrap":
-        pass
+    if action=="gen-meta":
+        gen_new_meta()
     elif action=="train-scratch":
+        policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":
+        policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = False)
     elif action=="eval":
         evaluate(model_path)
