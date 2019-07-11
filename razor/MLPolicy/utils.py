@@ -7,7 +7,9 @@ import torch
 from sklearn.model_selection import train_test_split
 import random
 from collections import namedtuple
-
+import json
+import subprocess
+import argparse
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 Step   = namedtuple('Step', ('state', 'prob', 'action'))
@@ -81,8 +83,9 @@ class Dataset(object):
         return result
     
     def score(self, result):
-        return result["Number of instructions"]
-
+        #return result["Number of instructions"]
+        #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
+        return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
         if next_state is not None:
             return next_state[0][18]-current_state[0][18]
@@ -94,6 +97,13 @@ class Dataset(object):
         print(len(raw_data_np))
         self.mean = np.mean(raw_data_np, 0)
         self.std  = np.std(raw_data_np, 0)
+        #calculate mean and std of scores based on current dataset
+        final_scores = []
+        for eps in self.all_data:
+            final_scores.append(eps["score"])
+        final_scores = np.array(final_scores)
+        self.score_mean = np.mean(final_scores)
+        self.score_std  = np.std(final_scores)
 
     def collect(self, size):
         self.raw_data = []
@@ -113,7 +123,6 @@ class Dataset(object):
             run_data["raw_result"] = result
             run_data["total"] = total
             self.all_data.append(run_data)
-        #self.all_data.sort(key=lambda x: x["score"])
 
     def sort(self):
         self.all_data.sort(key=lambda x: x["score"])
@@ -195,17 +204,50 @@ class Dataset(object):
         #        print("------")
         print("best score", self.all_data[0]["score"])
         print("worst score", self.all_data[-1]["score"])
+
+def gen_new_meta(workdir, bootstrap_runs, run_command):
+    dataset_path = os.path.join(workdir, "slash")
+    metadata = {}
+    # run slash without the model to see how many features we are using
+    print("run check_format to see if we change the number of features")
+    #clear previous runs
+    if os.path.exists(dataset_path):
+        clear_prev_runs = subprocess.check_output(("rm -rf %s"%dataset_path).split())
+    #run with policy none
+    run_none = subprocess.check_output("./build.sh -intra-spec none -folder none".split(), cwd = workdir)
+    #run with policy aggressive
+    run_aggr = subprocess.check_output("./build.sh -intra-spec nonrec-aggressive -folder agg".split(), cwd = workdir)
+    #build 1 2 3 4 ... k
+    job_ids = ""
+    for jid in range(bootstrap_runs):
+        job_ids +=" %s"%str(jid)
+    #run the jobs
+    runners_cmd = "parallel %s -epsilon 10.5 -folder {} 2>/dev/null ::: %s"%(run_command, job_ids)
+    print(runners_cmd)
+    runners = subprocess.check_output(runners_cmd.split(), cwd = workdir)
+
+    dataset_bootstrap = Dataset(dataset_path)
+    dataset_bootstrap.sort()
+    dataset_bootstrap.dump()
+    print("features_len:", dataset_bootstrap.features_len)
+    print("mean:", dataset_bootstrap.mean)
+    print("std:", dataset_bootstrap.std)
+    metadata["features_len"] = dataset_bootstrap.features_len
+    metadata["mean"] = dataset_bootstrap.mean.tolist()
+    metadata["std"] = dataset_bootstrap.std.tolist()
+    metadata["score_mean"] = dataset_bootstrap.score_mean
+    metadata["score_std"]  = dataset_bootstrap.score_std
+    metadata["sample_inputs"] = dataset_bootstrap.raw_data[0][:dataset_bootstrap.features_len]
+    with open(os.path.join(workdir, "metadata.json"), "w") as f:
+        json.dump(metadata, f)
+
+
 if __name__== "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', default=100, help='number of trial runs to get meta data')
+    args = parser.parse_args()
+    bootstrap_runs = int(args.n)
     OCCAM_HOME = os.environ['OCCAM_HOME']
-    datapath = os.path.join(OCCAM_HOME, "examples/portfolio/tree/slash") 
-    dataset = Dataset(datapath, n_unused_stat = 3)
-    memory = ReplayMemory(1000)
-    dataset.dump()
-    dataset.push_to_memory(memory)
-    print("len memory:", len(memory.memory))
-    for i in range(20):
-        print(memory.memory[i])
-    dataset.calculate_std_mean()
-    print(dataset.std)
-    print(dataset.mean)
-    print("features_len:", dataset.features_len)
+    model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model") 
+    work_dir   = os.path.join(OCCAM_HOME, "examples/portfolio/apache")
+    gen_new_meta(work_dir, bootstrap_runs, "./build.sh ")
