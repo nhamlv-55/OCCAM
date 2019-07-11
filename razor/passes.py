@@ -128,8 +128,8 @@ def profile(input_file, output_file):
     args += [
         ## XXX: these can be expensive        
         '-profile-verbose=false'
-        ,'-profile-loops=false'
-        #,'-profile-safe-pointers=false'
+        ,'-profile-loops=true'
+        ,'-profile-safe-pointers=true'
     ]
     print "profiling to", output_file
     args += ['-profile-outfile={0}'.format(output_file)]
@@ -303,7 +303,7 @@ def peval(input_file, output_file, \
             
     if policy <> 'none':
         if policy == 'machine-learning':
-            max_intra_specializer_iteration = 2
+            max_intra_specializer_iteration = 1
         else:
             max_intra_specializer_iteration = 9999999
         out = ['']
