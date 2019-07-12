@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from utils import *
 from net import * 
 from DQN import DQNPolicy
+from PolicyGradient import PolicyGradient
 import os
 from sklearn import preprocessing
 import torch.optim as optim
@@ -53,7 +54,8 @@ if __name__=="__main__":
     if action=="gen-meta":
         gen_new_meta()
     elif action=="train-scratch":
-        policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
+        #policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
+        policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":
         policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
