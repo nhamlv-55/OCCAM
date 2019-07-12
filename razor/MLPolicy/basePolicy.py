@@ -41,6 +41,19 @@ class BasePolicy(object):
         print("saving the net...")
         traced_script_module.save(os.path.join(OCCAM_HOME, "model.pt"))
 
+    def run_policy(self, no_of_sampling, eps_threshold):
+        #clear previous runs
+        if os.path.exists(self.dataset_path):
+            clear_prev_runs = subprocess.check_output(("rm -r %s"%self.dataset_path).split())
+        job_ids = ""
+        for jid in range(no_of_sampling):
+            job_ids +=" %s"%str(jid)
+        runners_cmd = "parallel %s -epsilon %s -folder {} 2>/dev/null  ::: %s"%(self.run_command, eps_threshold, job_ids)
+        print(runners_cmd)
+        print("workdir:", self.workdir)
+        runners = subprocess.check_output(runners_cmd.split(), cwd = self.workdir)
+        return runners
+    
     def train(self):
         pass
 

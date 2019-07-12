@@ -14,12 +14,14 @@ Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 Step   = namedtuple('Step', ('state', 'prob', 'action'))
 np.set_printoptions(precision=6, suppress=True)
+GAMMA = 0.99
+DEBUG = False
 class ReplayMemory(object):
     def __init__(self, capacity):
         self.capacity = capacity
         self.memory = []
         self.position = 0
-
+        self.eps_reward = []
     def push(self, *args):
         """Saves a transition."""
         if len(self.memory) < self.capacity:
@@ -83,13 +85,16 @@ class Dataset(object):
         return result
     
     def score(self, result):
-        #return result["Number of instructions"]
+        return result["Number of instructions"]*1.0/1000
         #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
-        return result["Statically unknown memory accesses"]
+        #return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
         if next_state is not None:
+            print("next_state is not None")
             return next_state[0][18]-current_state[0][18]
         else:
+            print("next_state is None")
+            print("final score:", final_score)
             return final_score-current_state[0][18]
 
     def calculate_std_mean(self):
@@ -102,8 +107,8 @@ class Dataset(object):
         for eps in self.all_data:
             final_scores.append(eps["score"])
         final_scores = np.array(final_scores)
-        self.score_mean = np.mean(final_scores)
-        self.score_std  = np.std(final_scores)
+        self.score_mean = np.mean(final_scores, 0)
+        self.score_std  = np.std(final_scores, 0)
 
     def collect(self, size):
         self.raw_data = []
@@ -126,7 +131,30 @@ class Dataset(object):
 
     def sort(self):
         self.all_data.sort(key=lambda x: x["score"])
-    
+
+    # for Policy Gradient
+    def get_trajectory_data(self):
+        batch_states = []
+        batch_actions = []
+        batch_rewards = []
+        batch_probs = []
+        for eps in self.all_data:
+            states = []
+            actions = []
+            probs = []
+            
+            for sub_episode in eps["episode_data"]:
+                for step in sub_episode:
+                    states.append(step.state)
+                    actions.append(step.action)
+                    probs.append(step.prob)
+                
+            batch_states.extend(states)
+            batch_actions.extend(actions)
+            batch_probs.extend(probs)
+            rewards = [eps["score"]]*len(states)
+            batch_rewards.extend(discounted_rewards(rewards, GAMMA))
+        return batch_states, batch_actions, batch_rewards, batch_probs 
     def push_to_memory(self, memory):
 
         ##################################################
@@ -178,18 +206,7 @@ class Dataset(object):
                     memory.push(state, action, next_state, reward)
         print("last entry in memory:", memory.memory[-1])
 
-    def discounted_rewards(self, score):
-        r = [0]*21
-        r[-1] = score
-        """ take 1D float array of rewards and compute discounted reward """
-        discounted_r = np.zeros_like(r)
-        running_add = 0
-        for t in reversed(xrange(0, len(r))):
-            running_add = running_add * self.gamma + r[t]
-            discounted_r[t] = running_add
-        discounted_r -= np.mean(discounted_r)
-        discounted_r /= np.std(discounted_r)
-        return discounted_r
+    
 
     def dump(self):
         ##########################################################
@@ -204,7 +221,18 @@ class Dataset(object):
         #        print("------")
         print("best score", self.all_data[0]["score"])
         print("worst score", self.all_data[-1]["score"])
-
+def discounted_rewards(rewards, gamma):
+    r = np.array([gamma**i * rewards[i] 
+                  for i in range(len(rewards))])
+    if DEBUG: print("r:", r)
+    # Reverse the array direction for cumsum and then
+    # revert back to the original order
+    r = r[::-1].cumsum()[::-1]
+    if DEBUG: print("r cumsum, mean, std:", r)
+    r -= np.mean(r)
+    r /= np.std(r)
+    if DEBUG: print("scaled_dr:", r)
+    return r
 def gen_new_meta(workdir, bootstrap_runs, run_command):
     dataset_path = os.path.join(workdir, "slash")
     metadata = {}
@@ -249,5 +277,5 @@ if __name__== "__main__":
     bootstrap_runs = int(args.n)
     OCCAM_HOME = os.environ['OCCAM_HOME']
     model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model") 
-    work_dir   = os.path.join(OCCAM_HOME, "examples/portfolio/apache")
+    work_dir   = os.path.join(OCCAM_HOME, "examples/portfolio/tree")
     gen_new_meta(work_dir, bootstrap_runs, "./build.sh ")

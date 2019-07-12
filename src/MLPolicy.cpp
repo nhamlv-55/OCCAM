@@ -198,8 +198,8 @@ namespace previrt {
     const float coin_bias = epsilon > 10 ? epsilon - 10: 0.5;
     //s->append("TOUCH A CALL SITE\n");
     const bool explore = true;
-    //const int type = 0; //Policy gradient
-    const int type = 1; // DQN
+    const int type = 0; //Policy gradient
+    //const int type = 1; // DQN
     llvm::Function *callee = CS.getCalledFunction();
     llvm::Function *caller = CS.getCaller();
     float q_Yes = -1;

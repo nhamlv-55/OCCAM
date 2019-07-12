@@ -37,18 +37,10 @@ class DQNPolicy(BasePolicy):
             if (i+1)%10==0:
                 print("performance at iteration %s"%str(i))
                 self.evaluate(tag="eval%s"%str(i))
-            #clear previous runs
-            if os.path.exists(self.dataset_path):
-                clear_prev_runs = subprocess.check_output(("rm -r %s"%self.dataset_path).split())
-            job_ids = ""
-            for jid in range(no_of_sampling):
-                job_ids +=" %s"%str(jid)
             steps_done = i
             eps_threshold = EPS_END + (EPS_START - EPS_END) * \
-                            math.exp(-1. * steps_done / EPS_DECAY)
-            runners_cmd = "parallel %s -epsilon %s -folder {} 2>/dev/null  ::: %s"%(self.run_command, eps_threshold, job_ids)
-            print(runners_cmd)
-            runners = subprocess.check_output(runners_cmd.split(), cwd = self.workdir)
+                        math.exp(-1. * steps_done / EPS_DECAY)
+            self.run_policy(no_of_sampling, eps_threshold)
             dataset = Dataset(self.dataset_path, size = no_of_sampling)
             dataset.push_to_memory(self.memory)
             self.optimize()
