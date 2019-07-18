@@ -15,11 +15,13 @@ LLVM_CFG = $(LLVM_HOME)/bin/$(LLVM_CONFIG)
 
 LLVM_INCLUDE = $(shell ${LLVM_CFG} --includedir)
 
-CXX_FLAGS += $(shell  ${LLVM_CFG} --cxxflags) -I${LLVM_INCLUDE} -I../include -I/usr/local/include  -DGOOGLE_PROTOBUF_NO_RTTI -fPIC -g
+CXX_FLAGS += $(shell  ${LLVM_CFG} --cxxflags) -I${LLVM_INCLUDE} -I../include -I/usr/local/include -I/usr/include  -DGOOGLE_PROTOBUF_NO_RTTI -fPIC -g
 
 CXX_FLAGS += -Ianalysis/sea-dsa/include
 
-CXX_FLAGS += -Ianalysis/llvm-dsa/include 
+CXX_FLAGS += -Ianalysis/llvm-dsa/include
+
+CXX_FLAGS += -Iproto
 
 C_FLAGS = $(shell  ${LLVM_CFG} --cflags)
 
@@ -40,22 +42,16 @@ else ifeq (FreeBSD, $(findstring FreeBSD, ${OS}))
 # FreeBSD
 LIBRARY = ${LIBRARYNAME}.so
 LIBFLAGS = -shared -Wl,-soname,${LIBRARY}
-OTHERLIBS = -L/usr/local/lib -lpthread -lprotobuf 
+OTHERLIBS = -L/usr/local/lib -lpthread -lprotobuf
 else
 # LINUX
 LIBRARY = ${LIBRARYNAME}.so
 DYLIB = so
 LIBFLAGS = -shared -Wl,-soname,${LIBRARY}
-OTHERLIBS =  -lpthread -lprotobuf 
+OTHERLIBS = -L/usr/local/lib -lpthread -lprotobuf -lgrpc++ -lgrpc++_reflection
 endif
 
 # torch
-PYTORCH_LIBS = $(PYTORCH_INSTALL)/lib/libtorch.${DYLIB}
-
-PYTORCH_LIBS += $(PYTORCH_INSTALL)/lib/libc10.${DYLIB}
-LDLIBS := \
-     $(PYTORCH_LIBS)
-
 CXX_FLAGS += \
 		 -Wfatal-errors \
      -I $(PYTORCH_INSTALL)/include/torch/csrc/api/include \
@@ -73,7 +69,7 @@ SOURCES += $(wildcard transforms/*.cpp)
 
 SOURCES += $(wildcard utils/*.cpp)
 
-OBJECTS := proto/Previrt.pb.o $(patsubst %.cpp,%.o,${SOURCES}) 
+OBJECTS := proto/Previrt.pb.o proto/Previrt.grpc.pb.o $(patsubst %.cpp,%.o,${SOURCES}) 
 
 INSTALL = install
 
@@ -114,12 +110,16 @@ utils/%.o: utils/%.cpp
 	#$(CXX) -I. ${CXX_FLAGS} -fexceptions -frtti $< -c 
 
 	$(CXX) -I. ${CXX_FLAGS} $< -c 
-proto/%.o: proto/%.cc proto/%.h 
-	$(CXX)  ${CXX_FLAGS} $< -c -o $@
 
+proto/%.o: proto/%.cc proto/%.h
+	echo AAAAAAAAAAAAAA
+	echo _
+	$(CXX)  ${CXX_FLAGS} $< -c -o $@
+	$(CXX)  ${CXX_FLAGS} proto/Previrt.grpc.pb.cc -c -o proto/Previrt.grpc.pb.o
 
 protoc: Previrt.proto
 	mkdir -p proto
+	${PROTOC} --grpc_out=proto --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` Previrt.proto 
 	${PROTOC} Previrt.proto --cpp_out=proto
 
 clean: 
