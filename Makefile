@@ -115,8 +115,10 @@ dist: proto
 	python setup.py sdist bdist_wheel
 
 proto:  protoc
+	echo "\n\nIntstalling proto\n\n"
 	mkdir -p razor/proto
 	touch razor/proto/__init__.py
+	python -m grpc_tools.protoc -Isrc --python_out=razor/proto --grpc_python_out=razor/proto src/Previrt.proto
 	$(PROTOC) --proto_path=src --python_out=razor/proto src/Previrt.proto
 
 protoc:
