@@ -35,6 +35,10 @@ syntax = "proto2";
 
 package previrt.proto;
 
+service QueryOracle {
+  rpc Query(State) returns (Action) {}
+}
+
 enum Type {
   U = 0 ; // unknown
   I = 1 ; // integer
@@ -198,3 +202,11 @@ message Expr {
   optional bytes Global = 32 ;
 }
 */
+
+message State {
+  required string raw_code = 1;
+}
+
+message Action {
+  required int32 action = 1;
+}
