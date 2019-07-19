@@ -29,7 +29,7 @@ class PolicyGradient(BasePolicy):
             if (i+1)%10 == 0:
                 print("performance at iteration %s"%str(i))
                 self.evaluate(tag="eval%s"%str(i))
-            eps_threshold = -1 #to always use policy
+            eps_threshold = -1 #set to -1 to always use policy
             self.run_policy(no_of_sampling, eps_threshold)
             dataset = Dataset(self.dataset_path, size = no_of_sampling)
             trajectory_data = dataset.get_trajectory_data()
