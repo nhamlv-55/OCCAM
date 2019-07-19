@@ -43,6 +43,7 @@ class DQNPolicy(BasePolicy):
             self.run_policy(no_of_sampling, eps_threshold)
             dataset = Dataset(self.dataset_path, size = no_of_sampling)
             dataset.push_to_memory(self.memory)
+            if DEBUG: print(self.memory.memory)
             self.optimize()
             self.save_model(model_path)
             # Update the target network
