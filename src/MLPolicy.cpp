@@ -195,11 +195,9 @@ namespace previrt {
                               const std::vector<float> module_features) const {
     std::cerr<<"TOUCH A CALL SITE"<<std::endl;
     std::cerr<<"EPSILON:"<<epsilon<<std::endl;
-    const float coin_bias = epsilon > 10 ? epsilon - 10: 0.5;
-    //s->append("TOUCH A CALL SITE\n");
-    const bool explore = true;
-    const int type = 0; //Policy gradient
-    //const int type = 1; // DQN
+    //const int type = 0; //Policy gradient
+    const int type = 1; // DQN
+    //const int type = 2; //AggressiveSpecPolicy
     llvm::Function *callee = CS.getCalledFunction();
     llvm::Function *caller = CS.getCaller();
     float q_Yes = -1;
@@ -248,7 +246,7 @@ namespace previrt {
       //      return false;
       //return random_with_prob(0.5);
       bool final_decision;
-      if(!random_with_prob(epsilon)){ //if random<epsilon -> random, if not, call the policy
+      if(!random_with_prob(epsilon) || (type==1)){ //if random<epsilon -> random, if not, call the policy. for DQN, always use policy)
         torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
@@ -258,11 +256,17 @@ namespace previrt {
         q_No  = prediction[0][0].item<float>();
         q_Yes = prediction[0][1].item<float>();
         switch(type){
-        case 0:
+        case 0: //Policy Gradient
           final_decision = random_with_prob(q_Yes);
           break;
-        case 1:
-          final_decision = q_Yes > q_No;
+        case 1: //DQN
+          if(random_with_prob(epsilon))
+            final_decision = random_with_prob(0.5);
+          else
+            final_decision = q_Yes > q_No;
+          break;
+        case 2: //AggressiveSpecPolicy
+          final_decision = true;
           break;
         default:
           final_decision = random_with_prob(0.5);
@@ -270,7 +274,13 @@ namespace previrt {
       }else{
         q_Yes = -1;
         q_No = -1;
-        final_decision = random_with_prob(coin_bias); 
+        switch(type){
+        case 2:
+          final_decision = true;
+          break;
+        default:
+          final_decision = random_with_prob(0.5); 
+        }
       }
       //record data to file
       for (double f: features){ s->append(std::to_string(f).append(",")); }
