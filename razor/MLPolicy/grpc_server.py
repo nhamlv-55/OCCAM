@@ -29,7 +29,7 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 def get_action(state):
     """Returns Action at given location or None."""
     print("state[:10]", state.raw_code)
-    return Previrt_pb2.Action(action = len(state.raw_code))
+    return Previrt_pb2.Prediction(action = len(state.raw_code))
 
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
@@ -38,12 +38,13 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         pass
 
     def Query(self, request, context):
-        action = get_action(request)
-        if action is None:
-            return Previrt_pb2.Action(action=-1)
+        pred = get_action(request)
+        if pred is None:
+            return Previrt_pb2.Prediction(action=-1)
         else:
-            print(action)
-            return Previrt_pb2.Action(action = 0)
+            print(pred)
+            print(type(pred))
+            return pred
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
