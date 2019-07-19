@@ -85,17 +85,23 @@ class Dataset(object):
         return result
     
     def score(self, result):
-        return result["Number of instructions"]*1.0/1000
+        return result["Number of instructions"]
         #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
         #return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
+        #reward is 0 for all step
         if next_state is not None:
-            print("next_state is not None")
-            return next_state[0][18]-current_state[0][18]
+            return float(0)
         else:
-            print("next_state is None")
-            print("final score:", final_score)
-            return final_score-current_state[0][18]
+            return float(final_score)
+
+       # if next_state is not None:
+       #     print("next_state is not None")
+       #     return next_state[0][18]-current_state[0][18]
+       # else:
+       #     print("next_state is None")
+       #     print("final score:", final_score)
+       #     return final_score-current_state[0][18]
 
     def calculate_std_mean(self):
         raw_data_np = np.array(self.raw_data)
