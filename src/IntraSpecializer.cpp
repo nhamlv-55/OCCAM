@@ -51,7 +51,8 @@
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
 //#include "llvm/Transforms/IPO/PassManagerBuilder.h"
-
+#include "llvm/Support/FileSystem.h"
+#include "llvm/Support/raw_ostream.h"
 #include "SpecializationTable.h"
 #include "Specializer.h"
 /* here specialization policies */
@@ -107,7 +108,7 @@ public:
 
   bool Query(previrt::proto::State s ) {
     errs()<<"call query with s="<<s.raw_code()<<"\n";
-    previrt::proto::Action* a;
+    previrt::proto::Prediction* p;
 
     // Connection timeout in seconds
     unsigned int client_connection_timeout = 5;
@@ -118,12 +119,12 @@ public:
     std::chrono::system_clock::time_point deadline =
       std::chrono::system_clock::now() + std::chrono::seconds(client_connection_timeout);
 
-    context.set_deadline(deadline);
+    //context.set_deadline(deadline);
 
-    Status status = stub_->Query(&context, s, a);
+    Status status = stub_->Query(&context, s, p);
     errs()<< "got response\n";
     if (!status.ok()) {
-      errs() << "Query rpc failed.";
+      errs() << "Query rpc failed.\n";
       return false;
     }
     errs() << "got response";
@@ -145,7 +146,7 @@ namespace previrt {
     bool trySpecializeFunction(Function *f, llvm::Module &M, SpecializationTable &table,
                                SpecializationPolicy *policy,
                                std::vector<Function *> &to_add);
-
+    std::shared_ptr<Channel> connection = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
   public:
     static char ID;
 
@@ -163,15 +164,21 @@ namespace previrt {
   bool SpecializerPass::trySpecializeFunction(Function *f, llvm::Module &M, SpecializationTable &table,
                                               SpecializationPolicy *policy,
                                               std::vector<Function *> &to_add) {
-    QueryOracleClient q(
-                           grpc::CreateChannel("localhost:50051",
-                                               grpc::InsecureChannelCredentials())
-                           );
-
-    previrt::proto::State s = MakeState("hello");
-    q.Query(s);
+    //Comment out GRPC stuff
+    ///////////////////////////////////////////////////
+    // QueryOracleClient q(connection);              //
+    //                                               //
+    // previrt::proto::State s = MakeState("hello"); //
+    // q.Query(s);                                   //
+    ///////////////////////////////////////////////////
     std::vector<Instruction *> worklist;
+    std::error_code EC;
+    raw_fd_ostream outputFile(llvm::StringRef("output_BB.bc"), EC, llvm::sys::fs::F_Append);
+
     for (BasicBlock &bb : *f) {
+            outputFile<<"bb:\n";
+      outputFile<<bb;
+
       for (Instruction &I : bb) {
 
         Instruction *ci = dyn_cast<CallInst>(&I);
@@ -200,12 +207,18 @@ namespace previrt {
     }
 
     bool modified = false;
+    int iteration = 0;
+    raw_fd_ostream WorkListOutput(llvm::StringRef("output_WL.bc"), EC, llvm::sys::fs::F_Append);
+
+
     while (!worklist.empty()) {
       Instruction *ci = worklist.back();
       worklist.pop_back();
-
+      WorkListOutput<<"wl:\n";
+      WorkListOutput<<&ci;
       CallSite cs(ci);
       Function *callee = cs.getCalledFunction();
+      Function *caller = cs.getCaller();
       assert(callee);
       if (!GlobalValue::isLocalLinkage(callee->getLinkage())) {
         // We only try to specialize a function if it's internal.
@@ -219,9 +232,14 @@ namespace previrt {
       bool specialize = false;
       if(SpecPolicy==ML){
         ProfilerPass &p = getAnalysis<ProfilerPass>();
-        //errs()<<"Dump the Module:\n";
-        //errs()<<M;
         p.runOnModule(M);
+        const unsigned callee_no_of_uses = callee->getNumUses();
+        const unsigned caller_no_of_uses = caller->getNumUses();
+        errs()<<"number of time callee is used:"<<callee_no_of_uses<<"\n";
+        errs()<<"number of time caller is used:"<<caller_no_of_uses<<"\n";
+        //errs()<<"callee:"<<*callee<<"\n";
+        //errs()<<"caller:"<<*caller<<"\n";
+        //        errs()<<"Number of time callee is used:"<<no_of_uses<<std::endl;
         std::vector<float> module_features ;
         module_features.push_back((float)p.getNumFuncs());
         module_features.push_back((float)p.getNumSpecFuncs());
@@ -231,9 +249,13 @@ namespace previrt {
         module_features.push_back((float)p.getTotalDirectCalls());
         //module_features.push_back((float)p.getTotalIndirectCalls());
         module_features.push_back((float)p.getTotalMemInst());
+        module_features.push_back((float)callee_no_of_uses);
+        module_features.push_back((float)caller_no_of_uses);
+
         //module_features.push_back((float)p.getTotalSafeMemInst());
-        //std::cerr<<"module_features:"<<module_features<<std::endl;
         specialize = policy->specializeOn(cs, specScheme, module_features);
+        //try dump policy
+        //specialize = callee_no_of_uses>2 && specialize; 
       }else{
         specialize = policy->specializeOn(cs, specScheme);
       }
