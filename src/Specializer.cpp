@@ -150,6 +150,8 @@ namespace previrt
       result = llvm::CloneFunction(f, vmap, &info);
       result->setName(baseName);
     }
+    //Force inlining
+    result->addFnAttr (Attribute::AlwaysInline);
     return result;
   }
 
