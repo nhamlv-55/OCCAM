@@ -7,7 +7,7 @@ import subprocess
 import math
 from utils import *
 import torch.optim as optim
-DEBUG = False
+DEBUG = True
 
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp):
@@ -42,9 +42,9 @@ class PolicyGradient(BasePolicy):
         batch_rewards = trajectory_data[2]
         self.optimizer.zero_grad()
         state_tensor = torch.tensor(batch_states)
-        reward_tensor = torch.tensor(batch_rewards).view(-1, 1)
+        reward_tensor = torch.tensor(batch_rewards)
         # Actions are used as indices, must be LongTensor
-        action_tensor = torch.LongTensor(batch_actions).view(-1, 1)
+        action_tensor = torch.LongTensor(batch_actions)
         print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
         logprob = torch.log(
@@ -53,7 +53,9 @@ class PolicyGradient(BasePolicy):
         if DEBUG: print("reward_tensor", reward_tensor)
         if DEBUG: print("action_tensor", action_tensor)
         adv = logprob[np.arange(len(action_tensor)), action_tensor]
-        if DEBUG: print("adv", adv)
+
+        if DEBUG:
+            print("adv", adv, adv.shape)
         selected_logprobs = reward_tensor * adv
         if DEBUG: print("selected_logprobs", selected_logprobs)
         loss = -selected_logprobs.mean()
@@ -62,3 +64,6 @@ class PolicyGradient(BasePolicy):
         loss.backward()
         # Apply gradients
         self.optimizer.step()
+        if DEBUG:
+            for param in self.net.parameters():
+                print(param.data)
