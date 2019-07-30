@@ -293,8 +293,9 @@ class Slash(object):
 
         def add_profile_map(title):
             profile_map = collections.OrderedDict()
+            titleCamelCase = ''.join(x for x in title.title() if not x.isspace())
             for i, m in enumerate(files.values()):
-                profile_map[m.get()] = database+str(i)+"_results.txt"
+                profile_map[m.get()] = database+str(i)+titleCamelCase+"_results.txt"
             def _profile(m):
                 "Profiling "
                 passes.profile(m.get(), profile_map[m.get()])
