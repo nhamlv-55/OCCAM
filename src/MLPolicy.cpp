@@ -192,11 +192,12 @@ namespace previrt {
   bool MLPolicy::specializeOn(llvm::CallSite, std::vector<llvm::Value*>&) const {return false;};
   bool MLPolicy::specializeOn(CallSite CS,
                               std::vector<Value *> &slice,
-                              const std::vector<float> module_features) const {
+                              const std::vector<float> module_features,
+                              QueryOracleClient* q) const {
     std::cerr<<"TOUCH A CALL SITE"<<std::endl;
     std::cerr<<"EPSILON:"<<epsilon<<std::endl;
-    //const int type = 0; //Policy gradient
-    const int type = 1; // DQN
+    const int type = 0; //Policy gradient
+    //const int type = 1; // DQN
     //const int type = 2; //AggressiveSpecPolicy
     llvm::Function *callee = CS.getCalledFunction();
     llvm::Function *caller = CS.getCaller();
@@ -227,9 +228,9 @@ namespace previrt {
       // only invoke MLPolicy after this point
       std::vector<float> features;
       std::vector<float> callee_features = getInstructionCount(callee);
-      std::vector<float> caller_features = getInstructionCount(caller);
+      //std::vector<float> caller_features = getInstructionCount(caller);
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
-      features.insert( features.end(), caller_features.begin(), caller_features.end() );
+      //features.insert( features.end(), caller_features.begin(), caller_features.end() );
       features.push_back(no_of_const);
       features.push_back(no_of_arg);
       features.insert( features.end(), module_features.begin(), module_features.end() );
@@ -243,11 +244,10 @@ namespace previrt {
       std::cerr << "Feature vector: " << features << std::endl;
       std::cerr << "Invoke MLpolicy" <<std::endl;
       std::cerr << "Module feature: " << module_features <<std::endl;
-      //      return false;
-      //return random_with_prob(0.5);
       bool final_decision;
       if(!random_with_prob(epsilon) || (type==1)){ //if random<epsilon -> random, if not, call the policy. for DQN, always use policy)
         torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
+        q->Query(q->MakeState(*s));
         x = x.reshape({1, x.size(0)});
         std::vector<torch::jit::IValue> inputs;
         inputs.push_back(x);
