@@ -7,16 +7,17 @@ import subprocess
 import math
 from utils import *
 import torch.optim as optim
-BATCH_SIZE = 1000
+BATCH_SIZE = 5000
 GAMMA = 0.999
 EPS_START = 0.9
 EPS_END = 0.05
 EPS_DECAY = 200
-TARGET_UPDATE = 5
+TARGET_UPDATE = 50
 DEBUG = False
-class DQNPolicy(BasePolicy):
+class DoubleQPolicy(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp)
+        self.memory = ReplayMemory(1000000)
         if network_hp is not None:
             self.net = network_type(self.metadata, network_hp)
             self.target_net = network_type(self.metadata, network_hp)
@@ -31,7 +32,7 @@ class DQNPolicy(BasePolicy):
             self.save_model(model_path)
         else:
             self.net = torch.load(model_path)
-        self.optimizer = optim.RMSprop(self.net.parameters())
+        self.optimizer = optim.RMSprop(self.net.parameters(), lr=0.01)
 
         for i in range(no_of_iter):
             if (i+1)%10==0:
