@@ -35,7 +35,9 @@
 /**
  * Intra-module specialization.
  **/
-
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Analysis/CallGraph.h"
 #include "llvm/Analysis/LoopInfo.h"
@@ -61,20 +63,7 @@
 #include "MLPolicy.h"
 /* call profiler */
 #include "utils/Profiler.h"
-/*grpc to call to model*/
-#include <grpc/grpc.h>
-#include <grpcpp/channel.h>
-#include <grpcpp/client_context.h>
-#include <grpcpp/create_channel.h>
-#include <grpcpp/security/credentials.h>
-#include <proto/Previrt.pb.h>
-#include <proto/Previrt.grpc.pb.h>
-using grpc::Channel;
-using grpc::ClientContext;
-using grpc::ClientReader;
-using grpc::ClientReaderWriter;
-using grpc::ClientWriter;
-using grpc::Status;
+#include "utils/QueryOracleClient.h"
 using namespace llvm;
 using namespace previrt;
 
@@ -100,45 +89,7 @@ previrt::proto::State MakeState(const std::string& raw_code) {
   return s;
 }
 
-class QueryOracleClient {
-public:
-  QueryOracleClient(std::shared_ptr<Channel> channel)
-    : stub_(previrt::proto::QueryOracle::NewStub(channel)) {
-  }
-
-  bool Query(previrt::proto::State s ) {
-    errs()<<"call query with s="<<s.raw_code()<<"\n";
-    previrt::proto::Prediction* p;
-
-    // Connection timeout in seconds
-    unsigned int client_connection_timeout = 5;
-
-    ClientContext context;
-
-    // Set timeout for API
-    std::chrono::system_clock::time_point deadline =
-      std::chrono::system_clock::now() + std::chrono::seconds(client_connection_timeout);
-
-    //context.set_deadline(deadline);
-
-    Status status = stub_->Query(&context, s, p);
-    errs()<< "got response\n";
-    if (!status.ok()) {
-      errs() << "Query rpc failed.\n";
-      return false;
-    }
-    errs() << "got response";
-    //errs() << a->action();
-    return true;
-  }
-
-private:
-  std::unique_ptr<previrt::proto::QueryOracle::Stub> stub_;
-};
-
-
 namespace previrt {
-
   /* Intra-module specialization */
   class SpecializerPass : public llvm::ModulePass {
   private:
@@ -164,21 +115,13 @@ namespace previrt {
   bool SpecializerPass::trySpecializeFunction(Function *f, llvm::Module &M, SpecializationTable &table,
                                               SpecializationPolicy *policy,
                                               std::vector<Function *> &to_add) {
-    //Comment out GRPC stuff
-    ///////////////////////////////////////////////////
-    // QueryOracleClient q(connection);              //
-    //                                               //
-    // previrt::proto::State s = MakeState("hello"); //
-    // q.Query(s);                                   //
-    ///////////////////////////////////////////////////
+    QueryOracleClient client(connection);
+
     std::vector<Instruction *> worklist;
-    std::error_code EC;
-    raw_fd_ostream outputFile(llvm::StringRef("output_BB.bc"), EC, llvm::sys::fs::F_Append);
+    //std::error_code EC;
+    //raw_fd_ostream outputFile(llvm::StringRef("output_BB.bc"), EC, llvm::sys::fs::F_Append);
 
     for (BasicBlock &bb : *f) {
-            outputFile<<"bb:\n";
-      outputFile<<bb;
-
       for (Instruction &I : bb) {
 
         Instruction *ci = dyn_cast<CallInst>(&I);
@@ -208,14 +151,10 @@ namespace previrt {
 
     bool modified = false;
     int iteration = 0;
-    raw_fd_ostream WorkListOutput(llvm::StringRef("output_WL.bc"), EC, llvm::sys::fs::F_Append);
-
 
     while (!worklist.empty()) {
       Instruction *ci = worklist.back();
       worklist.pop_back();
-      WorkListOutput<<"wl:\n";
-      WorkListOutput<<&ci;
       CallSite cs(ci);
       Function *callee = cs.getCalledFunction();
       Function *caller = cs.getCaller();
@@ -242,18 +181,13 @@ namespace previrt {
         //        errs()<<"Number of time callee is used:"<<no_of_uses<<std::endl;
         std::vector<float> module_features ;
         module_features.push_back((float)p.getNumFuncs());
-        module_features.push_back((float)p.getNumSpecFuncs());
-        //module_features.push_back((float)p.getNumLoops());
         module_features.push_back((float)p.getTotalInst());
         module_features.push_back((float)p.getTotalBlocks());
         module_features.push_back((float)p.getTotalDirectCalls());
-        //module_features.push_back((float)p.getTotalIndirectCalls());
-        module_features.push_back((float)p.getTotalMemInst());
         module_features.push_back((float)callee_no_of_uses);
         module_features.push_back((float)caller_no_of_uses);
 
-        //module_features.push_back((float)p.getTotalSafeMemInst());
-        specialize = policy->specializeOn(cs, specScheme, module_features);
+        specialize = policy->specializeOn(cs, specScheme, module_features, &client);
         //try dump policy
         //specialize = callee_no_of_uses>2 && specialize; 
       }else{
@@ -281,6 +215,15 @@ namespace previrt {
         }
       }
       errs() << "]\n";
+      errs() << "before specialization:\n";
+      //count number of instructions
+      unsigned before_count = 0;
+      for (const BasicBlock &BB : *callee){
+        before_count += BB.size();
+      }
+      //errs() <<*callee;
+      errs() << before_count;
+      errs() << "\n";
 #endif
 
       // --- build a specialized function if specScheme is more
@@ -302,8 +245,19 @@ namespace previrt {
       if (!specialized_callee) {
         specialized_callee = specializeFunction(callee, specScheme);
         if (!specialized_callee) {
+          errs()<<"failed to specialize\n";
           continue;
         }
+        errs() <<"after specialization:\n";
+        //count number of instructions after
+        unsigned after_count = 0;
+        for (const BasicBlock &BB : *specialized_callee){
+          after_count += BB.size();
+        }
+
+        //errs() << *specialized_callee;
+        errs() <<after_count;
+        errs() <<"\n";
         table.addSpecialization(callee, specScheme, specialized_callee);
         to_add.push_back(specialized_callee);
       }
@@ -322,6 +276,8 @@ namespace previrt {
       llvm::ReplaceInstWithInst(ci, newInst);
       modified = true;
     }
+
+    
 
     return modified;
   }
@@ -359,6 +315,12 @@ namespace previrt {
       if (f.isDeclaration())
         continue;
       modified |= trySpecializeFunction(&f, M, table, policy, to_add);
+      //Run profiling after each function in M
+      ProfilerPass &p = getAnalysis<ProfilerPass>();
+      p.runOnModule(M);
+      errs()<<"Profiling after each function in M\n";
+      errs()<<p.getNumFuncs()<<" "<<p.getTotalInst()<<" "<<p.getTotalBlocks()<<" "<<p.getTotalDirectCalls();
+      errs()<<"\n";
     }
 
     // -- Optimize new function and add it into the module
@@ -405,7 +367,6 @@ namespace previrt {
     if (optimizer) {
       delete optimizer;
     }
-
     return modified;
   }
 

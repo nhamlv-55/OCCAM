@@ -151,7 +151,11 @@ namespace previrt
       result->setName(baseName);
     }
     //Force inlining
-    result->addFnAttr (Attribute::AlwaysInline);
+    //errs()<<"force inlining...\n";
+    //result->addFnAttr (Attribute::AlwaysInline);
+    //Force no inlining
+    //errs()<<"force no inlining...\n";
+    //result->addFnAttr (Attribute::NoInline);
     return result;
   }
 

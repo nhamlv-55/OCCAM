@@ -208,5 +208,5 @@ message State {
 }
 
 message Prediction {
-  required int32 action = 1;
+  required string pred = 1;
 }
