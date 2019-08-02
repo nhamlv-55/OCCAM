@@ -24,7 +24,7 @@ import Previrt_pb2
 import Previrt_pb2_grpc
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
-
+_INTERACTIVE = True
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
@@ -33,11 +33,19 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
 
     def Query(self, request, context):
         print(request)
+        if _INTERACTIVE:
+            pred = raw_input("Should I specialize?")
+            if pred=="y":
+                pred = True
+            else:
+                pred = False
+        else:
+            pass
         context.set_trailing_metadata((
             ('blahdata', b'I agree'),
             ('retry', 'false'),
         ))
-        return Previrt_pb2.Prediction(pred="PONG")
+        return Previrt_pb2.Prediction(pred=pred)
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(

@@ -40,8 +40,7 @@ public:
       llvm::errs() << "Query rpc failed.\n";
       return false;
     }
-    llvm::errs() << p.pred();
-    return true;
+    return p.pred();
   }
 
   previrt::proto::State MakeState(const std::string& raw_code) {
