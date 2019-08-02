@@ -45,29 +45,7 @@
 #include <vector>
 #include <cstdlib>
 #include <random>
-#define NO_OF_FEATS 3
-
-struct Net : torch::nn::Module {
-  Net() {
-    // Construct and register two Linear submodules.
-    fc1 = register_module("fc1", torch::nn::Linear(NO_OF_FEATS, 3));
-    fc2 = register_module("fc2", torch::nn::Linear(3, 2));
-  }
-
-  // Implement the Net's algorithm.
-  torch::Tensor forward(torch::Tensor x) {
-    // Use one of many tensor manipulation functions.
-    x = torch::relu(fc1->forward(x.reshape({x.size(0), NO_OF_FEATS})));
-    // x = torch::dropout(x, /*p=*/0.5, /*train=*/is_training());
-    //x = torch::log_softmax(x, /*dim=*/1);
-    x = torch::softmax(fc2->forward(x), 1);
-    return x;
-  }
-
-  // Use one of many "standard library" modules.
-  torch::nn::Linear fc1{nullptr}, fc2{nullptr};
-};
-
+#include "utils/QueryOracleClient.h"
 
 namespace previrt
 {
@@ -114,7 +92,8 @@ namespace previrt
 
     virtual bool specializeOn(llvm::CallSite CS,
                               std::vector<llvm::Value*>& slice,
-                              const std::vector<float> module_features) const override;
+                              const std::vector<float> module_features,
+                              QueryOracleClient* q) const ;
 
     virtual bool specializeOn(llvm::Function* F,
 			      const PrevirtType* begin,

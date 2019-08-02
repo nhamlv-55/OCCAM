@@ -25,12 +25,6 @@ import Previrt_pb2_grpc
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
-
-def get_action(state):
-    """Returns Action at given location or None."""
-    print("state[:10]", state.raw_code)
-    return Previrt_pb2.Prediction(action = len(state.raw_code))
-
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
@@ -38,23 +32,21 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         pass
 
     def Query(self, request, context):
-        pred = get_action(request)
-        if pred is None:
-            return Previrt_pb2.Prediction(action=-1)
-        else:
-            print(pred)
-            print(type(pred))
-            return pred
-
+        print(request)
+        context.set_trailing_metadata((
+            ('blahdata', b'I agree'),
+            ('retry', 'false'),
+        ))
+        return Previrt_pb2.Prediction(pred="PONG")
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
         QueryOracleServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     try:
         while True:
-            time.sleep(10)
+            time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
 
