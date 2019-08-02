@@ -10,6 +10,7 @@ from collections import namedtuple
 import json
 import subprocess
 import argparse
+import math
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 Step   = namedtuple('Step', ('state', 'prob', 'action'))
@@ -55,7 +56,7 @@ class Dataset(object):
         output = []
         total = 0
         for fname in csv_files:
-            run = []
+            sub_episode = []
             with open(fname, "r") as f:
                 for l in f.readlines():
                     if l.startswith("TOUCH A CALL"):
@@ -67,14 +68,14 @@ class Dataset(object):
                     state = tokens[:-self.n_unused_stat]
                     prob = tokens[-3:-1]
                     action = tokens[-1]
-                    run.append(Step(state, prob, action))
-            if len(run)>0:
-                episode_data.append(run)
+                    sub_episode.append(Step(state, prob, action))
+            if len(sub_episode)>0:
+                episode_data.append(sub_episode)
         return raw_data, episode_data, total
 
     def get_stat(self, run):
         result = {}
-        with open(run+"/0_results.txt", "r") as f:
+        with open(run+"/0AfterSpecialization_results.txt", "r") as f:
             for l in f.readlines():
                 if "[" in l:
                     continue
@@ -85,7 +86,7 @@ class Dataset(object):
         return result
     
     def score(self, result):
-        return result["Number of instructions"]
+        return math.log10(result["Number of instructions"]*1.0/1000)
         #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
         #return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
@@ -272,6 +273,8 @@ def gen_new_meta(workdir, bootstrap_runs, run_command):
     metadata["score_mean"] = dataset_bootstrap.score_mean
     metadata["score_std"]  = dataset_bootstrap.score_std
     metadata["sample_inputs"] = dataset_bootstrap.raw_data[0][:dataset_bootstrap.features_len]
+    metadata["max_score"] = dataset_bootstrap.all_data[0]["score"]
+    metadata["min_score"] = dataset_bootstrap.all_data[-1]["score"]
     with open(os.path.join(workdir, "metadata.json"), "w") as f:
         json.dump(metadata, f)
 
