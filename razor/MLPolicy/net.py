@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import torch
 
 DEBUG = False
+#DEBUG = True
 
 torch.set_printoptions(sci_mode = False)
 
@@ -16,6 +17,29 @@ class Net(nn.Module):
 
         print("mean when init network:", self.mean)
         print("std when init network:", self.std)
+
+class TinyFFNSoftmax(Net):
+    #Use tanh for easier training (only with tiny net)
+    def __init__(self, metadata):
+        Net.__init__(self, metadata)
+        print(self.features_len)
+        self.fc_f1 = nn.Linear(self.features_len, self.features_len, bias = True)  
+        self.fc_f2 = nn.Linear(self.features_len, 2, bias = True)
+    def forward(self, x): 
+        if DEBUG: print(x, x.size())
+        features = x - self.mean
+        if DEBUG: print("x after subtract mean:", features)
+        features /= self.std
+        #print("x after normalization:", x)
+        #features = x.to(torch.float)
+        if DEBUG: print("x after normalization:", features)
+        h_f = F.tanh(self.fc_f1(features))
+        if DEBUG: print("h_f:",h_f)
+        h_f2 = F.tanh(self.fc_f2(h_f))
+        if DEBUG: print("h_f2:", h_f2)
+        output = F.softmax(h_f2, dim = -1)
+        return output
+
 class FeedForwardSingleInput(Net):
     def __init__(self, metadata):
         Net.__init__(self, metadata)
