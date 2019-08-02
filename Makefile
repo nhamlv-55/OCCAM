@@ -103,7 +103,7 @@ instalar: install_occam_lib #install_razor
 
 
 #iam: local editable install of razor for developing
-develop: install_occam_lib
+develop: install_occam_lib proto
 ifeq ($(PIP),)
 	$(error developing requires pip)
 endif
@@ -120,6 +120,7 @@ proto:  protoc
 	touch razor/proto/__init__.py
 	python -m grpc_tools.protoc -Isrc --python_out=razor/proto --grpc_python_out=razor/proto src/Previrt.proto
 	$(PROTOC) --proto_path=src --python_out=razor/proto src/Previrt.proto
+	cp razor/proto/*.py razor/MLPolicy/
 
 protoc:
 ifeq ($(PROTOC),)
