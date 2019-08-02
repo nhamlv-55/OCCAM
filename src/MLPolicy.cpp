@@ -245,33 +245,37 @@ namespace previrt {
       std::cerr << "Invoke MLpolicy" <<std::endl;
       std::cerr << "Module feature: " << module_features <<std::endl;
       bool final_decision;
+      bool gRPC = true;
       if(!random_with_prob(epsilon) || (type==1)){ //if random<epsilon -> random, if not, call the policy. for DQN, always use policy)
-        torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
-        q->Query(q->MakeState(*s));
-        x = x.reshape({1, x.size(0)});
-        std::vector<torch::jit::IValue> inputs;
-        inputs.push_back(x);
-        std::cerr << x << std::endl;
-        at::Tensor prediction = module->forward(inputs).toTensor();
-        q_No  = prediction[0][0].item<float>();
-        q_Yes = prediction[0][1].item<float>();
-        switch(type){
-        case 0: //Policy Gradient
-          final_decision = random_with_prob(q_Yes);
-          break;
-        case 1: //DQN
-          if(random_with_prob(epsilon))
+        if(gRPC){
+          final_decision = q->Query(q->MakeState(*s));
+        }else{
+          torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
+          x = x.reshape({1, x.size(0)});
+          std::vector<torch::jit::IValue> inputs;
+          inputs.push_back(x);
+          std::cerr << x << std::endl;
+          at::Tensor prediction = module->forward(inputs).toTensor();
+          q_No  = prediction[0][0].item<float>();
+          q_Yes = prediction[0][1].item<float>();
+          switch(type){
+          case 0: //Policy Gradient
+            final_decision = random_with_prob(q_Yes);
+            break;
+          case 1: //DQN
+            if(random_with_prob(epsilon))
+              final_decision = random_with_prob(0.5);
+            else
+              final_decision = q_Yes > q_No;
+            break;
+          case 2: //AggressiveSpecPolicy
+            final_decision = true;
+            break;
+          default:
             final_decision = random_with_prob(0.5);
-          else
-            final_decision = q_Yes > q_No;
-          break;
-        case 2: //AggressiveSpecPolicy
-          final_decision = true;
-          break;
-        default:
-          final_decision = random_with_prob(0.5);
+          }
         }
-      }else{
+      }else{//not using policy or using grpc
         q_Yes = -1;
         q_No = -1;
         switch(type){
