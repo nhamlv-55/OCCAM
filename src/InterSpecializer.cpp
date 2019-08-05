@@ -62,26 +62,26 @@ using namespace llvm;
 
 static cl::opt<previrt::SpecializationPolicyType>
 SpecPolicy("Pspecialize-policy",
-	   cl::desc("Inter-module specialization policy"),
-	   cl::values
-	   (clEnumValN (previrt::NOSPECIALIZE, "nospecialize",
-			"Skip inter-module specialization"),
-	    clEnumValN (previrt::AGGRESSIVE, "aggressive",
-			"Specialize always if some constant argument"),
-	    clEnumValN (previrt::NONRECURSIVE_WITH_AGGRESSIVE, "nonrec-aggressive",
-			"aggressive + non-recursive function")),
-	   cl::init(previrt::NONRECURSIVE_WITH_AGGRESSIVE));
+           cl::desc("Inter-module specialization policy"),
+           cl::values
+           (clEnumValN (previrt::NOSPECIALIZE, "nospecialize",
+                        "Skip inter-module specialization"),
+            clEnumValN (previrt::AGGRESSIVE, "aggressive",
+                        "Specialize always if some constant argument"),
+            clEnumValN (previrt::NONRECURSIVE_WITH_AGGRESSIVE, "nonrec-aggressive",
+                        "aggressive + non-recursive function")),
+           cl::init(previrt::NONRECURSIVE_WITH_AGGRESSIVE));
   
 static cl::list<std::string>
 SpecCompIn("Pspecialize-input",
-	   cl::NotHidden,
-	   cl::desc("Specify the interface to specialize with respect to"));
+           cl::NotHidden,
+           cl::desc("Specify the interface to specialize with respect to"));
   
 static cl::opt<std::string>
 SpecCompOut("Pspecialize-output",
-	    cl::init(""),
-	    cl::NotHidden,
-	    cl::desc("Specify the output file for the specialized module"));
+            cl::init(""),
+            cl::NotHidden,
+            cl::desc("Specify the output file for the specialized module"));
 
 namespace previrt
 {
@@ -108,8 +108,8 @@ namespace previrt
    * code to use the new API
    */
   static bool SpecializeComponent(Module& M, ComponentInterfaceTransform& T,
-				  SpecializationPolicy* policy,
-				  std::vector<Function*>& to_add) {
+                                  SpecializationPolicy* policy,
+                                  std::vector<Function*>& to_add) {
     errs() << "SpecializeComponent()\n";
 
     int rewrite_count = 0;
@@ -118,7 +118,7 @@ namespace previrt
     // - Should try to handle strings & arrays
     // Iterate through all functions in the interface of T
     for (ComponentInterface::FunctionIterator ff = I.begin(), fe = I.end(); ff
-        != fe; ++ff) {
+           != fe; ++ff) {
       StringRef name = ff->first();
       Function* func = resolveFunction(M, name);
 
@@ -128,7 +128,7 @@ namespace previrt
 
       // Now iterate through all calls to func in the interface of T
       for (ComponentInterface::CallIterator cc = I.call_begin(name), ce =
-          I.call_end(name); cc != ce; ++cc) {
+             I.call_end(name); cc != ce; ++cc) {
         const CallInfo* const call = *cc;
         const unsigned arg_count = call->args.size();
         if (func->isVarArg()) {
@@ -141,14 +141,14 @@ namespace previrt
           continue;
         }
 
-	/*
-	  should we specialize? if yes then each bit in slice will
-	  indicate whether the argument is a specializable constant
-	 */
+        /*
+          should we specialize? if yes then each bit in slice will
+          indicate whether the argument is a specializable constant
+        */
         SmallBitVector slice(arg_count);
         bool shouldSpecialize = policy->specializeOn(func,
-						     call->args.begin(), call->args.end(),
-						     slice);
+                                                     call->args.begin(), call->args.end(),
+                                                     slice);
 
         if (!shouldSpecialize)
           continue;
@@ -159,51 +159,51 @@ namespace previrt
         argPerm.reserve(slice.count());
         for (unsigned i = 0; i < arg_count; i++) {
           if (slice.test(i)) {
-	      Type * paramType = func->getFunctionType()->getParamType(i);
-	      Value *concreteArg = call->args[i].concretize(M, paramType);
-	      args.push_back(concreteArg);
-	      assert(concreteArg->getType() == paramType
-		     && "Specializing function with concrete argument of wrong type!");
+            Type * paramType = func->getFunctionType()->getParamType(i);
+            Value *concreteArg = call->args[i].concretize(M, paramType);
+            args.push_back(concreteArg);
+            assert(concreteArg->getType() == paramType
+                   && "Specializing function with concrete argument of wrong type!");
           } else {
             args.push_back(nullptr);
             argPerm.push_back(i);
           }
         }
-	
-	/*
-	  args is a list of pointers to values
-	   -- if the pointer is nullptr then that argument is not
-               specialized.
-	   -- if the pointer is not nullptr then the argument will be/has
-              been specialized to that value.
+  
+        /*
+          args is a list of pointers to values
+          -- if the pointer is nullptr then that argument is not
+          specialized.
+          -- if the pointer is not nullptr then the argument will be/has
+          been specialized to that value.
 
-	  argsPerm is a list on integers; the indices of the non-special arguments
-	  args[i] = nullptr iff i is in argsPerm for i < arg_count.
-	*/
+          argsPerm is a list on integers; the indices of the non-special arguments
+          args[i] = nullptr iff i is in argsPerm for i < arg_count.
+        */
 
         Function* specialized_func = specializeFunction(func, args);
-	if (!specialized_func) {
-	  continue;
-	}
+        if (!specialized_func) {
+          continue;
+        }
         specialized_func->setLinkage(GlobalValue::ExternalLinkage);
         FunctionHandle rewriteTo = specialized_func->getName();
         T.rewrite(name, call, rewriteTo, argPerm);
         to_add.push_back(specialized_func);
-	errs() << "Specialized  " << name << " to " << rewriteTo << "\n";
+        errs() << "Specialized  " << name << " to " << rewriteTo << "\n";
 
-        #if 0
-	for (unsigned i = 0; i < arg_count; i++) {
-	  errs() << "i = " << i << ": slice[i] = " << slice[i]
-		 << " args[i] = " << args.at(i) << "\n";
-	}
-	errs() << " argPerm = [";
-	for (unsigned i = 0; i < argPerm.size(); i++) {
-	  errs() << argPerm.at(i) << " ";
-	}
-	errs() << "]\n";
-        #endif
+#if 0
+        for (unsigned i = 0; i < arg_count; i++) {
+          errs() << "i = " << i << ": slice[i] = " << slice[i]
+                 << " args[i] = " << args.at(i) << "\n";
+        }
+        errs() << " argPerm = [";
+        for (unsigned i = 0; i < argPerm.size(); i++) {
+          errs() << argPerm.at(i) << " ";
+        }
+        errs() << "]\n";
+#endif
 
-       rewrite_count++;
+        rewrite_count++;
       }
     }
     if (rewrite_count > 0) {
@@ -228,7 +228,7 @@ namespace previrt {
       
       errs() << "InterSpecializerPass():\n";
       for (cl::list<std::string>::const_iterator b = SpecCompIn.begin(),
-	     e = SpecCompIn.end(); b != e; ++b) {
+             e = SpecCompIn.end(); b != e; ++b) {
         errs() << "Reading file '" << *b << "'...";
         if (transform.readInterfaceFromFile(*b)) {
           errs() << "success\n";
@@ -249,23 +249,23 @@ namespace previrt {
           
     virtual bool runOnModule(Module& M) {    
       if (!transform.interface) {
-	return false;
+        return false;
       }
 
       // -- Create the specialization policy. Bail out if no policy.
       SpecializationPolicy* policy = nullptr;
       switch (SpecPolicy) {
-        case NOSPECIALIZE:
-	  return false;
-        case AGGRESSIVE:
-	  policy = new AggressiveSpecPolicy();
-	  break;
-        case NONRECURSIVE_WITH_AGGRESSIVE: {
-	  SpecializationPolicy* subpolicy = new AggressiveSpecPolicy();
-	  CallGraph& cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();      
-	  policy = new RecursiveGuardSpecPolicy(subpolicy, cg);
-	  break;
-	}
+      case NOSPECIALIZE:
+        return false;
+      case AGGRESSIVE:
+        policy = new AggressiveSpecPolicy();
+        break;
+      case NONRECURSIVE_WITH_AGGRESSIVE: {
+        SpecializationPolicy* subpolicy = new AggressiveSpecPolicy();
+        CallGraph& cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();      
+        policy = new RecursiveGuardSpecPolicy(subpolicy, cg);
+        break;
+      }
       }
 
       assert(policy);      
@@ -274,20 +274,20 @@ namespace previrt {
       bool modified = SpecializeComponent(M, transform, policy, to_add);
       
       /*
-	 adding the "new" specialized definitions (in to_add) to M;
-	 opt will write out M to the -o argument to the "python call"
+        adding the "new" specialized definitions (in to_add) to M;
+        opt will write out M to the -o argument to the "python call"
       */
       Module::FunctionListType &functionList = M.getFunctionList();
       while (!to_add.empty()) {
-	Function *add = to_add.back();
-	to_add.pop_back();
-	if (add->getParent() == &M) {
-	  // Already in module
-	  continue;
-	} else {
-	  errs() << "Adding \"" << add->getName() << "\" to the module.\n";
-	  functionList.push_back(add);
-	}
+        Function *add = to_add.back();
+        to_add.pop_back();
+        if (add->getParent() == &M) {
+          // Already in module
+          continue;
+        } else {
+          errs() << "Adding \"" << add->getName() << "\" to the module.\n";
+          functionList.push_back(add);
+        }
       }
 
       /* writing the output ("rw" rewrite file) to the -Pspecialize-output argument */
@@ -295,16 +295,16 @@ namespace previrt {
         proto::ComponentInterfaceTransform buf;
         codeInto(this->transform, buf);
         std::ofstream output(SpecCompOut.c_str(),
-			     std::ios::binary | std::ios::trunc);
-	bool success = buf.SerializeToOstream(&output);
-	if (!success) {
-	  assert (false && "failed to write out interface");
-	}
+                             std::ios::binary | std::ios::trunc);
+        bool success = buf.SerializeToOstream(&output);
+        if (!success) {
+          assert (false && "failed to write out interface");
+        }
         output.close();
       }
       
       if (policy) {
-	delete policy;
+        delete policy;
       }
       return modified;
     }
