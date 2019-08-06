@@ -21,7 +21,7 @@ public:
   }
 
   bool Query(previrt::proto::State s ) {
-    llvm::errs()<<"call query with s="<<s.feature()<<"\n";
+    llvm::errs()<<"call query with s="<<s.features()<<"\n";
     previrt::proto::Prediction p;
 
     // Connection timeout in seconds
