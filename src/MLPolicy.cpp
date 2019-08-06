@@ -49,13 +49,12 @@ namespace previrt {
     database->assign(_database);
     assert(delegate);
     torch::Tensor tensor = torch::eye(3);
-    std::cerr << "Print a tensor" << tensor << std::endl;
-    std::cerr << "Hello ML" << std::endl;
+    errs() << "Hello ML" << "\n";
     // randomize weight
     // torch::nn::init::xavier_uniform_(this->net->fc1->weight, 1.0);
     // torch::nn::init::xavier_uniform_(this->net->fc2->weight, 1.0);
-    // std::cerr << "w:::" << this->net->fc1->weight << std::endl;
-    // std::cerr << "w:::" << this->net->fc2->weight << std::endl;
+    // errs() << "w:::" << this->net->fc1->weight << "\n";
+    // errs() << "w:::" << this->net->fc2->weight << "\n";
     markRecursiveFunctions();
   }
 
@@ -66,11 +65,11 @@ namespace previrt {
     pid_t pid = getpid();
     database->append(std::to_string(pid)).append("collected_data.csv");
     std::ofstream outFile(*database);
-    std::cerr << "calling destructor with file " << *database << std::endl;
+    errs() << "calling destructor with file " << *database << "\n";
     outFile << *s;
     outFile.flush();
     outFile.close();
-    std::cerr << "file closed" << std::endl;
+    errs() << "file closed" << "\n";
   }
 
   void MLPolicy::markRecursiveFunctions() {
@@ -110,7 +109,7 @@ namespace previrt {
 
     //return true;
     double sample = distr(eng);
-    std::cerr << "sample:" << sample << " threshold:" << prob<< std::endl;
+    errs() << "sample:" << sample << " threshold:" << prob<< "\n";
     return sample <= prob;
   }
 
@@ -194,8 +193,8 @@ namespace previrt {
                               std::vector<Value *> &slice,
                               const std::vector<float> module_features,
                               QueryOracleClient* q) const {
-    std::cerr<<"TOUCH A CALL SITE"<<std::endl;
-    std::cerr<<"EPSILON:"<<epsilon<<std::endl;
+    errs()<<"TOUCH A CALL SITE"<<"\n";
+    errs()<<"EPSILON:"<<epsilon<<"\n";
     const int type = 0; //Policy gradient
     //const int type = 1; // DQN
     //const int type = 2; //AggressiveSpecPolicy
@@ -209,13 +208,36 @@ namespace previrt {
       // directly borrow from AggressiveSpecPolicy
       bool specialize = false;
       std::vector<unsigned> argument_features;
-      slice.reserve(CS.arg_size());
+      slice.reserve(CS.arg_size()); 
+      std::string user_str;
+      llvm::raw_string_ostream rso(user_str);
       for (unsigned i = 0, e = CS.arg_size(); i < e; ++i) {
         Constant *cst = dyn_cast<Constant>(CS.getArgument(i));
+        
         // XXX: cst can be nullptr
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
           slice.push_back(cst);
           argument_features.push_back(1);
+          // count how many branch insts are affected
+          unsigned branch_cnt = 0;
+          unsigned arg_index = 0;
+          for(auto arg = callee->arg_begin(); arg != callee->arg_end(); ++arg, ++arg_index) {
+            if(arg_index==i){
+              for(auto U : arg->users()){  // U is of type User*
+                arg->print(errs());
+                arg->print(rso);
+                if (auto I = dyn_cast<Instruction>(U)){
+                  errs()<<"\tUser:";
+                  rso<<"\tUser:";
+                  I->print(errs());
+                  I->print(rso);
+                  errs()<<"\n";
+                  rso<<"\n";
+                }
+              }
+              break;
+            }
+          }
           specialize = true;
           no_of_const++;
         } else { 
@@ -224,7 +246,7 @@ namespace previrt {
         }
       }
       // return false immediately
-      if(specialize==false){std::cerr<<"all arguemnts are not specializable"<<std::endl; return false;}
+      if(specialize==false){errs()<<"all arguemnts are not specializable"<<"\n"; return false;}
       // only invoke MLPolicy after this point
       std::vector<float> features;
       std::vector<float> callee_features = getInstructionCount(callee);
@@ -235,26 +257,37 @@ namespace previrt {
       features.push_back(no_of_arg);
       features.insert( features.end(), module_features.begin(), module_features.end() );
       llvm::Module  *M = CS.getParent()->getModule();
+      trace->insert(trace->end(), features.begin(), features.end());
       //      features.push_back((float)M->getInstructionCount ());
       //features.insert( features.end(), (*trace).begin(), (*trace).end());
       //std::vector<float> trace_mask = std::vector<float>(42-(*trace).size(), 0);
       //features.insert( features.end(), trace_mask.begin(), trace_mask.end());
       //features.insert( features.end(), argument_features.begin(), argument_features.end());
-      std::cerr << "trace so far:"<<(*trace)<<std::endl;
-      std::cerr << "Feature vector: " << features << std::endl;
-      std::cerr << "Invoke MLpolicy" <<std::endl;
-      std::cerr << "Module feature: " << module_features <<std::endl;
+      std::cerr << "trace so far:"<<(*trace)<<"\n";
+      std::cerr << "Feature vector: " << features << "\n";
+      std::cerr << "Invoke MLpolicy" <<"\n";
+      std::cerr << "Module feature: " << module_features <<"\n";
       bool final_decision;
       bool gRPC = true;
       if(!random_with_prob(epsilon) || (type==1)){ //if random<epsilon -> random, if not, call the policy. for DQN, always use policy)
         if(gRPC){
-          final_decision = q->Query(q->MakeState(*s));
+          std::stringstream ss;
+          for(size_t i = 0; i < features.size(); ++i)
+            {
+              if(i != 0)
+                ss << ",";
+              ss << features[i];
+            }
+          std::string state = ss.str();
+          final_decision = q->Query(q->MakeState(state, user_str, *trace));
+
+          errs()<<"final_decision:"<<final_decision<<"\n";
         }else{
           torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
           x = x.reshape({1, x.size(0)});
           std::vector<torch::jit::IValue> inputs;
           inputs.push_back(x);
-          std::cerr << x << std::endl;
+          std::cerr << x << "\n";
           at::Tensor prediction = module->forward(inputs).toTensor();
           q_No  = prediction[0][0].item<float>();
           q_Yes = prediction[0][1].item<float>();
@@ -295,10 +328,9 @@ namespace previrt {
       s->append(std::to_string((int)final_decision));
       s->append("\n");
       //note: currently +1 because we use a fixed size vector for trace with value 0 used as mask.
-      pushToTrace((int)final_decision);
       return final_decision;
     } else {
-        std::cerr << "not callee or not allowSpecialization" << std::endl;
+        errs() << "not callee or not allowSpecialization" << "\n";
         return false;
       }
   }
