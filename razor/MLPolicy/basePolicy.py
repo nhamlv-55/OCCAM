@@ -3,21 +3,21 @@ import torch
 import os
 import subprocess
 from utils import *
+from grpc_server import QueryOracleServicer
 OCCAM_HOME = os.environ['OCCAM_HOME']
 
 class BasePolicy(object):
-    def __init__(self, workdir, model_path, network_type, network_hp):
-        self.run_command = "./build.sh "
+    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode):
+        self.run_command = "./build.sh --devirt none"
         self.workdir = workdir
         self.model_path = model_path
         self.dataset_path = os.path.join(workdir, "slash")
         self.network_type = network_type
         self.network_hp = network_hp
         self.get_meta()
-        self.memory = ReplayMemory(100000)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.trace_len = 40 #a raw estimate of total number of steps in 1 episode. only use to decay epsilon
-
+        self.grpc_mode = grpc_mode
     def get_meta(self):
         with open(os.path.join(self.workdir, "metadata.json")) as json_file:  
             self.metadata = json.load(json_file)
@@ -57,5 +57,7 @@ class BasePolicy(object):
     def train(self):
         pass
 
+    def forward(self, input):
+        raise NotImplementedError()
     def evaluate(self, tag="eval"):
         _ = subprocess.check_output(("%s -epsilon 0 -folder %s 2>%s.log"%(self.run_command, tag, tag)).split(), cwd = self.workdir)

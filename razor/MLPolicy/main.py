@@ -5,8 +5,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from utils import *
 from net import * 
-from DQN import DQNPolicy
 from PolicyGradient import PolicyGradient
+from DAgger import DAgger
 import os
 from sklearn import preprocessing
 import torch.optim as optim
@@ -47,18 +47,19 @@ DEBUG = args.DEBUG
 print("DEBUG=", DEBUG)
 #load latest model or create a new one
 def evaluate(model_path):
-    _ = subprocess.check_output("./build.sh -folder eval 2>eval.log".split(), cwd = workdir)
+    _ = subprocess.check_output("./build.sh -epsilon 0 -folder eval 2>eval.log".split(), cwd = workdir)
     print(_)
     print("done evaluation")
 if __name__=="__main__":
     if action=="gen-meta":
         gen_new_meta()
     elif action=="train-scratch":
-        #policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
-        policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None)
+        #policy = DoubleQPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
+        policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None, grpc_mode = True)
+        #policy = DAgger(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":
-        policy = DQNPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
+        policy = DoubleQPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = False)
     elif action=="eval":
         evaluate(model_path)
