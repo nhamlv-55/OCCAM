@@ -21,11 +21,11 @@ public:
   }
 
   bool Query(previrt::proto::State s ) {
-    llvm::errs()<<"call query with s="<<s.raw_code()<<"\n";
+    llvm::errs()<<"call query with s="<<s.feature()<<"\n";
     previrt::proto::Prediction p;
 
     // Connection timeout in seconds
-    unsigned int client_connection_timeout = 10;
+    unsigned int client_connection_timeout = 100;
 
     ClientContext context;
 
@@ -43,9 +43,14 @@ public:
     return p.pred();
   }
 
-  previrt::proto::State MakeState(const std::string& raw_code) {
+  previrt::proto::State MakeState(const std::string& features, const std::string& meta, const std::vector<float>& trace) {
     previrt::proto::State s;
-    s.set_raw_code(raw_code);
+    s.set_features(features);
+    s.set_meta(meta);
+    //throw trace to proto message
+    for(size_t i = 0; i < trace.size(); i++){
+      s.add_trace((int)trace[i]);
+    }
     return s;
   }
 private:
