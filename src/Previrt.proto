@@ -204,9 +204,11 @@ message Expr {
 */
 
 message State {
-  required string raw_code = 1;
+  required string features = 1;
+  repeated uint32 trace = 2;
+  optional string meta = 3;
 }
 
 message Prediction {
-  required string pred = 1;
+  required bool pred = 1;
 }
