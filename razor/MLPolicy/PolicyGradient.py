@@ -7,16 +7,25 @@ import subprocess
 import math
 from utils import *
 import torch.optim as optim
-DEBUG = True
+from concurrent import futures
+import time
+import math
+import logging
 
+import grpc
+
+import Previrt_pb2
+import Previrt_pb2_grpc
+from grpc_server import QueryOracleServicer
+DEBUG = False
 class PolicyGradient(BasePolicy):
-    def __init__(self, workdir, model_path, network_type, network_hp):
-        BasePolicy.__init__(self, workdir, model_path, network_type, network_hp)
+    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False):
+        BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode)
         if network_hp is not None:
             self.net = network_type(self.metadata, network_hp)
         else:
             self.net = network_type(self.metadata)
-
+            
     def train(self, model_path, no_of_sampling, no_of_iter, from_scratch):
         if from_scratch:
             print("Create a new model")
@@ -30,7 +39,16 @@ class PolicyGradient(BasePolicy):
                 print("performance at iteration %s"%str(i))
                 self.evaluate(tag="eval%s"%str(i))
             eps_threshold = -1 #set to -1 to always use policy
-            self.run_policy(no_of_sampling, eps_threshold)
+            if self.grpc_mode:
+                server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+                Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
+                    QueryOracleServicer(self.net), server)
+                server.add_insecure_port('[::]:50051')
+                server.start()
+                self.run_policy(no_of_sampling, eps_threshold)
+                server.stop(0)
+            else:
+                self.run_policy(no_of_sampling, eps_threshold)
             dataset = Dataset(self.dataset_path, size = no_of_sampling)
             trajectory_data = dataset.get_trajectory_data()
             self.optimize(trajectory_data, i)
@@ -66,4 +84,8 @@ class PolicyGradient(BasePolicy):
         self.optimizer.step()
         if DEBUG:
             for param in self.net.parameters():
-                print(param.data)
+                print("params:", param.data)
+
+    def forward(self, state):
+        state_tensor = torch.tensor(state)
+        return self.net.forward((state_tensor)).view(-1, 2)
