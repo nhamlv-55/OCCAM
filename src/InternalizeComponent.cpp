@@ -49,18 +49,18 @@ using namespace llvm;
 
 static cl::list<std::string>
 InterfaceInput("Pinternalize-input",
-	       cl::NotHidden,
-	       cl::desc("specifies the interface to internalize with respect to"));
+               cl::NotHidden,
+               cl::desc("specifies the interface to internalize with respect to"));
 
 static cl::opt<std::string>
 KeepExternalFile("Pkeep-external",
-		 cl::desc("<file> : list of function names to be whitelisted"),
-		 cl::init(""));
+                 cl::desc("<file> : list of function names to be whitelisted"),
+                 cl::init(""));
 
 static cl::opt<unsigned>
 FixpointTreshold("Pinternalize-fixpoint-threshold",
-		 cl::desc("Limit of fixpoint iterations during global dead code elimination refinement"),
-		 cl::init(5));
+                 cl::desc("Limit of fixpoint iterations during global dead code elimination refinement"),
+                 cl::init(5));
 
 namespace previrt
 {
@@ -80,7 +80,7 @@ namespace previrt
       //return GlobalValue::WeakODRLinkage;
       return GlobalValue::InternalLinkage;
       // XXX: not sure if all external definitions have an
-    // appropriate internal counterpart
+      // appropriate internal counterpart
     default:
       errs() << "Got other linkage! " << l << "\n";
       return l;
@@ -103,29 +103,29 @@ namespace previrt
     if (KeepExternalFile != "") {
       std::ifstream infile(KeepExternalFile);
       if (infile.is_open()) {
-	std::string line;
-	while (std::getline(infile, line)) {
-	  keep_external.insert(line);
-	}
-	infile.close();
+        std::string line;
+        while (std::getline(infile, line)) {
+          keep_external.insert(line);
+        }
+        infile.close();
       } else {
-	errs() << "Warning: ignored whitelist because something failed.\n";
+        errs() << "Warning: ignored whitelist because something failed.\n";
       }
     }
     
     // Set all functions that are not in the interface to internal linkage only    
     for (auto &f: M) {
       if (keep_external.count(f.getName())) {
-	errs() << "Did not internalize " << f.getName() << " because it is whitelisted.\n";
-	continue;
+        errs() << "Did not internalize " << f.getName() << " because it is whitelisted.\n";
+        continue;
       }
       if (!f.isDeclaration() && f.hasExternalLinkage() &&
           I.calls.find(f.getName()) == I.calls.end() &&
           I.references.find(f.getName()) == I.references.end()) {
-	errs() << "Hiding '" << f.getName() << "'\n";
-	f.setLinkage(GlobalValue::InternalLinkage);
-	hidden++;
-	modified = true;
+        errs() << "Hiding '" << f.getName() << "'\n";
+        f.setLinkage(GlobalValue::InternalLinkage);
+        hidden++;
+        modified = true;
       }
     }
 
@@ -133,15 +133,15 @@ namespace previrt
     // the interface to "localized linkage" only
     for (auto &gv: M.globals()) {
       if (gv.hasName() && keep_external.count(gv.getName())) {
-	errs() << "Did not internalize " << gv.getName() << " because it is whitelisted.\n";
-	continue;
+        errs() << "Did not internalize " << gv.getName() << " because it is whitelisted.\n";
+        continue;
       }
       if ((gv.hasExternalLinkage() || gv.hasCommonLinkage()) && 
-	  gv.hasInitializer() &&
+          gv.hasInitializer() &&
           I.references.find(gv.getName()) == I.references.end()) {
-	errs() << "internalizing '" << gv.getName() << "'\n";	
+        errs() << "internalizing '" << gv.getName() << "'\n";	
         gv.setLinkage(localizeLinkage(gv.getLinkage()));
-	internalized++;
+        internalized++;
         modified = true;
       }
     }
@@ -193,8 +193,8 @@ namespace previrt
     InternalizePass(): ModulePass(ID) { 
       errs() << "InternalizePass()\n";
       for (cl::list<std::string>::const_iterator b =
-	     InterfaceInput.begin(), e = InterfaceInput.end();
-	   b != e; ++b) {
+             InterfaceInput.begin(), e = InterfaceInput.end();
+           b != e; ++b) {
         errs() << "Reading file '" << *b << "'...";
         if (interface.readFromFile(*b)) {
           errs() << "success\n";
