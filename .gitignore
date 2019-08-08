@@ -8,3 +8,4 @@
 *.DS_Store
 model.pt
 examples/
+examples/fib/slash
