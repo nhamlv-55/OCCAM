@@ -1,0 +1,1406 @@
+*** IR Dump After Module Verifier ***
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  %4 = getelementptr i8*, i8** %3, i32 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %4
+  %5 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %5
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %6 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %7 = load i8, i8* %6, align 1, !tbaa !6
+  %conv.i = sext i8 %7 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %7, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %8 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %9 = load i8, i8* %8, align 1, !tbaa !6
+  %conv4.i = sext i8 %9 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG ***
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  %4 = getelementptr i8*, i8** %3, i32 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %4
+  %5 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %5
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %6 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %7 = load i8, i8* %6, align 1, !tbaa !6
+  %conv.i = sext i8 %7 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %7, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %8 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %9 = load i8, i8* %8, align 1, !tbaa !6
+  %conv4.i = sext i8 %9 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After SROA ***
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  %4 = getelementptr i8*, i8** %3, i32 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %4
+  %5 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %5
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %6 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %7 = load i8, i8* %6, align 1, !tbaa !6
+  %conv.i = sext i8 %7 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %7, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %8 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %9 = load i8, i8* %8, align 1, !tbaa !6
+  %conv4.i = sext i8 %9 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Early CSE ***
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Lower 'expect' Intrinsics ***
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Force set function attributes ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+!2 = !{!3, !3, i64 0}
+!3 = !{!"any pointer", !4, i64 0}
+!4 = !{!"omnipotent char", !5, i64 0}
+!5 = !{!"Simple C/C++ TBAA"}
+!6 = !{!4, !4, i64 0}
+*** IR Dump After Infer set function attributes ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+!2 = !{!3, !3, i64 0}
+!3 = !{!"any pointer", !4, i64 0}
+!4 = !{!"omnipotent char", !5, i64 0}
+!5 = !{!"Simple C/C++ TBAA"}
+!6 = !{!4, !4, i64 0}
+*** IR Dump After Interprocedural Sparse Conditional Constant Propagation ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+define i32 @main(i32, i8**) {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+!2 = !{!3, !3, i64 0}
+!3 = !{!"any pointer", !4, i64 0}
+!4 = !{!"omnipotent char", !5, i64 0}
+!5 = !{!"Simple C/C++ TBAA"}
+!6 = !{!4, !4, i64 0}
+*** IR Dump After Global Variable Optimizer ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+define i32 @main(i32, i8**) local_unnamed_addr {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+!2 = !{!3, !3, i64 0}
+!3 = !{!"any pointer", !4, i64 0}
+!4 = !{!"omnipotent char", !5, i64 0}
+!5 = !{!"Simple C/C++ TBAA"}
+!6 = !{!4, !4, i64 0}
+*** IR Dump After Promote Memory to Register ***
+define i32 @main(i32, i8**) local_unnamed_addr {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Dead Argument Elimination ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+define i32 @main(i32, i8**) local_unnamed_addr {
+  %3 = alloca i8*, i32 2
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i32 0, i32 0), i8** %3
+  %4 = getelementptr i8*, i8** %3, i32 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i32 0, i32 0), i8** %4
+  %arrayidx.i = getelementptr inbounds i8*, i8** %3, i64 1
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv.i = sext i8 %6 to i32
+  %sub.i.i = add nsw i32 %conv.i, -50
+  %cmp.i.i = icmp sgt i8 %6, 50
+  br i1 %cmp.i.i, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %mul.i.i = mul nsw i32 %sub.i.i, %sub.i.i
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul.i.i) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  %call2.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 25) #1
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ %mul.i.i, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %7 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %8 = load i8, i8* %7, align 1, !tbaa !6
+  %conv4.i = sext i8 %8 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+!2 = !{!3, !3, i64 0}
+!3 = !{!"any pointer", !4, i64 0}
+!4 = !{!"omnipotent char", !5, i64 0}
+!5 = !{!"Simple C/C++ TBAA"}
+!6 = !{!4, !4, i64 0}
+*** IR Dump After Combine redundant instructions ***
+define i32 @main(i32, i8**) local_unnamed_addr {
+  %3 = alloca [2 x i8*], align 8
+  %.sub = getelementptr inbounds [2 x i8*], [2 x i8*]* %3, i64 0, i64 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i64 0, i64 0), i8** %.sub, align 8
+  %4 = getelementptr inbounds [2 x i8*], [2 x i8*]* %3, i64 0, i64 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i64 0, i64 0), i8** %4, align 8
+  %arrayidx.i = getelementptr inbounds [2 x i8*], [2 x i8*]* %3, i64 0, i64 1
+  br i1 true, label %if.then.i.i, label %if.else.i.i
+
+if.then.i.i:                                      ; preds = %2
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  br label %.exit
+
+if.else.i.i:                                      ; preds = %2
+  br label %.exit
+
+.exit:                                            ; preds = %if.then.i.i, %if.else.i.i
+  %retval.0.i.i = phi i32 [ 2209, %if.then.i.i ], [ 25, %if.else.i.i ]
+  %5 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %6 = load i8, i8* %5, align 1, !tbaa !6
+  %conv4.i = sext i8 %6 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 %retval.0.i.i, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG ***
+define i32 @main(i32, i8**) local_unnamed_addr {
+if.then.i.i:
+  %2 = alloca [2 x i8*], align 8
+  %.sub = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i64 0, i64 0), i8** %.sub, align 8
+  %3 = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i64 0, i64 0), i8** %3, align 8
+  %arrayidx.i = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %4 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %5 = load i8, i8* %4, align 1, !tbaa !6
+  %conv4.i = sext i8 %5 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Remove unused exception handling info ***
+Printing <null> Function
+*** IR Dump After Function Integration/Inlining ***
+Printing <null> Function
+*** IR Dump After Deduce function attributes ***
+Printing <null> Function
+*** IR Dump After Promote 'by reference' arguments to scalars ***
+Printing <null> Function
+*** IR Dump After Remove unused exception handling info ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8**) local_unnamed_addr #1 {
+if.then.i.i:
+  %2 = alloca [2 x i8*], align 8
+  %.sub = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i64 0, i64 0), i8** %.sub, align 8
+  %3 = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i64 0, i64 0), i8** %3, align 8
+  %arrayidx.i = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %4 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %5 = load i8, i8* %4, align 1, !tbaa !6
+  %conv4.i = sext i8 %5 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Function Integration/Inlining ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8**) local_unnamed_addr #1 {
+if.then.i.i:
+  %2 = alloca [2 x i8*], align 8
+  %.sub = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i64 0, i64 0), i8** %.sub, align 8
+  %3 = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i64 0, i64 0), i8** %3, align 8
+  %arrayidx.i = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %4 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %5 = load i8, i8* %4, align 1, !tbaa !6
+  %conv4.i = sext i8 %5 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Deduce function attributes ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %2 = alloca [2 x i8*], align 8
+  %.sub = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i64 0, i64 0), i8** %.sub, align 8
+  %3 = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i64 0, i64 0), i8** %3, align 8
+  %arrayidx.i = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %4 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %5 = load i8, i8* %4, align 1, !tbaa !6
+  %conv4.i = sext i8 %5 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Promote 'by reference' arguments to scalars ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %2 = alloca [2 x i8*], align 8
+  %.sub = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 0
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @0, i64 0, i64 0), i8** %.sub, align 8
+  %3 = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i64 0, i64 0), i8** %3, align 8
+  %arrayidx.i = getelementptr inbounds [2 x i8*], [2 x i8*]* %2, i64 0, i64 1
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %4 = load i8*, i8** %arrayidx.i, align 8, !tbaa !2
+  %5 = load i8, i8* %4, align 1, !tbaa !6
+  %conv4.i = sext i8 %5 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After SROA ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %2 = load i8, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @1, i64 0, i64 0), align 1, !tbaa !2
+  %conv4.i = sext i8 %2 to i32
+  %add.i12.i = add nsw i32 %conv4.i, 3
+  %mul1.i18.i = mul nsw i32 %add.i12.i, %add.i12.i
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %mul1.i18.i) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 %mul1.i18.i) #1
+  ret i32 0
+}
+*** IR Dump After Early CSE w/ MemorySSA ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Speculatively execute instructions if target has divergent branches ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Jump Threading ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Value Propagation ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Combine redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Conditionally eliminate dead library calls ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After PGOMemOPSize ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Tail Call Elimination ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Reassociate expressions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After LCSSA Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop-Closed SSA Form Pass ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Combine redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After LCSSA Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop-Closed SSA Form Pass ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After MergedLoadStoreMotion ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Global Value Numbering ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After MemCpy Optimization ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Sparse Conditional Constant Propagation ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Demanded bits analysis ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Bit-Tracking Dead Code Elimination ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Combine redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Jump Threading ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Value Propagation ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Dead Store Elimination ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After LCSSA Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop-Closed SSA Form Pass ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Aggressive Dead Code Elimination ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Combine redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Remove unused exception handling info ***
+Printing <null> Function
+*** IR Dump After Function Integration/Inlining ***
+Printing <null> Function
+*** IR Dump After Deduce function attributes ***
+Printing <null> Function
+*** IR Dump After Promote 'by reference' arguments to scalars ***
+Printing <null> Function
+*** IR Dump After A No-Op Barrier Pass ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+*** IR Dump After Eliminate Available Externally Globals ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+*** IR Dump After Deduce function attributes in RPO ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+*** IR Dump After Float to int ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After LCSSA Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop-Closed SSA Form Pass ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop Distribution ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Demanded bits analysis ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop Vectorization ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop Load Elimination ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Combine redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Demanded bits analysis ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After SLP Vectorizer ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG more aggressively ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Combine redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After LCSSA Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop-Closed SSA Form Pass ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Combine redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After LCSSA Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop-Closed SSA Form Pass ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Alignment from assumptions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Strip Unused Function Prototypes ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+@0 = private constant [5 x i8] c"main\00"
+@1 = private constant [2 x i8] c"a\00"
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+*** IR Dump After Dead Global Elimination ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+*** IR Dump After Merge Duplicate Global Constants ***; ModuleID = '/home/workspace/OCCAM/examples/fib/slash/ml/main.a.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [23 x i8] c"Fibonacci of %d is %d\0A\00", align 1
+
+; Function Attrs: nounwind
+declare i32 @printf(i8* nocapture readonly, ...) local_unnamed_addr #0
+
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+
+attributes #0 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+*** IR Dump After Canonicalize natural loops ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After LCSSA Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Loop-Closed SSA Form Pass ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Remove redundant instructions ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Simplify the CFG ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}
+*** IR Dump After Module Verifier ***
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readnone) local_unnamed_addr #1 {
+if.then.i.i:
+  %call.i.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #1
+  %call2.i19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #1
+  %call6.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 10000) #1
+  ret i32 0
+}

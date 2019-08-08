@@ -1,7 +1,7 @@
 all: main
 
 main: main.c 
-	${CC} -O2 -Wall  main.c -o main 
+	${CC} -mllvm -disable-llvm-optzns -O1 -Wall  main.c -o main 
 
 
 clean:
