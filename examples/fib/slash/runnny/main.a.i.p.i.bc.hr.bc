@@ -1,0 +1,65 @@
+; ModuleID = 'slash/runnny/main.a.i.p.i.bc'
+source_filename = "llvm-link"
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.1 = private unnamed_addr constant [13 x i8] c" %d  %d  %d\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define internal fastcc i32 @foo(i32 %x) unnamed_addr #0 {
+entry:
+  %cmp = icmp eq i32 %x, 97
+  br i1 %cmp, label %if.then, label %if.else
+
+if.then:                                          ; preds = %entry
+  %call = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #2
+  br label %cleanup
+
+if.else:                                          ; preds = %entry
+  %call2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 10000) #2
+  br label %cleanup
+
+cleanup:                                          ; preds = %if.else, %if.then
+  %retval.0 = phi i32 [ 2209, %if.then ], [ 10000, %if.else ]
+  ret i32 %retval.0
+}
+
+declare i32 @printf(i8*, ...) local_unnamed_addr #1
+
+; Function Attrs: nounwind
+define i32 @main(i32, i8** nocapture readonly) local_unnamed_addr #2 {
+entry:
+  %2 = icmp eq i32 %0, 2
+  br i1 %2, label %tail, label %incorrect_argc
+
+incorrect_argc:                                   ; preds = %entry
+  ret i32 1
+
+tail:                                             ; preds = %entry
+  %3 = getelementptr inbounds i8*, i8** %1, i64 1
+  %4 = load i8*, i8** %3, align 8
+  %call.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 2209) #2
+  %5 = load i8, i8* %4, align 1, !tbaa !2
+  %conv7.i = sext i8 %5 to i32
+  %call11.i = tail call fastcc i32 @foo(i32 %conv7.i) #2
+  %arrayidx13.i = getelementptr inbounds i8, i8* %4, i64 1
+  %6 = load i8, i8* %arrayidx13.i, align 1, !tbaa !2
+  %conv14.i = sext i8 %6 to i32
+  %call18.i = tail call fastcc i32 @foo(i32 %conv14.i) #2
+  %call19.i = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([13 x i8], [13 x i8]* @.str.1, i64 0, i64 0), i32 2209, i32 %call11.i, i32 %call18.i) #2
+  ret i32 0
+}
+
+attributes #0 = { nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #2 = { nounwind }
+
+!llvm.ident = !{!0}
+!llvm.module.flags = !{!1}
+
+!0 = !{!"clang version 5.0.2 "}
+!1 = !{i32 1, !"wchar_size", i32 4}
+!2 = !{!3, !3, i64 0}
+!3 = !{!"omnipotent char", !4, i64 0}
+!4 = !{!"Simple C/C++ TBAA"}
