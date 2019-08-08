@@ -204,6 +204,7 @@ namespace previrt {
     float q_No = -1;
     float no_of_arg = CS.arg_size();
     float no_of_const = 0;
+    unsigned branch_cnt = 0;
     if (callee && allowSpecialization(callee)) {
       // directly borrow from AggressiveSpecPolicy
       bool specialize = false;
@@ -213,13 +214,12 @@ namespace previrt {
       llvm::raw_string_ostream rso(user_str);
       for (unsigned i = 0, e = CS.arg_size(); i < e; ++i) {
         Constant *cst = dyn_cast<Constant>(CS.getArgument(i));
-        
+
         // XXX: cst can be nullptr
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
           slice.push_back(cst);
           argument_features.push_back(1);
           // count how many branch insts are affected
-          unsigned branch_cnt = 0;
           unsigned arg_index = 0;
           for(auto arg = callee->arg_begin(); arg != callee->arg_end(); ++arg, ++arg_index) {
             if(arg_index==i){
@@ -233,6 +233,10 @@ namespace previrt {
                   I->print(rso);
                   errs()<<"\n";
                   rso<<"\n";
+                  if(isa<llvm::CmpInst>(*I)){
+                    branch_cnt++;
+                    errs()<<"is a cmp inst\n";
+                  }
                 }
               }
               break;
@@ -256,6 +260,7 @@ namespace previrt {
       features.push_back(no_of_const);
       features.push_back(no_of_arg);
       features.insert( features.end(), module_features.begin(), module_features.end() );
+      features.push_back(branch_cnt);
       llvm::Module  *M = CS.getParent()->getModule();
       trace->insert(trace->end(), features.begin(), features.end());
       //      features.push_back((float)M->getInstructionCount ());
