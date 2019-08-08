@@ -1,0 +1,232 @@
+>> /root/anaconda3/envs/py2/bin/slash --inter-spec-policy=none --intra-spec-policy=machine-learning --devirt=none --no-strip --stats --database= --epsilon=-10 --work-dir=slash/runnny manifest
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=0BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=0BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.bc -o=/home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc -Pconstraints -Pconstraints-input constraints
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.bc -o=/home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc -Pconstraints -Pconstraints-input constraints WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc -o=/dev/null -Pinterface -Pinterface-output main.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc -o=/dev/null -Pinterface -Pinterface-output main.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc -o=/home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.bc -Pinternalize -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc
+Hiding 'foo'
+Progress: hidden = 1 internalized 0
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.bc -o=/home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.bc -Pinternalize -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.bc -o /tmp/tmpkaFxbj.bc -O3 -stats -stats-json -pass-remarks-output=main.a.i.bc.yaml
+
+{
+	"basicaa.SearchTimes": 24,
+	"bdce.NumRemoved": 1,
+	"bitcode-reader.NumMDRecordLoaded": 51,
+	"bitcode-reader.NumMDStringLoaded": 5,
+	"cgscc-passmgr.MaxSCCIterations": 1,
+	"early-cse.NumCSE": 7,
+	"early-cse.NumCSELoad": 3,
+	"early-cse.NumSimplify": 3,
+	"functionattrs.NumNoCapture": 1,
+	"functionattrs.NumReadOnlyArg": 1,
+	"globaldce.NumVariables": 2,
+	"globalopt.NumDeleted": 1,
+	"globalopt.NumFastCallFns": 1,
+	"globalopt.NumUnnamed": 3,
+	"globalsmodref-aa.NumNonAddrTakenFunctions": 2,
+	"globalsmodref-aa.NumNonAddrTakenGlobalVars": 2,
+	"gvn.NumGVNEqProp": 3,
+	"gvn.NumGVNInstr": 11,
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.bc -o /tmp/tmpkaFxbj.bc -O3 -stats -stats-json -pass-remarks-output=main.a.i.bc.yaml WHICH RETURNED 0
+
+	"gvn.NumGVNLoad": 1,
+	"gvn.NumGVNPRE": 1,
+	"gvn.NumGVNSimpl": 8,
+	"gvn.NumPRELoad": 1,
+	"indvars.NumElimExt": 2,
+	"indvars.NumWidened": 1,
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /tmp/tmpVyI1De.bc -o=/tmp/tmpkaFxbj.bc -Ppeval -Ppeval-policy=machine-learning -Ppeval-opt -Ppeval-database= -Ppeval-epsilon=-10
+
+	"instcombine.NumCombined": 20,
+	"instcombine.NumDeadInst": 3,
+	"local.NumRemoved": 1,
+	"loop-rotate.NumRotated": 1,
+	"loop-unswitch.TotalInsts": 1,
+	"memdep.NumCacheCompleteNonLocalPtr": 1,
+	"memdep.NumCacheNonLocalPtr": 1,
+	"memdep.NumUncacheNonLocalPtr": 14,
+	"scalar-evolution.NumTripCountsComputed": 1,
+	"sccp.NumDeadBlocks": 1,
+	"sccp.NumInstRemoved": 4,
+	"simplifycfg.NumSimpl": 2
+}
+SpecializerPass(1)
+Call runOnModule from ProfilerPass
+call runOnModule from IntraSpecializer.cpp::SpecializerPass
+Hello ML
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+2 27 7 6
+Call runOnModule from ProfilerPass
+number of time callee is used:3
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:-1.000000e+01
+i32 %y	User:  %add = add nsw i32 %y, 3
+trace so far:4 10 0 0 2 3 0 1 2 2 27 7 6 3 0
+Feature vector: 4 10 0 0 2 3 0 1 2 2 27 7 6 3 0
+Invoke MLpolicy
+Module feature: 2 27 7 6 3 0
+sample:9.047506e-01 threshold:-1.000000e+01
+call query with s=4,10,0,0,2,3,0,1,2,2,27,7,6,3,0
+final_decision:0
+Call runOnModule from ProfilerPass
+number of time callee is used:3
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:-1.000000e+01
+i32 %y	User:  %add = add nsw i32 %y, 3
+trace so far:4 10 0 0 2 3 0 1 2 2 27 7 6 3 0 4 10 0 0 2 3 0 1 2 2 27 7 6 3 0
+Feature vector: 4 10 0 0 2 3 0 1 2 2 27 7 6 3 0
+Invoke MLpolicy
+Module feature: 2 27 7 6 3 0
+sample:2.490881e-01 threshold:-1.000000e+01
+call query with s=4,10,0,0,2,3,0,1,2,2,27,7,6,3,0
+final_decision:0
+Call runOnModule from ProfilerPass
+number of time callee is used:3
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:-1.000000e+01
+i32 %x	User:  %cmp = icmp eq i32 %x, 97
+trace so far:4 10 0 0 2 3 0 1 2 2 27 7 6 3 0 4 10 0 0 2 3 0 1 2 2 27 7 6 3 0 4 10 0 0 2 3 0 1 2 2 27 7 6 3 0
+Feature vector: 4 10 0 0 2 3 0 1 2 2 27 7 6 3 0
+Invoke MLpolicy
+Module feature: 2 27 7 6 3 0
+sample:3.846561e-01 threshold:-1.000000e+01
+call query with s=4,10,0,0,2,3,0,1,2,2,27,7,6,3,0
+final_decision:1
+Intra-specializing call to 'foo' in function 'main' on arguments [0=(i32 97)]
+before specialization:
+10
+force inlining...
+after specialization:
+10
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+3 37 11 8
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+3 37 11 8
+Test getting num_instr by using ProfilerPass:37
+Done 1 pass of MLPolicy. Early break. ...progress...
+calling destructor with file 65528collected_data.csv
+file closed
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /tmp/tmpVyI1De.bc -o=/tmp/tmpkaFxbj.bc -Ppeval -Ppeval-policy=machine-learning -Ppeval-opt -Ppeval-database= -Ppeval-epsilon=-10 => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /tmp/tmpkaFxbj.bc -o /tmp/tmpVyI1De.bc -O3 -stats -stats-json -pass-remarks-output=tmpkaFxbj.bc.yaml
+
+{
+	"bitcode-reader.NumMDRecordLoaded": 40,
+	"bitcode-reader.NumMDStringLoaded": 4,
+	"cgscc-passmgr.MaxSCCIterations": 1,
+	"deadargelim.NumArgumentsEliminated": 1,
+	"deadargelim.NumRetValsEliminated": 1,
+	"early-cse.NumSimplify": 2,
+	"globalsmodref-aa.NumNonAddrTakenFunctions": 3,
+	"inline.NumDeleted": 1,
+	"inline.NumInlined": 1,
+	"instcombine.NumDeadInst": 2,
+	"memdep.NumUncacheNonLocalPtr": 1,
+	"sccp.IPNumArgsElimed": 1,
+	"sccp.IPNumInstRemoved": 3,
+	"sccp.NumDeadBlocks": 1,
+	"sccp.NumInstRemoved": 3,
+	"simplifycfg.NumSimpl": 2
+}
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /tmp/tmpkaFxbj.bc -o /tmp/tmpVyI1De.bc -O3 -stats -stats-json -pass-remarks-output=tmpkaFxbj.bc.yaml WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /tmp/tmpVyI1De.bc -o=/tmp/tmpkaFxbj.bc -Ppeval -Ppeval-policy=machine-learning -Ppeval-opt -Ppeval-database= -Ppeval-epsilon=-10
+
+SpecializerPass(1)
+Call runOnModule from ProfilerPass
+call runOnModule from IntraSpecializer.cpp::SpecializerPass
+Hello ML
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+2 23 7 6
+Call runOnModule from ProfilerPass
+number of time callee is used:2
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:-1.000000e+01
+all arguemnts are not specializable
+Call runOnModule from ProfilerPass
+number of time callee is used:2
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:-1.000000e+01
+all arguemnts are not specializable
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+2 23 7 6
+Test getting num_instr by using ProfilerPass:23
+Done 1 pass of MLPolicy. Early break. ...no progress...
+calling destructor with file 65537collected_data.csv
+file closed
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /tmp/tmpVyI1De.bc -o=/tmp/tmpkaFxbj.bc -Ppeval -Ppeval-policy=machine-learning -Ppeval-opt -Ppeval-database= -Ppeval-epsilon=-10 => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpfXqvho.iface -Pinterface-entry /tmp/tmpfXqvho.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc
+Reading interface from '/tmp/tmpfXqvho.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpfXqvho.iface -Pinterface-entry /tmp/tmpfXqvho.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpfXqvho.iface -Pinterface-entry /tmp/tmpfXqvho.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc
+Reading interface from '/tmp/tmpfXqvho.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpfXqvho.iface -Pinterface-entry /tmp/tmpfXqvho.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output main.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output main.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -Pinternalize -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.bc -o=/home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -Pinternalize -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmp1ErNi9.iface -Pinterface-entry /tmp/tmp1ErNi9.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc
+Reading interface from '/tmp/tmp1ErNi9.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmp1ErNi9.iface -Pinterface-entry /tmp/tmp1ErNi9.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmp1ErNi9.iface -Pinterface-entry /tmp/tmp1ErNi9.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc
+Reading interface from '/tmp/tmp1ErNi9.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmp1ErNi9.iface -Pinterface-entry /tmp/tmp1ErNi9.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=0AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=0AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/clang++ /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o main
+
+EXECUTED: /llvm/llvm-project/Debug/bin/clang++ /home/workspace/OCCAM/examples/fib/slash/runnny/main.a.i.p.i.bc -o main WHICH RETURNED 0
+

@@ -1,23 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int fibo(int x) {
-  if (x <= 1) {
-    return x;
+int foo(int x, int y) {
+  int w = y+3;
+  int z = x-50;
+  if (z == 47) {
+    z = z*z;
+    printf("%d", z);
+    return z;
   } else {
-    return fibo(x-1) + fibo(x-2);
+    w = w*w;
+    printf("%d", w);
+    return w;
   }
 }
 
 int main(int argc, char* argv[]){
-  if (argc == 2) {
-    // Currently, user-input specialization does not understand
-    // library calls such as atoi.
-    //int n = atoi(argv[1]);
-    int n = 15;
-    int res = fibo(n);
-    printf("Fibonacci of %d is %d\n",n, res);
-  }
-  
- return 0;
+  int a = foo(argv[1][0], argv[2][0]);
+  int b = foo(argv[2][0], argv[1][0]);
+  int c = foo(argv[2][1], argv[1][0]);
+  printf(" %d  %d  %d\n",a, b, c);
+  return 0;
 }
