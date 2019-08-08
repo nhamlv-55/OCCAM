@@ -120,7 +120,7 @@ def linker(fin, fout, args):
     return run('clang++', args)
 
 
-def run(prog, args, sb=None, fail_on_error=True):
+def run(prog, args, sb=None, fail_on_error=True, stderr_filename = None):
 
     log = logging.getLogger()
 
@@ -129,18 +129,26 @@ def run(prog, args, sb=None, fail_on_error=True):
     report(prog, args)
 
     log.log(logging.INFO, 'EXECUTING: %s\n', ' '.join([prog] + args))
-    
+
+    if stderr_filename is not None:
+        err_fp = open(stderr_filename, "w")
+    else:
+        err_fp = subprocess.PIPE
+
     proc = subprocess.Popen([prog] + args,
-                            stderr=subprocess.PIPE,
+                            stderr=err_fp,
                             stdout=subprocess.PIPE,
                             stdin=subprocess.PIPE)
-
-    echo.Echo(proc.stderr, log, sb)
-    if sb is not None:
-        echo.Echo(proc.stdout, None, sb)
+    if err_fp == subprocess.PIPE:
+        echo.Echo(proc.stderr, log, sb)
+        if sb is not None:
+            echo.Echo(proc.stdout, None, sb)
 
 
     retcode = proc.wait()
+
+    if err_fp != subprocess.PIPE:
+        err_fp.close()
 
     log.log(logging.INFO, 'EXECUTED: %(cmd)s WHICH RETURNED %(code)d\n',
             {'cmd'  : ' '.join([prog] + args), 'code' : retcode })
