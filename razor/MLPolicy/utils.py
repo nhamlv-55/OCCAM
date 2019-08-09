@@ -43,7 +43,7 @@ class Dataset(object):
         self.n_unused_stat = n_unused_stat
         self.all_data = []
         self.collect(size)
-        self.calculate_std_mean()
+        self.calculate_stats()
         self.features_len = self.mean.shape[0] - n_unused_stat
         self.mean = self.mean[:self.features_len]
         self.std  = self.std[:self.features_len]
@@ -104,11 +104,13 @@ class Dataset(object):
        #     print("final score:", final_score)
        #     return final_score-current_state[0][18]
 
-    def calculate_std_mean(self):
+    def calculate_stats(self):
         raw_data_np = np.array(self.raw_data)
         print(len(raw_data_np))
         self.mean = np.mean(raw_data_np, 0)
         self.std  = np.std(raw_data_np, 0)
+        self.maxx = np.max(raw_data_np, 0)
+        self.minn = np.min(raw_data_np, 0)
         #calculate mean and std of scores based on current dataset
         final_scores = []
         for eps in self.all_data:
@@ -275,8 +277,10 @@ def gen_new_meta(workdir, bootstrap_runs, run_command):
     metadata["sample_inputs"] = dataset_bootstrap.raw_data[0][:dataset_bootstrap.features_len]
     metadata["max_score"] = dataset_bootstrap.all_data[0]["score"]
     metadata["min_score"] = dataset_bootstrap.all_data[-1]["score"]
+    metadata["maxx"] = dataset_bootstrap.maxx.tolist()
+    metadata["minn"] = dataset_bootstrap.minn.tolist()
     with open(os.path.join(workdir, "metadata.json"), "w") as f:
-        json.dump(metadata, f)
+        json.dump(metadata, f, indent=4, sort_keys=True)
 
 
 if __name__== "__main__":
@@ -286,5 +290,5 @@ if __name__== "__main__":
     bootstrap_runs = int(args.n)
     OCCAM_HOME = os.environ['OCCAM_HOME']
     model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model") 
-    work_dir   = os.path.join(OCCAM_HOME, "examples/portfolio/tree")
+    work_dir   = os.path.join(OCCAM_HOME, "examples/fib")
     gen_new_meta(work_dir, bootstrap_runs, "./build.sh ")
