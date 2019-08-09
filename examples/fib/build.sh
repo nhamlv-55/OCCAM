@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 
-cat > manifest <<EOF
-{ "main" : "main.bc"
-, "binary"  : "main"
-, "modules"    : []
-, "native_libs" : []
-, "constraints"    : [1, "main", "a" ]
-, "name"    : "main"
-}
-EOF
-
 #make the bitcode
-CC=gclang make
-get-bc main
 #default values
 INTER_SPEC="none"
 INTRA_SPEC="machine-learning"
@@ -76,8 +64,9 @@ done
 export OCCAM_LOGLEVEL=INFO
 export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
 
+DATABASE=${PWD}/slash/$PREFIX/
 rm -rf slash/$PREFIX
-mkdir -p slash/$PREFIX
+mkdir -p $DATABASE
 #slash --no-strip --intra-spec-policy=aggressive --inter-spec-policy=none --stats --work-dir=slash/agg manifest 
 
 SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE} --epsilon=$EPSILON"
