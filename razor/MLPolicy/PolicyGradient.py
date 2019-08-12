@@ -17,7 +17,7 @@ import grpc
 import Previrt_pb2
 import Previrt_pb2_grpc
 from grpc_server import QueryOracleServicer
-DEBUG = False
+debug_print_limit = 6
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
@@ -42,7 +42,7 @@ class PolicyGradient(BasePolicy):
             if self.grpc_mode:
                 server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
                 Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-                    QueryOracleServicer(self.net), server)
+                    QueryOracleServicer(self.net, debug = False), server)
                 server.add_insecure_port('[::]:50051')
                 server.start()
                 self.run_policy(no_of_sampling, eps_threshold)
@@ -66,19 +66,20 @@ class PolicyGradient(BasePolicy):
 
         print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
-        logprob = torch.log(
-            self.net.forward(state_tensor)).view(-1, 2)
-        if self.debug: print("state_tensor:", state_tensor)
-        if self.debug: print("logprob:", logprob)
-        if self.debug: print("reward_tensor", reward_tensor)
-        if self.debug: print("action_tensor", action_tensor)
+        predict_tensor = self.net.forward(state_tensor)
+        logprob = torch.log(predict_tensor).view(-1,2)
+        if self.debug: print("state_tensor:", state_tensor[:debug_print_limit])
+        if self.debug: print("predict_tensor:", predict_tensor[:debug_print_limit])
+        #if self.debug: print("logprob:", logprob)
+        if self.debug: print("reward_tensor", reward_tensor[:debug_print_limit])
+        if self.debug: print("action_tensor", action_tensor[:debug_print_limit])
         adv = logprob[np.arange(len(action_tensor)), action_tensor]
 
         if self.debug:
-            print("adv", adv, adv.shape)
+            print("adv", adv[:debug_print_limit], adv.shape)
         selected_logprobs = reward_tensor * adv
-        if self.debug: print("selected_logprobs", selected_logprobs)
-        loss = -selected_logprobs.mean()
+        if self.debug: print("selected_logprobs", selected_logprobs[:debug_print_limit])
+        loss = selected_logprobs.mean()
         print("loss at iteration %s:"%iteration, loss)
         # Calculate gradients
         loss.backward()

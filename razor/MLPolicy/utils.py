@@ -133,7 +133,6 @@ class Dataset(object):
             self.raw_data.extend(_)
             run_data["episode_data"] = episode_data
             run_data["score"] = self.score(result)
-            #run_data["discounted_r"] = self.discounted_rewards(run_data["score"])
             run_data["raw_result"] = result
             run_data["total"] = total
             self.all_data.append(run_data)
@@ -161,8 +160,10 @@ class Dataset(object):
             batch_states.extend(states)
             batch_actions.extend(actions)
             batch_probs.extend(probs)
-            rewards = [eps["score"]]*len(states)
-            batch_rewards.extend(discounted_rewards(rewards, GAMMA))
+            #rewards = [eps["score"]]*len(states)
+            rewards = [0]*len(states)
+            rewards[-1] = eps["score"]
+            batch_rewards.extend(discount_rewards(rewards, GAMMA))
         return batch_states, batch_actions, batch_rewards, batch_probs 
     def push_to_memory(self, memory):
 
@@ -230,18 +231,16 @@ class Dataset(object):
         #        print("------")
         print("best score", self.all_data[0]["score"])
         print("worst score", self.all_data[-1]["score"])
-def discounted_rewards(rewards, gamma):
-    r = np.array([gamma**i * rewards[i] 
-                  for i in range(len(rewards))])
-    if DEBUG: print("r:", r)
-    # Reverse the array direction for cumsum and then
-    # revert back to the original order
-    r = r[::-1].cumsum()[::-1]
-    if DEBUG: print("r cumsum, mean, std:", r)
-    #r -= np.mean(r)
-    #r /= np.std(r)
-    #if DEBUG: print("scaled_dr:", r)
-    return r*100
+
+def discount_rewards(rewards, gamma):
+    discounted_rewards = np.zeros(len(rewards))
+    cumulative_rewards = 0
+    for i in reversed(range(0, len(rewards))):
+        cumulative_rewards = cumulative_rewards * gamma + rewards[i]
+        discounted_rewards[i] = cumulative_rewards
+    discounted_rewards -= np.mean(discounted_rewards)
+    discounted_rewards /= np.std(discounted_rewards)
+    return discounted_rewards
 def gen_new_meta(workdir, bootstrap_runs, run_command):
     dataset_path = os.path.join(workdir, "slash")
     metadata = {}
