@@ -188,11 +188,11 @@ def peval(input_file, output_file, \
     disable_opt = False
     disable_inlining = False
 
-    def _optimize(input_file, output_file, use_seaopt, print_after = False):
+    def _optimize(input_file, output_file, use_seaopt, iteration = None):
         retcode = optimize(input_file, output_file,
                            use_seaopt, opt_options,
-                           print_after = print_after,
-                           disable_inlining = disable_inlining)
+                           disable_inlining = disable_inlining,
+                           iteration = iteration)
         if retcode != 0:
             sys.stderr.write("ERROR: intra module optimization failed!\n")
             shutil.copy(input_file, output_file)
@@ -317,7 +317,7 @@ def peval(input_file, output_file, \
             if iteration > 1 or \
                (use_llpe or use_ipdse):
                 # optimize using standard llvm transformations
-                retcode = _optimize(done.name, opt.name, use_ai_dce, print_after = False)
+                retcode = _optimize(done.name, opt.name, use_ai_dce, iteration = iteration)
                 if retcode != 0:
                     break;
             else:
@@ -348,7 +348,7 @@ def peval(input_file, output_file, \
         pass
     return retcode
 
-def optimize(input_file, output_file, use_seaopt, extra_opts, print_after = False, disable_inlining = False):
+def optimize(input_file, output_file, use_seaopt, extra_opts, disable_inlining = False, iteration = None):
     """ run opt -O3
     """
     args = ['-disable-simplify-libcalls']
@@ -369,10 +369,10 @@ def optimize(input_file, output_file, use_seaopt, extra_opts, print_after = Fals
 
     # dump inlining remarks into yaml files in the work folder and print out stats
     input_file = input_file.split("/")[-1]
+    if iteration is not None:
+        input_file+=str(iteration)
     args+=['-stats', '-stats-json',
            '-pass-remarks-output=%s.yaml'%input_file]
-    if print_after:
-        args += ['-print-after-all']
     if disable_inlining:
         args += ['-inline-threshold=-100']
     return driver.run(utils.get_opt(use_seaopt), args, stderr_filename = '%s.opt_log.json'%input_file)
