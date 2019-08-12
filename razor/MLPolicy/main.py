@@ -35,7 +35,8 @@ parser.add_argument('-action', default="bootstrap")
 parser.add_argument('-s', default = 10, type=int, help='no of sampling')
 parser.add_argument('-i', default = 3, type=int, help ='no of iteration')
 parser.add_argument('-d', dest='DEBUG', action = 'store_true')
-parser.set_defaults(DEBUG = False)
+parser.add_argument('-g', dest='grpc_mode', action = 'store_true')
+parser.set_defaults(DEBUG = False, grpc_mode = False)
 args = parser.parse_args()
 workdir = args.workdir
 dataset_path = os.path.join(workdir, "slash")
@@ -45,6 +46,8 @@ no_of_sampling = args.s
 no_of_iter = args.i
 DEBUG = args.DEBUG
 print("DEBUG=", DEBUG)
+grpc_mode = args.grpc_mode
+print("grpc_mode:", grpc_mode)
 #load latest model or create a new one
 def evaluate(model_path):
     _ = subprocess.check_output("./build.sh -epsilon 0 -folder eval 2>eval.log".split(), cwd = workdir)
@@ -55,7 +58,7 @@ if __name__=="__main__":
         gen_new_meta()
     elif action=="train-scratch":
         #policy = DoubleQPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
-        policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None, grpc_mode = True)
+        policy = PolicyGradient(workdir, model_path, TinyFFNSoftmax, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
         #policy = DAgger(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":

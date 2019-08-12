@@ -7,7 +7,7 @@ from grpc_server import QueryOracleServicer
 OCCAM_HOME = os.environ['OCCAM_HOME']
 
 class BasePolicy(object):
-    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode):
+    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug):
         self.run_command = "./build.sh --devirt none"
         self.workdir = workdir
         self.model_path = model_path
@@ -18,6 +18,7 @@ class BasePolicy(object):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.trace_len = 40 #a raw estimate of total number of steps in 1 episode. only use to decay epsilon
         self.grpc_mode = grpc_mode
+        self.debug = debug
     def get_meta(self):
         with open(os.path.join(self.workdir, "metadata.json")) as json_file:  
             self.metadata = json.load(json_file)
@@ -30,16 +31,17 @@ class BasePolicy(object):
         self.net = torch.load(model_path)
 
     def save_model(self, model_path):
-        print("running a trial")
+        if self.debug: print("running a trial")
         output = self.net.forward(torch.tensor(self.metadata["sample_inputs"]).view(1, -1))
-        print("trial run's output:", output)
+        if self.debug: print("trial run's output:", output)
         torch.save(self.net, model_path)
-        print("tracing the net...")
-        print("sample_inputs:")
-        print(self.sample_inputs)
-        traced_script_module = torch.jit.trace(self.net, self.sample_inputs)
-        print("saving the net...")
-        traced_script_module.save(os.path.join(OCCAM_HOME, "model.pt"))
+        if self.debug: print("tracing the net...")
+        if self.debug: print("sample_inputs:")
+        if self.debug: print(self.sample_inputs)
+        if not self.grpc_mode:
+            traced_script_module = torch.jit.trace(self.net, self.sample_inputs)
+            print("saving the net...")
+            traced_script_module.save(os.path.join(OCCAM_HOME, "model.pt"))
 
     def run_policy(self, no_of_sampling, eps_threshold):
         #clear previous runs
@@ -49,8 +51,8 @@ class BasePolicy(object):
         for jid in range(no_of_sampling):
             job_ids +=" %s"%str(jid)
         runners_cmd = "parallel %s -epsilon %s -folder {} 2>/dev/null  ::: %s"%(self.run_command, eps_threshold, job_ids)
-        print(runners_cmd)
-        print("workdir:", self.workdir)
+        if self.debug: print(runners_cmd)
+        if self.debug: print("workdir:", self.workdir)
         runners = subprocess.check_output(runners_cmd.split(), cwd = self.workdir)
         return runners
     
