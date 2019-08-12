@@ -19,8 +19,8 @@ import Previrt_pb2_grpc
 from grpc_server import QueryOracleServicer
 DEBUG = False
 class PolicyGradient(BasePolicy):
-    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False):
-        BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode)
+    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
+        BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
         if network_hp is not None:
             self.net = network_type(self.metadata, network_hp)
         else:
@@ -63,29 +63,43 @@ class PolicyGradient(BasePolicy):
         reward_tensor = torch.tensor(batch_rewards)
         # Actions are used as indices, must be LongTensor
         action_tensor = torch.LongTensor(batch_actions)
+
         print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
         logprob = torch.log(
             self.net.forward(state_tensor)).view(-1, 2)
-        if DEBUG: print("lobprob:", logprob)
-        if DEBUG: print("reward_tensor", reward_tensor)
-        if DEBUG: print("action_tensor", action_tensor)
+        if self.debug: print("state_tensor:", state_tensor)
+        if self.debug: print("logprob:", logprob)
+        if self.debug: print("reward_tensor", reward_tensor)
+        if self.debug: print("action_tensor", action_tensor)
         adv = logprob[np.arange(len(action_tensor)), action_tensor]
 
-        if DEBUG:
+        if self.debug:
             print("adv", adv, adv.shape)
         selected_logprobs = reward_tensor * adv
-        if DEBUG: print("selected_logprobs", selected_logprobs)
+        if self.debug: print("selected_logprobs", selected_logprobs)
         loss = -selected_logprobs.mean()
         print("loss at iteration %s:"%iteration, loss)
         # Calculate gradients
         loss.backward()
         # Apply gradients
         self.optimizer.step()
-        if DEBUG:
+        if self.debug:
             for param in self.net.parameters():
                 print("params:", param.data)
 
     def forward(self, state):
         state_tensor = torch.tensor(state)
         return self.net.forward((state_tensor)).view(-1, 2)
+
+    def evaluate(self, tag="eval"):
+        if self.grpc_mode:
+             server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+             Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
+                 QueryOracleServicer(self.net, debug = True), server)
+             server.add_insecure_port('[::]:50051')
+             server.start()
+             _ = subprocess.check_output(("%s -epsilon 0 -folder %s 2>%s.log"%(self.run_command, tag, tag)).split(), cwd = self.workdir)
+             server.stop(0)
+        else:
+             _ = subprocess.check_output(("%s -epsilon 0 -folder %s 2>%s.log"%(self.run_command, tag, tag)).split(), cwd = self.workdir)
