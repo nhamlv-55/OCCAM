@@ -65,7 +65,7 @@ namespace previrt
     std::string* s = new std::string();
     std::vector<float>* trace = new std::vector<float>();
     std::shared_ptr<torch::jit::script::Module> module = torch::jit::load( std::string(std::getenv("OCCAM_HOME")).append("/model.pt"));
-
+    const bool use_grpc;
     FunctionSet rec_functions;
     
     void markRecursiveFunctions();
@@ -82,7 +82,7 @@ namespace previrt
 
   public:
     
-    MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, llvm::Pass& pass, std::string database, const float epsilon);
+    MLPolicy(SpecializationPolicy* delegate, llvm::CallGraph& cg, llvm::Pass& pass, std::string database, const float epsilon, const bool use_grpc);
 
     virtual ~MLPolicy();
     

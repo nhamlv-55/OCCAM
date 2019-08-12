@@ -18,6 +18,8 @@ class BasePolicy(object):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.trace_len = 40 #a raw estimate of total number of steps in 1 episode. only use to decay epsilon
         self.grpc_mode = grpc_mode
+        if self.grpc_mode:
+            self.run_command +=" -g "
         self.debug = debug
     def get_meta(self):
         with open(os.path.join(self.workdir, "metadata.json")) as json_file:  
