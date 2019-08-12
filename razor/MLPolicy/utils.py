@@ -86,7 +86,7 @@ class Dataset(object):
         return result
     
     def score(self, result):
-        return math.log10(result["Number of instructions"]*1.0/1000)
+        return result["Number of instructions"]*1.0
         #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
         #return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
@@ -238,10 +238,10 @@ def discounted_rewards(rewards, gamma):
     # revert back to the original order
     r = r[::-1].cumsum()[::-1]
     if DEBUG: print("r cumsum, mean, std:", r)
-    r -= np.mean(r)
-    r /= np.std(r)
-    if DEBUG: print("scaled_dr:", r)
-    return r
+    #r -= np.mean(r)
+    #r /= np.std(r)
+    #if DEBUG: print("scaled_dr:", r)
+    return r*100
 def gen_new_meta(workdir, bootstrap_runs, run_command):
     dataset_path = os.path.join(workdir, "slash")
     metadata = {}
@@ -284,11 +284,12 @@ def gen_new_meta(workdir, bootstrap_runs, run_command):
 
 
 if __name__== "__main__":
+    OCCAM_HOME = os.environ['OCCAM_HOME']
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', default=100, help='number of trial runs to get meta data')
+    parser.add_argument('-f', default=os.path.join(OCCAM_HOME,"examples/portfolio/tree"), help='work_dir')
     args = parser.parse_args()
     bootstrap_runs = int(args.n)
-    OCCAM_HOME = os.environ['OCCAM_HOME']
     model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model") 
-    work_dir   = os.path.join(OCCAM_HOME, "examples/fib")
+    work_dir   = args.f
     gen_new_meta(work_dir, bootstrap_runs, "./build.sh ")
