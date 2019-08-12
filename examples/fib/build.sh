@@ -44,6 +44,10 @@ do
             OPT_OPTIONS="${OPT_OPTIONS} --ai-dce"
             shift # past argument
             ;;
+        -g|--grpc)
+            OPT_OPTIONS="${OPT_OPTIONS} --grpc"
+            shift # past argument
+            ;;
         -devirt|--devirt)
             DEVIRT="$2"
             shift # past argument
@@ -65,7 +69,7 @@ export OCCAM_LOGLEVEL=INFO
 export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
 
 DATABASE=${PWD}/slash/$PREFIX/
-rm -rf slash/$PREFIX
+rm -rf $DATABASE
 mkdir -p $DATABASE
 #slash --no-strip --intra-spec-policy=aggressive --inter-spec-policy=none --stats --work-dir=slash/agg manifest 
 

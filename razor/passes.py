@@ -175,7 +175,7 @@ def peval(input_file, output_file, \
           opt_options, \
           policy, \
           devirt_method, \
-          use_llpe, use_ipdse, use_ai_dce, log=None, database=None, epsilon = -1):
+          use_llpe, use_ipdse, use_ai_dce, log=None, database=None, epsilon = -1, use_grpc = False):
     """ intra module specialization/optimization
     """
     opt = tempfile.NamedTemporaryFile(suffix='.bc', delete=False)
@@ -328,6 +328,8 @@ def peval(input_file, output_file, \
             if policy=="machine-learning" and database is not None:
                 passes.append('-Ppeval-database={0}'.format(database))
                 passes.append('-Ppeval-epsilon={0}'.format(epsilon))
+            if use_grpc:
+                passes.append('-Ppeval-grpc')
             progress = driver.previrt_progress(opt.name, done.name, passes, output=out)
             sys.stderr.write("\tintra-module specialization finished\n")
             if progress:

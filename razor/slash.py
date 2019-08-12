@@ -85,6 +85,7 @@ instructions = """slash has three modes of use:
         --amalgamate=<file>        : Amalgamate the bitcode into a single <file> before linking (used to deal with duplicate symbols)
         --database=<file>          : Database to train ML model
         --epsilon=<float>          : Epsilon to control MLpolicy
+        --grpc                     : Use grpc mode
     """
 
 def entrypoint():
@@ -133,7 +134,9 @@ class Slash(object):
                         'keep-external=',
                         'amalgamate=',
                         'database=',
-                        'epsilon=']
+                        'epsilon=',
+                        'grpc',
+            ]
 
             parsedargs = getopt.getopt(argv[1:], None, cmdflags)
             (self.flags, self.args) = parsedargs
@@ -267,7 +270,11 @@ class Slash(object):
         database = utils.get_flag(self.flags, 'database', 'none')
         epsilon  = utils.get_flag(self.flags, 'epsilon', '2')
         no_inlining = utils.get_flag(self.flags, 'disable-inlining', None)
-
+        use_grpc = utils.get_flag(self.flags, 'grpc', None)
+        if use_grpc is not None:
+            use_grpc = True
+        else:
+            use_grpc = False
         sys.stderr.write('\nslash working on {0} wrt {1} ...\n'.format(module, ' '.join(libs)))
 
         native_lib_flags = []
@@ -414,7 +421,10 @@ class Slash(object):
                              intra_spec_policy, \
                              devirt, \
                              use_llpe, use_ipdse, use_ai_dce, \
-                             log=open(fn, 'w'), database = database, epsilon = epsilon)
+                             log=open(fn, 'w'), \
+                             database = database, \
+                             epsilon = epsilon, \
+                             use_grpc = use_grpc)
 
             pool.InParallel(intra, files.values(), self.pool)
 

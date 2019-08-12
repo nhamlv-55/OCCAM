@@ -44,8 +44,8 @@ using namespace torch;
 namespace previrt {
 
   MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg,
-                     llvm::Pass &_pass, std::string _database, const float _epsilon)
-    : cg(_cg), delegate(_delegate), pass(_pass), epsilon(_epsilon){
+                     llvm::Pass &_pass, std::string _database, const float _epsilon, const bool _use_grpc)
+    : cg(_cg), delegate(_delegate), pass(_pass), epsilon(_epsilon), use_grpc(_use_grpc){
     database->assign(_database);
     assert(delegate);
     torch::Tensor tensor = torch::eye(3);
@@ -254,11 +254,11 @@ namespace previrt {
       // only invoke MLPolicy after this point
       std::vector<float> features;
       std::vector<float> callee_features = getInstructionCount(callee);
+      //features.insert( features.end(), callee_features.begin(), callee_features.end() );
       //std::vector<float> caller_features = getInstructionCount(caller);
-      features.insert( features.end(), callee_features.begin(), callee_features.end() );
       //features.insert( features.end(), caller_features.begin(), caller_features.end() );
-      features.push_back(no_of_const);
-      features.push_back(no_of_arg);
+      //features.push_back(no_of_const);
+      //features.push_back(no_of_arg);
       features.insert( features.end(), module_features.begin(), module_features.end() );
       features.push_back(branch_cnt);
       llvm::Module  *M = CS.getParent()->getModule();
@@ -273,9 +273,8 @@ namespace previrt {
       std::cerr << "Invoke MLpolicy" <<"\n";
       std::cerr << "Module feature: " << module_features <<"\n";
       bool final_decision;
-      bool gRPC = true;
       if(!random_with_prob(epsilon) || (type==1)){ //if random<epsilon -> random, if not, call the policy. for DQN, always use policy)
-        if(gRPC){
+        if(use_grpc){
           std::stringstream ss;
           for(size_t i = 0; i < features.size(); ++i)
             {
