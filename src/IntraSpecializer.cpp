@@ -83,12 +83,7 @@ static cl::opt<SpecializationPolicyType> SpecPolicy(
                                                     cl::init(ML));
 static cl::opt<float> Epsilon("Ppeval-epsilon", cl::desc("Epsilon for MLPolicy"));
 
-previrt::proto::State MakeState(const std::string& raw_code) {
-  previrt::proto::State s;
-  s.set_raw_code(raw_code);
-  return s;
-}
-
+static cl::opt<bool> UseGRPC("Ppeval-grpc", cl::desc("Use GRPC mode"), cl::init(false));
 namespace previrt {
   /* Intra-module specialization */
   class SpecializerPass : public llvm::ModulePass {
@@ -180,12 +175,13 @@ namespace previrt {
         //errs()<<"caller:"<<*caller<<"\n";
         //        errs()<<"Number of time callee is used:"<<no_of_uses<<std::endl;
         std::vector<float> module_features ;
-        module_features.push_back((float)p.getNumFuncs());
-        module_features.push_back((float)p.getTotalInst());
-        module_features.push_back((float)p.getTotalBlocks());
-        module_features.push_back((float)p.getTotalDirectCalls());
-        module_features.push_back((float)callee_no_of_uses);
-        module_features.push_back((float)caller_no_of_uses);
+        //module_features.push_back((float)p.getNumFuncs());
+        //module_features.push_back((float)p.getTotalInst());
+        //module_features.push_back((float)p.getTotalBlocks());
+        //module_features.push_back((float)p.getTotalDirectCalls());
+        //module_features.push_back((float)callee_no_of_uses);
+        module_features.push_back((float)worklist.size());
+        //module_features.push_back((float)caller_no_of_uses);
 
         specialize = policy->specializeOn(cs, specScheme, module_features, &client);
         //try dump policy
@@ -302,7 +298,7 @@ namespace previrt {
     case ML: {
       SpecializationPolicy *subpolicy = new AggressiveSpecPolicy();
       CallGraph &cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();
-      policy = new MLPolicy(subpolicy, cg, *this, LogFilename, Epsilon);
+      policy = new MLPolicy(subpolicy, cg, *this, LogFilename, Epsilon, UseGRPC);
       break;
     }
     }
@@ -348,10 +344,6 @@ namespace previrt {
     }
 
     if(SpecPolicy == ML){
-      ProfilerPass &p  = getAnalysis<ProfilerPass>();
-      unsigned num_instr = p.getTotalInst();
-      std::cerr<<"Test getting num_instr by using ProfilerPass:"<<num_instr<<std::endl;
-      
       errs() << "Done 1 pass of MLPolicy. Early break. ";
     }
     if (modified) {
