@@ -32,25 +32,28 @@ _INTERACTIVE = False
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
-    def __init__(self, net = None):
+    def __init__(self, net = None, debug = False):
         self.names = [
-            "block_count",
-            "inst_count",
-            "load_inst_count",
-            "store_inst_count",
-            "call_inst_count",
-            "branch_inst_count",
-            "loop_count",
-            "no_of_const",
-            "no_of_args",
-            "M_no_of_funcs",
-            "M_no_of_insts",
-            "M_no_of_blocks",
-            "M_no_of_direct_calls",
-            "callee_no_of_use",
-            "caller_no_of_use"
+           # "block_count",
+           # "inst_count",
+           # "load_inst_count",
+           # "store_inst_count",
+           # "call_inst_count",
+           # "branch_inst_count",
+           # "loop_count",
+           # "no_of_const",
+           # "no_of_args",
+           "M_no_of_funcs",
+           "M_no_of_insts",
+           "M_no_of_blocks",
+           "M_no_of_direct_calls",
+           "callee_no_of_use",
+           # "caller_no_of_use",
+            "current_worklist_size",
+            "branch_cnt"
         ]
         self.net = net
+        self.debug = debug
         #self.policy = policy_type(workdir, model_path, FeedForwardSingleInputSoftmax)
         #self.policy.load(model_path)
 
@@ -77,20 +80,17 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             else:
                 pred = False
         else:
-            self.print_state(request)
+            if self.debug: self.print_state(request)
             features = [int(s) for s in request.features.split(',')]
             features = torch.FloatTensor([features])
             #print(features.shape)
             #print(self.net)
             logits = self.net.forward(features).view(-1).detach().numpy()
-            print(logits)
+            if self.debug: print(logits)
             pred = np.random.choice([False, True], p=logits)
             
-            print(pred)
-        context.set_trailing_metadata((
-            ('blahdata', b'I agree'),
-            ('retry', 'false'),
-        ))
+            if self.debug: print(pred)
+        #context.set_trailing_metadata(('metadata_for_testint', b'I agree'),)
         return Previrt_pb2.Prediction(pred=pred)
 
 def serve():
