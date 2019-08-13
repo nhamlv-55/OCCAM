@@ -165,11 +165,11 @@ class Dataset(object):
             rewards[-1] = eps["score"]
             batch_rewards.extend(discount_rewards(rewards, GAMMA))
         if normalize_rewards:
-            print("before norm:", batch_rewards)
+            if DEBUG: print("before norm:", batch_rewards)
             batch_rewards -= np.mean(batch_rewards)
-            print("after subtract mean:", batch_rewards)
+            if DEBUG: print("after subtract mean:", batch_rewards)
             batch_rewards /= np.std(batch_rewards)
-            print("after / std : ", batch_rewards)
+            if DEBUG: print("after / std : ", batch_rewards)
         return batch_states, batch_actions, batch_rewards, batch_probs 
     def push_to_memory(self, memory):
 

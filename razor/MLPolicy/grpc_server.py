@@ -29,6 +29,7 @@ from utils import *
 from net import * 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 _INTERACTIVE = False
+#IMPORTANT: use 2>grpc_log to debug. Search for `calling application`
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
@@ -43,17 +44,18 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
            # "loop_count",
            # "no_of_const",
            # "no_of_args",
-           "M_no_of_funcs",
-           "M_no_of_insts",
-           "M_no_of_blocks",
-           "M_no_of_direct_calls",
-           "callee_no_of_use",
+           #"M_no_of_funcs",
+           #"M_no_of_insts",
+           #"M_no_of_blocks",
+           #"M_no_of_direct_calls",
+           #"callee_no_of_use",
            # "caller_no_of_use",
-            "current_worklist_size",
+           #"current_worklist_size",
             "branch_cnt"
         ]
         self.net = net
         self.debug = debug
+        if self.debug: print("init QueryOracleServicer...")
         #self.policy = policy_type(workdir, model_path, FeedForwardSingleInputSoftmax)
         #self.policy.load(model_path)
 
