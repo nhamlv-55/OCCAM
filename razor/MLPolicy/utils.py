@@ -141,7 +141,7 @@ class Dataset(object):
         self.all_data.sort(key=lambda x: x["score"])
 
     # for Policy Gradient
-    def get_trajectory_data(self):
+    def get_trajectory_data(self, normalize_rewards = False):
         batch_states = []
         batch_actions = []
         batch_rewards = []
@@ -164,6 +164,12 @@ class Dataset(object):
             rewards = [0]*len(states)
             rewards[-1] = eps["score"]
             batch_rewards.extend(discount_rewards(rewards, GAMMA))
+        if normalize_rewards:
+            print("before norm:", batch_rewards)
+            batch_rewards -= np.mean(batch_rewards)
+            print("after subtract mean:", batch_rewards)
+            batch_rewards /= np.std(batch_rewards)
+            print("after / std : ", batch_rewards)
         return batch_states, batch_actions, batch_rewards, batch_probs 
     def push_to_memory(self, memory):
 
@@ -238,8 +244,6 @@ def discount_rewards(rewards, gamma):
     for i in reversed(range(0, len(rewards))):
         cumulative_rewards = cumulative_rewards * gamma + rewards[i]
         discounted_rewards[i] = cumulative_rewards
-    discounted_rewards -= np.mean(discounted_rewards)
-    discounted_rewards /= np.std(discounted_rewards)
     return discounted_rewards
 def gen_new_meta(workdir, bootstrap_runs, run_command):
     dataset_path = os.path.join(workdir, "slash")
