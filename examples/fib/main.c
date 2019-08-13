@@ -19,6 +19,8 @@ int main(int argc, char* argv[]){
   int a = foo(argv[1][0], argv[2][0]);
   int b = foo(argv[2][0], argv[1][0]);
   int c = foo(argv[2][1], argv[1][0]);
-  printf(" %d  %d  %d\n",a, b, c);
+  int a_prime = foo(argv[1][0], argv[2][1]);
+  int d = foo(argv[2][2], argv[1][0]);
+  printf(" %d  %d  %d %d %d\n",a, b, c, d, a_prime);
   return 0;
 }
