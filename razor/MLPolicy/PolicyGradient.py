@@ -17,7 +17,12 @@ import grpc
 import Previrt_pb2
 import Previrt_pb2_grpc
 from grpc_server import QueryOracleServicer
+
+torch.manual_seed(0)
+np.random.seed(0)
+
 debug_print_limit = 6
+lr = 0.1
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
@@ -32,7 +37,7 @@ class PolicyGradient(BasePolicy):
             self.save_model(model_path)
         else:
             self.net = torch.load(model_path)
-        self.optimizer = optim.Adam(self.net.parameters(), lr = 0.01)
+        self.optimizer = optim.Adam(self.net.parameters(), lr = lr)
 
         for i in range(no_of_iter):
             if (i+1)%10 == 0:
@@ -50,7 +55,7 @@ class PolicyGradient(BasePolicy):
             else:
                 self.run_policy(no_of_sampling, eps_threshold)
             dataset = Dataset(self.dataset_path, size = no_of_sampling)
-            trajectory_data = dataset.get_trajectory_data()
+            trajectory_data = dataset.get_trajectory_data(normalize_rewards = True)
             self.optimize(trajectory_data, i)
             self.save_model(model_path)
 
@@ -67,7 +72,7 @@ class PolicyGradient(BasePolicy):
         print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
         predict_tensor = self.net.forward(state_tensor)
-        logprob = torch.log(predict_tensor).view(-1,2)
+        logprob = torch.log(predict_tensor).view(-1,2).double()
         if self.debug: print("state_tensor:", state_tensor[:debug_print_limit])
         if self.debug: print("predict_tensor:", predict_tensor[:debug_print_limit])
         #if self.debug: print("logprob:", logprob)
@@ -83,12 +88,19 @@ class PolicyGradient(BasePolicy):
         print("loss at iteration %s:"%iteration, loss)
         # Calculate gradients
         loss.backward()
-        # Apply gradients
-        self.optimizer.step()
+        print("before updating parameters-------------")
         if self.debug:
             for param in self.net.parameters():
-                print("params:", param.data)
-
+                print("params:", param.data.view(1, -1),)
+        
+        # Apply gradients
+        self.optimizer.step()
+        print("after updating parameters---------------")
+        if self.debug:
+            for param in self.net.parameters():
+                print("grads:", param.grad.view(1, -1))
+            for param in self.net.parameters():
+                print("params:", param.data.view(1, -1))
     def forward(self, state):
         state_tensor = torch.tensor(state)
         return self.net.forward((state_tensor)).view(-1, 2)
