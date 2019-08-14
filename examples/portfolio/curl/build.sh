@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+#make sure we have these libs to link
+apt install libssl-dev
 # Make sure we exit if there is a failure
 set -e
 
@@ -115,7 +116,7 @@ function dynamic_link() {
 , "native_libs" : [ ]
 , "ldflags" : [ "-O2", "-lpthread", "-lz", "-lcrypto", "-lssl" ]
 , "name"    : "curl"
-, "constraints" : [1, "curl", "--compressed", "--http1.1", "--ipv4"]
+, "constraints" : [1, "curl", "--compressed", "--http2.0", "--ipv4", "-ssl", "-url"]
 }
 EOF
 
