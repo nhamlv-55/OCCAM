@@ -186,7 +186,7 @@ def peval(input_file, output_file, \
     tmp.close()
     ## Only for debugging or tests
     disable_opt = False
-    disable_inlining = False
+    disable_inlining = True
 
     def _optimize(input_file, output_file, use_seaopt, iteration = None):
         retcode = optimize(input_file, output_file,
