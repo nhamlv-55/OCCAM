@@ -35,22 +35,29 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
 
     def __init__(self, net = None, debug = False):
         self.names = [
-           # "block_count",
-           # "inst_count",
-           # "load_inst_count",
-           # "store_inst_count",
-           # "call_inst_count",
-           # "branch_inst_count",
-           # "loop_count",
-           # "no_of_const",
-           # "no_of_args",
-           #"M_no_of_funcs",
-           #"M_no_of_insts",
-           #"M_no_of_blocks",
-           #"M_no_of_direct_calls",
-           #"callee_no_of_use",
-           # "caller_no_of_use",
-           #"current_worklist_size",
+            "block_count",
+            "inst_count",
+            "load_inst_count",
+            "store_inst_count",
+            "call_inst_count",
+            "branch_inst_count",
+            "loop_count",
+            "caller_block_count",
+            "caller_inst_count",
+            "caller_load_inst_count",
+            "caller_store_inst_count",
+            "caller_call_inst_count",
+            "caller_branch_inst_count",
+            "caller_loop_count",
+            "no_of_const",
+            "no_of_args",
+            "M_no_of_funcs",
+            "M_no_of_insts",
+            "M_no_of_blocks",
+            "M_no_of_direct_calls",
+            "callee_no_of_use",
+           #"caller_no_of_use",
+           "current_worklist_size",
             "branch_cnt"
         ]
         self.net = net
@@ -61,9 +68,14 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
 
     def print_state(self, request):
         features = request.features
-        trace = np.array(request.trace)
-        trace = trace.reshape(-1, len(self.names))
         features = [int(s) for s in features.split(',')]
+        trace = np.array(request.trace)
+        if len(features)!=len(self.names):
+            print("Error in feature mapping")
+            print("len features:", len(features))
+            print("len names:", len(self.names))
+            return
+        trace = trace.reshape(-1, len(self.names))
         meta = request.meta
         print("trace:")
         print(trace)
@@ -72,7 +84,6 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         print("state:")
         for i in range(len(features)):
             print(self.names[i], ":", features[i])
-
     def Query(self, request, context):
         if _INTERACTIVE:
             self.print_state(request)
@@ -109,12 +120,8 @@ def serve():
 
 
 if __name__ == '__main__':
+    global _INTERACTIVE
+    _INTERACTIVE = True
     logging.basicConfig()
     serve()
 
-##############################
-# server = ...               #
-# server.start()             #
-# policy.run_policy(100, 10) #
-# server.stop()              #
-##############################
