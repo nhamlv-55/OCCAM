@@ -189,6 +189,45 @@ namespace previrt {
   }
 
   bool MLPolicy::specializeOn(llvm::CallSite, std::vector<llvm::Value*>&) const {return false;};
+
+  unsigned countAllUsage(Value* arg, llvm::raw_string_ostream* rso){
+    unsigned branch_cnt = 0;
+    std::vector<Value *> worklist;
+    worklist.push_back(arg);
+    while(!worklist.empty()){
+      Value *e = worklist.back();
+      worklist.pop_back();
+      errs()<<"processing ";
+      e->print(errs());
+      errs()<<"...\n";
+      for(auto U : e->users()){  // U is of type User*
+        e->print(errs());
+        e->print(*rso);
+        if (auto I = dyn_cast<Instruction>(U)){
+          errs()<<"\tUser:";
+          *rso<<"\tUser:";
+          I->print(errs());
+          I->print(*rso);
+          errs()<<"\n";
+          *rso<<"\n";
+          if(isa<llvm::BinaryOperator>(*I)){
+            errs()<<"Push a binary use to worklist\n";
+            I->print(errs());
+            errs()<<"\n";
+            worklist.push_back(I);
+          }
+          if(isa<llvm::CmpInst>(*I)){
+            branch_cnt++;
+            errs()<<"is a cmp inst\n";
+          }
+        }
+      }
+
+    }
+    return branch_cnt;
+  }
+
+
   bool MLPolicy::specializeOn(CallSite CS,
                               std::vector<Value *> &slice,
                               const std::vector<float> module_features,
@@ -212,33 +251,27 @@ namespace previrt {
       slice.reserve(CS.arg_size()); 
       std::string user_str;
       llvm::raw_string_ostream rso(user_str);
+      rso<<"Function:";
+      rso<<callee->getName();
+      rso<<"\n; Body:\n";
+      callee->print(rso);
+      std::vector<Value*> worklist;
       for (unsigned i = 0, e = CS.arg_size(); i < e; ++i) {
         Constant *cst = dyn_cast<Constant>(CS.getArgument(i));
-
+        rso<<"\n";
         // XXX: cst can be nullptr
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
+          rso<<"constant argument:\n";
+          cst->print(rso);
+          rso<<"\n";
           slice.push_back(cst);
+
           argument_features.push_back(1);
           // count how many branch insts are affected
           unsigned arg_index = 0;
           for(auto arg = callee->arg_begin(); arg != callee->arg_end(); ++arg, ++arg_index) {
             if(arg_index==i){
-              for(auto U : arg->users()){  // U is of type User*
-                arg->print(errs());
-                arg->print(rso);
-                if (auto I = dyn_cast<Instruction>(U)){
-                  errs()<<"\tUser:";
-                  rso<<"\tUser:";
-                  I->print(errs());
-                  I->print(rso);
-                  errs()<<"\n";
-                  rso<<"\n";
-                  if(isa<llvm::CmpInst>(*I)){
-                    branch_cnt++;
-                    errs()<<"is a cmp inst\n";
-                  }
-                }
-              }
+              branch_cnt += countAllUsage(arg, &rso);
               break;
             }
           }
@@ -254,14 +287,13 @@ namespace previrt {
       // only invoke MLPolicy after this point
       std::vector<float> features;
       std::vector<float> callee_features = getInstructionCount(callee);
-      //features.insert( features.end(), callee_features.begin(), callee_features.end() );
-      //std::vector<float> caller_features = getInstructionCount(caller);
-      //features.insert( features.end(), caller_features.begin(), caller_features.end() );
-      //features.push_back(no_of_const);
-      //features.push_back(no_of_arg);
+      features.insert( features.end(), callee_features.begin(), callee_features.end() );
+      std::vector<float> caller_features = getInstructionCount(caller);
+      features.insert( features.end(), caller_features.begin(), caller_features.end() );
+      features.push_back(no_of_const);
+      features.push_back(no_of_arg);
       features.insert( features.end(), module_features.begin(), module_features.end() );
       features.push_back(branch_cnt);
-      llvm::Module  *M = CS.getParent()->getModule();
       trace->insert(trace->end(), features.begin(), features.end());
       //      features.push_back((float)M->getInstructionCount ());
       //features.insert( features.end(), (*trace).begin(), (*trace).end());
