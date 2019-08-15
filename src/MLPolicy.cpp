@@ -196,6 +196,7 @@ namespace previrt {
     worklist.push_back(arg);
     while(!worklist.empty()){
       Value *e = worklist.back();
+
       worklist.pop_back();
       errs()<<"processing ";
       e->print(errs());
@@ -250,7 +251,13 @@ namespace previrt {
       std::vector<unsigned> argument_features;
       slice.reserve(CS.arg_size()); 
       std::string user_str;
+      std::string wl_str;
       llvm::raw_string_ostream rso(user_str);
+      llvm::raw_string_ostream wl_rso(wl_str);
+      wl_rso<<"Worklist:\n";
+      rso<<"Module:";
+      rso<<CS.getParent()->getParent()->getParent()->getModuleIdentifier();
+      rso<<"\n";
       rso<<"Function:";
       rso<<callee->getName();
       rso<<"\n; Body:\n";
@@ -261,17 +268,13 @@ namespace previrt {
         rso<<"\n";
         // XXX: cst can be nullptr
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
-          rso<<"constant argument:\n";
-          cst->print(rso);
-          rso<<"\n";
           slice.push_back(cst);
-
           argument_features.push_back(1);
           // count how many branch insts are affected
           unsigned arg_index = 0;
           for(auto arg = callee->arg_begin(); arg != callee->arg_end(); ++arg, ++arg_index) {
             if(arg_index==i){
-              branch_cnt += countAllUsage(arg, &rso);
+              branch_cnt += countAllUsage(arg, &wl_rso);
               break;
             }
           }
@@ -282,6 +285,7 @@ namespace previrt {
           argument_features.push_back(0);
         }
       }
+      wl_rso<<"End worklist:\n";
       // return false immediately
       if(specialize==false){errs()<<"all arguemnts are not specializable"<<"\n"; return false;}
       // only invoke MLPolicy after this point
@@ -315,7 +319,7 @@ namespace previrt {
               ss << features[i];
             }
           std::string state = ss.str();
-          final_decision = q->Query(q->MakeState(state, user_str, *trace));
+          final_decision = q->Query(q->MakeState(state, rso.str()+wl_rso.str(), *trace));
 
           errs()<<"final_decision:"<<final_decision<<"\n";
         }else{
