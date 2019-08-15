@@ -52,6 +52,10 @@
 /* here specialization policies */
 #include "AggressiveSpecPolicy.h"
 #include "RecursiveGuardSpecPolicy.h"
+#include "MLPolicy.h"
+/* call profiler */
+#include "utils/Profiler.h"
+#include "utils/QueryOracleClient.h"
 
 #include <vector>
 #include <string>
@@ -59,6 +63,8 @@
 #include "llvm/Support/raw_ostream.h"
 
 using namespace llvm;
+
+static cl::opt<std::string> LogFilename("Ppeval-database", cl::desc("Specify output database filename"), cl::value_desc("database"));
 
 static cl::opt<previrt::SpecializationPolicyType>
 SpecPolicy("Pspecialize-policy",
@@ -69,8 +75,9 @@ SpecPolicy("Pspecialize-policy",
             clEnumValN (previrt::AGGRESSIVE, "aggressive",
                         "Specialize always if some constant argument"),
             clEnumValN (previrt::NONRECURSIVE_WITH_AGGRESSIVE, "nonrec-aggressive",
-                        "aggressive + non-recursive function")),
-           cl::init(previrt::NONRECURSIVE_WITH_AGGRESSIVE));
+                        "aggressive + non-recursive function"),
+            clEnumValN (previrt::ML, "machine-learning", "using machine learning policy")),
+           cl::init(previrt::ML));
   
 static cl::list<std::string>
 SpecCompIn("Pspecialize-input",
@@ -82,7 +89,9 @@ SpecCompOut("Pspecialize-output",
             cl::init(""),
             cl::NotHidden,
             cl::desc("Specify the output file for the specialized module"));
+static cl::opt<float> Epsilon("Ppeval-epsilon", cl::desc("Epsilon for MLPolicy"));
 
+static cl::opt<bool> UseGRPC("Ppeval-grpc", cl::desc("Use GRPC mode"), cl::init(false));
 namespace previrt
 {
 
@@ -112,6 +121,8 @@ namespace previrt
                                   std::vector<Function*>& to_add) {
     errs() << "SpecializeComponent()\n";
 
+    std::shared_ptr<Channel> connection = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+    QueryOracleClient client(connection);
     int rewrite_count = 0;
     const ComponentInterface& I = T.getInterface();
     // TODO: What needs to be done?
@@ -146,10 +157,23 @@ namespace previrt
           indicate whether the argument is a specializable constant
         */
         SmallBitVector slice(arg_count);
-        bool shouldSpecialize = policy->specializeOn(func,
-                                                     call->args.begin(), call->args.end(),
-                                                     slice);
+        bool shouldSpecialize = false;
+        if(SpecPolicy==ML){
+          std::vector<float> module_features ;
+          module_features.push_back(0);
+          module_features.push_back(0);
+          module_features.push_back(0);
+          module_features.push_back(0);
+          module_features.push_back(0);
+          module_features.push_back(0);
+          //module_features.push_back((float)caller_no_of_uses);
 
+          shouldSpecialize = policy->specializeOn(func, call->args.begin(), call->args.end(), slice);
+        }else{
+          shouldSpecialize = policy->specializeOn(func,
+                                                  call->args.begin(), call->args.end(),
+                                                  slice);
+        }
         if (!shouldSpecialize)
           continue;
 
@@ -266,6 +290,12 @@ namespace previrt {
         policy = new RecursiveGuardSpecPolicy(subpolicy, cg);
         break;
       }
+      case ML: {
+        SpecializationPolicy *subpolicy = new AggressiveSpecPolicy();
+        CallGraph &cg = getAnalysis<CallGraphWrapperPass>().getCallGraph();
+        policy = new MLPolicy(subpolicy, cg, *this, LogFilename, Epsilon, UseGRPC);
+        break;
+      }
       }
 
       assert(policy);      
@@ -311,6 +341,8 @@ namespace previrt {
     
     virtual void getAnalysisUsage(AnalysisUsage &AU) const {
       AU.addRequired<CallGraphWrapperPass> ();
+      AU.addRequired<ProfilerPass>();
+      AU.addRequired<LoopInfoWrapperPass>();
     }
     
   };
