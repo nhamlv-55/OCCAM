@@ -193,11 +193,13 @@ namespace previrt {
   unsigned countAllUsage(Value* arg, llvm::raw_string_ostream* rso){
     unsigned branch_cnt = 0;
     std::vector<Value *> worklist;
+    std::vector<Value *> visited;
     worklist.push_back(arg);
     while(!worklist.empty()){
       Value *e = worklist.back();
 
       worklist.pop_back();
+      visited.push_back(e);
       errs()<<"processing ";
       e->print(errs());
       errs()<<"...\n";
@@ -205,21 +207,18 @@ namespace previrt {
         e->print(errs());
         e->print(*rso);
         if (auto I = dyn_cast<Instruction>(U)){
-          errs()<<"\tUser:";
-          *rso<<"\tUser:";
-          I->print(errs());
-          I->print(*rso);
-          errs()<<"\n";
-          *rso<<"\n";
-          if(isa<llvm::BinaryOperator>(*I)){
-            errs()<<"Push a binary use to worklist\n";
+          if(std::find(visited.begin(), visited.end(), U) == visited.end()) {
+            errs()<<"\tUser:";
+            *rso<<"\tUser:";
             I->print(errs());
+            I->print(*rso);
             errs()<<"\n";
+            *rso<<"\n";
             worklist.push_back(I);
-          }
-          if(isa<llvm::CmpInst>(*I)){
-            branch_cnt++;
-            errs()<<"is a cmp inst\n";
+            if(isa<llvm::BranchInst>(*I)){
+              branch_cnt++;
+              errs()<<"is a cmp inst\n";
+            }
           }
         }
       }
