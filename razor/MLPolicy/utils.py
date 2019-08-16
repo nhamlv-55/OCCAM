@@ -75,6 +75,14 @@ class Dataset(object):
 
     def get_stat(self, run):
         result = {}
+        with open(run+"/rop_stats.txt", "r") as f:
+            for l in f.readlines():
+                if "Unique gadgets found" in l:
+
+                    tokens = l.strip().split(":")
+                    v = int(tokens[1].strip())
+                    k = tokens[0]
+                    result[k] = v
         with open(run+"/0AfterSpecialization_results.txt", "r") as f:
             for l in f.readlines():
                 if "[" in l:
@@ -85,8 +93,8 @@ class Dataset(object):
                 result[k] = v
         return result
     
-    def score(self, result):
-        return result["Number of instructions"]*1.0
+    def score(self, result, metric="Unique gadgets found"):
+        return result[metric]*1.0
         #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
         #return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
@@ -156,8 +164,11 @@ class Dataset(object):
                     states.append(step.state)
                     actions.append(step.action)
                     probs.append(step.prob)
-                
+            #try aliased states shuffling (only for 3 )
+            if(len(states)==3):
+                random.shuffle(states)
             batch_states.extend(states)
+
             batch_actions.extend(actions)
             batch_probs.extend(probs)
             #rewards = [eps["score"]]*len(states)
