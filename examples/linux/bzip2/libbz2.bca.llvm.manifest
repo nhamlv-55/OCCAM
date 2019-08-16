@@ -1,0 +1,8 @@
+
+/home/workspace/OCCAM/examples/linux/bzip2/bzip2/.crctable.o.bc
+/home/workspace/OCCAM/examples/linux/bzip2/bzip2/.randtable.o.bc
+/home/workspace/OCCAM/examples/linux/bzip2/bzip2/.compress.o.bc
+/home/workspace/OCCAM/examples/linux/bzip2/bzip2/.decompress.o.bc
+/home/workspace/OCCAM/examples/linux/bzip2/bzip2/.bzlib.o.bc
+/home/workspace/OCCAM/examples/linux/bzip2/bzip2/.blocksort.o.bc
+/home/workspace/OCCAM/examples/linux/bzip2/bzip2/.huffman.o.bc
