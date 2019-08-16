@@ -45,10 +45,11 @@ class BasePolicy(object):
             print("saving the net...")
             traced_script_module.save(os.path.join(OCCAM_HOME, "model.pt"))
 
-    def run_policy(self, no_of_sampling, eps_threshold):
+    def run_policy(self, no_of_sampling, eps_threshold, iteration):
         #clear previous runs
         if os.path.exists(self.dataset_path):
-            clear_prev_runs = subprocess.check_output(("rm -r %s"%self.dataset_path).split())
+
+            clear_prev_runs = subprocess.check_output(("mv %s %s_run%s"%(self.dataset_path, self.dataset_path, str(iteration)) ).split())
         job_ids = ""
         for jid in range(no_of_sampling):
             job_ids +=" %s"%str(jid)
