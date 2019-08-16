@@ -1,0 +1,14 @@
+[CFG analysis]
+  29 Number of functions
+  12 Number of specialized functions
+1006 Number of basic blocks
+5926 Number of instructions
+2007 Number of direct calls
+1897 Number of external calls
+   0 Number of indirect calls
+  26 Number of loops   
+   0 Number of bounded loops
+[Memory analysis]
+1108 Number of memory instructions
+ 697 Statically safe memory accesses
+ 411 Statically unknown memory accesses

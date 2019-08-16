@@ -1,0 +1,687 @@
+>> /root/anaconda3/envs/py2/bin/slash --inter-spec-policy=none --intra-spec-policy=none --devirt=none --no-strip --stats --database=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/ --epsilon=-10 --work-dir=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/ --amalgamate=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone//amalgamation.bc --epsilon=-1 bzip2.json
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/0BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/0BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/1BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/1BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/2BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/2BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/3BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/3BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/4BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/4BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/5BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/5BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/6BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/6BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/7BeforeSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/7BeforeSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc -Parguments -Parguments-input arguments -Parguments-name bzip2
+
+Read 4 command line arguments:
+	-force
+	-keep
+	-quiet
+	-small
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc -Parguments -Parguments-input arguments -Parguments-name bzip2 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc -o=/dev/null -Pinterface -Pinterface-output randtable.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc -o=/dev/null -Pinterface -Pinterface-output randtable.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc -o=/dev/null -Pinterface -Pinterface-output bzlib.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc -o=/dev/null -Pinterface -Pinterface-output bzlib.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc -o=/dev/null -Pinterface -Pinterface-output blocksort.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc -o=/dev/null -Pinterface -Pinterface-output blocksort.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc -o=/dev/null -Pinterface -Pinterface-output huffman.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc -o=/dev/null -Pinterface -Pinterface-output huffman.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc -o=/dev/null -Pinterface -Pinterface-output bzip2.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc -o=/dev/null -Pinterface -Pinterface-output bzip2.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc -o=/dev/null -Pinterface -Pinterface-output decompress.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc -o=/dev/null -Pinterface -Pinterface-output decompress.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc -o=/dev/null -Pinterface -Pinterface-output compress.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc -o=/dev/null -Pinterface -Pinterface-output compress.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc -o=/dev/null -Pinterface -Pinterface-output crctable.o.01.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc -o=/dev/null -Pinterface -Pinterface-output crctable.o.01.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.bc -Pinternalize -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'bzlib.o.01.iface'...success
+Reading file 'blocksort.o.01.iface'...success
+Reading file 'huffman.o.01.iface'...success
+Reading file 'bzip2.o.01.iface'...success
+Reading file 'decompress.o.01.iface'...success
+Reading file 'compress.o.01.iface'...success
+Reading file 'crctable.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.bc -Pinternalize -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.01.iface'...success
+Reading file 'blocksort.o.01.iface'...success
+Reading file 'huffman.o.01.iface'...success
+Reading file 'bzip2.o.01.iface'...success
+Reading file 'decompress.o.01.iface'...success
+Reading file 'compress.o.01.iface'...success
+Reading file 'crctable.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc
+Hiding 'BZ2_bzCompressInit'
+Hiding 'BZ2_bzCompress'
+Hiding 'BZ2_bzCompressEnd'
+Hiding 'BZ2_bzDecompressInit'
+Hiding 'BZ2_bzDecompress'
+Hiding 'BZ2_bzDecompressEnd'
+Hiding 'BZ2_bzWriteClose'
+Hiding 'BZ2_bzBuffToBuffCompress'
+Hiding 'BZ2_bzBuffToBuffDecompress'
+Hiding 'BZ2_bzopen'
+Hiding 'BZ2_bzdopen'
+Hiding 'BZ2_bzread'
+Hiding 'BZ2_bzwrite'
+Hiding 'BZ2_bzflush'
+Hiding 'BZ2_bzclose'
+Hiding 'BZ2_bzerror'
+Progress: hidden = 16 internalized 0
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.01.iface'...success
+Reading file 'bzlib.o.01.iface'...success
+Reading file 'huffman.o.01.iface'...success
+Reading file 'bzip2.o.01.iface'...success
+Reading file 'decompress.o.01.iface'...success
+Reading file 'compress.o.01.iface'...success
+Reading file 'crctable.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.01.iface'...success
+Reading file 'bzlib.o.01.iface'...success
+Reading file 'blocksort.o.01.iface'...success
+Reading file 'bzip2.o.01.iface'...success
+Reading file 'decompress.o.01.iface'...success
+Reading file 'compress.o.01.iface'...success
+Reading file 'crctable.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.01.iface'...success
+Reading file 'bzlib.o.01.iface'...success
+Reading file 'blocksort.o.01.iface'...success
+Reading file 'huffman.o.01.iface'...success
+Reading file 'decompress.o.01.iface'...success
+Reading file 'compress.o.01.iface'...success
+Reading file 'crctable.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc
+internalizing 'zSuffix'
+internalizing 'unzSuffix'
+internalizing 'outputHandleJustInCase'
+internalizing 'smallMode'
+internalizing 'keepInputFiles'
+internalizing 'forceOverwrite'
+internalizing 'noisy'
+internalizing 'verbosity'
+internalizing 'blockSize100k'
+internalizing 'testFailsExist'
+internalizing 'unzFailsExist'
+internalizing 'numFileNames'
+internalizing 'numFilesProcessed'
+internalizing 'workFactor'
+internalizing 'deleteOutputOnInterrupt'
+internalizing 'exitValue'
+internalizing 'inName'
+internalizing 'outName'
+internalizing 'progNameReally'
+internalizing 'progName'
+internalizing 'longestFileName'
+internalizing 'srcMode'
+internalizing 'opMode'
+internalizing 'tmpName'
+Progress: hidden = 0 internalized 24
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.01.iface'...success
+Reading file 'bzlib.o.01.iface'...success
+Reading file 'blocksort.o.01.iface'...success
+Reading file 'huffman.o.01.iface'...success
+Reading file 'bzip2.o.01.iface'...success
+Reading file 'compress.o.01.iface'...success
+Reading file 'crctable.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.01.iface'...success
+Reading file 'bzlib.o.01.iface'...success
+Reading file 'blocksort.o.01.iface'...success
+Reading file 'huffman.o.01.iface'...success
+Reading file 'bzip2.o.01.iface'...success
+Reading file 'decompress.o.01.iface'...success
+Reading file 'crctable.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc
+Hiding 'BZ2_bsInitWrite'
+Progress: hidden = 1 internalized 0
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input crctable.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.01.iface'...success
+Reading file 'bzlib.o.01.iface'...success
+Reading file 'blocksort.o.01.iface'...success
+Reading file 'huffman.o.01.iface'...success
+Reading file 'bzip2.o.01.iface'...success
+Reading file 'decompress.o.01.iface'...success
+Reading file 'compress.o.01.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.bc -Pinternalize -Pinternalize-input randtable.o.01.iface -Pinternalize-input bzlib.o.01.iface -Pinternalize-input blocksort.o.01.iface -Pinternalize-input huffman.o.01.iface -Pinternalize-input bzip2.o.01.iface -Pinternalize-input decompress.o.01.iface -Pinternalize-input compress.o.01.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.bc -o /tmp/tmpXykWBi.bc -O3 -stats -stats-json -pass-remarks-output=randtable.o.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.bc -o /tmp/tmpXykWBi.bc -O3 -stats -stats-json -pass-remarks-output=randtable.o.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.bc -o /tmp/tmpoumBE1.bc -O3 -stats -stats-json -pass-remarks-output=bzlib.o.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.bc -o /tmp/tmpoumBE1.bc -O3 -stats -stats-json -pass-remarks-output=bzlib.o.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.bc -o /tmp/tmp1Bvdel.bc -O3 -stats -stats-json -pass-remarks-output=blocksort.o.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.bc -o /tmp/tmp1Bvdel.bc -O3 -stats -stats-json -pass-remarks-output=blocksort.o.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.bc -o /tmp/tmpAJXks2.bc -O3 -stats -stats-json -pass-remarks-output=huffman.o.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.bc -o /tmp/tmpAJXks2.bc -O3 -stats -stats-json -pass-remarks-output=huffman.o.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.bc -o /tmp/tmpSc4r6A.bc -O3 -stats -stats-json -pass-remarks-output=bzip2.o.a.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.bc -o /tmp/tmpSc4r6A.bc -O3 -stats -stats-json -pass-remarks-output=bzip2.o.a.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.bc -o /tmp/tmpjeRlrP.bc -O3 -stats -stats-json -pass-remarks-output=decompress.o.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.bc -o /tmp/tmpjeRlrP.bc -O3 -stats -stats-json -pass-remarks-output=decompress.o.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.bc -o /tmp/tmpfwu3VX.bc -O3 -stats -stats-json -pass-remarks-output=compress.o.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.bc -o /tmp/tmpfwu3VX.bc -O3 -stats -stats-json -pass-remarks-output=compress.o.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.bc -o /tmp/tmpEjp8eg.bc -O3 -stats -stats-json -pass-remarks-output=crctable.o.i.bc.yaml -inline-threshold=-100
+
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -disable-simplify-libcalls /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.bc -o /tmp/tmpEjp8eg.bc -O3 -stats -stats-json -pass-remarks-output=crctable.o.i.bc.yaml -inline-threshold=-100 WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc
+Reading interface from '/tmp/tmpPlJ4iv.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpPlJ4iv.iface -Pinterface-entry /tmp/tmpPlJ4iv.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output randtable.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output randtable.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output bzlib.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output bzlib.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output blocksort.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output blocksort.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output huffman.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output huffman.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output bzip2.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/dev/null -Pinterface -Pinterface-output bzip2.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output decompress.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output decompress.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output compress.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output compress.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output crctable.o.02.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/dev/null -Pinterface -Pinterface-output crctable.o.02.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -Pinternalize -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'bzlib.o.02.iface'...success
+Reading file 'blocksort.o.02.iface'...success
+Reading file 'huffman.o.02.iface'...success
+Reading file 'bzip2.o.02.iface'...success
+Reading file 'decompress.o.02.iface'...success
+Reading file 'compress.o.02.iface'...success
+Reading file 'crctable.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -Pinternalize -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.02.iface'...success
+Reading file 'blocksort.o.02.iface'...success
+Reading file 'huffman.o.02.iface'...success
+Reading file 'bzip2.o.02.iface'...success
+Reading file 'decompress.o.02.iface'...success
+Reading file 'compress.o.02.iface'...success
+Reading file 'crctable.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.02.iface'...success
+Reading file 'bzlib.o.02.iface'...success
+Reading file 'huffman.o.02.iface'...success
+Reading file 'bzip2.o.02.iface'...success
+Reading file 'decompress.o.02.iface'...success
+Reading file 'compress.o.02.iface'...success
+Reading file 'crctable.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.02.iface'...success
+Reading file 'bzlib.o.02.iface'...success
+Reading file 'blocksort.o.02.iface'...success
+Reading file 'bzip2.o.02.iface'...success
+Reading file 'decompress.o.02.iface'...success
+Reading file 'compress.o.02.iface'...success
+Reading file 'crctable.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.02.iface'...success
+Reading file 'bzlib.o.02.iface'...success
+Reading file 'blocksort.o.02.iface'...success
+Reading file 'huffman.o.02.iface'...success
+Reading file 'decompress.o.02.iface'...success
+Reading file 'compress.o.02.iface'...success
+Reading file 'crctable.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.02.iface'...success
+Reading file 'bzlib.o.02.iface'...success
+Reading file 'blocksort.o.02.iface'...success
+Reading file 'huffman.o.02.iface'...success
+Reading file 'bzip2.o.02.iface'...success
+Reading file 'compress.o.02.iface'...success
+Reading file 'crctable.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.02.iface'...success
+Reading file 'bzlib.o.02.iface'...success
+Reading file 'blocksort.o.02.iface'...success
+Reading file 'huffman.o.02.iface'...success
+Reading file 'bzip2.o.02.iface'...success
+Reading file 'decompress.o.02.iface'...success
+Reading file 'crctable.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input crctable.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input main.iface
+
+InternalizePass()
+Reading file 'randtable.o.02.iface'...success
+Reading file 'bzlib.o.02.iface'...success
+Reading file 'blocksort.o.02.iface'...success
+Reading file 'huffman.o.02.iface'...success
+Reading file 'bzip2.o.02.iface'...success
+Reading file 'decompress.o.02.iface'...success
+Reading file 'compress.o.02.iface'...success
+Reading file 'main.iface'...success
+Done reading.
+InternalizePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc
+/llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.bc -o=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -Pinternalize -Pinternalize-input randtable.o.02.iface -Pinternalize-input bzlib.o.02.iface -Pinternalize-input blocksort.o.02.iface -Pinternalize-input huffman.o.02.iface -Pinternalize-input bzip2.o.02.iface -Pinternalize-input decompress.o.02.iface -Pinternalize-input compress.o.02.iface -Pinternalize-input main.iface => 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface
+
+GatherInterfacePass::runOnModule: /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc
+Reading interface from '/tmp/tmpv3iJ7Z.iface'...success
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -o=/dev/null -Pinterface -Pinterface-output /tmp/tmpv3iJ7Z.iface -Pinterface-entry /tmp/tmpv3iJ7Z.iface WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/0AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/0AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/1AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/1AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/2AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/2AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/3AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/3AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/4AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/4AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/5AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/5AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/6AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/6AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/7AfterSpecialization_results.txt
+
+Call runOnModule from ProfilerPass
+EXECUTED: /llvm/llvm-project/Debug/bin/opt -load=/home/workspace/OCCAM/lib/libtorch.so -load=/home/workspace/OCCAM/lib/libc10.so -load=/home/workspace/OCCAM/lib/libSeaDsa.so -load=/home/workspace/OCCAM/lib/libDSA.so -load=/home/workspace/OCCAM/lib/libprevirt.so /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc -o=/dev/null -Pprofiler -profile-verbose=false -profile-loops=true -profile-safe-pointers=true -profile-outfile=/home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/7AfterSpecialization_results.txt WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/llvm-link -override /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/amalgamation.bc
+
+EXECUTED: /llvm/llvm-project/Debug/bin/llvm-link -override /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzip2.o.a.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/blocksort.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/bzlib.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/compress.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/crctable.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/decompress.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/huffman.o.i.p.i.bc /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/randtable.o.i.p.i.bc -o /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/amalgamation.bc WHICH RETURNED 0
+
+EXECUTING: /llvm/llvm-project/Debug/bin/clang++ /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/amalgamation.bc -o bzip2_slashed
+
+EXECUTED: /llvm/llvm-project/Debug/bin/clang++ /home/workspace/OCCAM/examples/linux/bzip2/slash/runnone/amalgamation.bc -o bzip2_slashed WHICH RETURNED 0
+

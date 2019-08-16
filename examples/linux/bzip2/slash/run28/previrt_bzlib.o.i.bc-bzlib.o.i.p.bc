@@ -1,0 +1,118 @@
+SpecializerPass(1)
+Call runOnModule from ProfilerPass
+call runOnModule from IntraSpecializer.cpp::SpecializerPass
+Hello ML
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+14 2930 504 344
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+14 2930 504 344
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+14 2930 504 344
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+14 2930 504 344
+Call runOnModule from ProfilerPass
+number of time callee is used:3
+number of time caller is used:2
+TOUCH A CALL SITE
+EPSILON:1.050000e+01
+all arguemnts are not specializable
+Call runOnModule from ProfilerPass
+number of time callee is used:3
+number of time caller is used:2
+TOUCH A CALL SITE
+EPSILON:1.050000e+01
+all arguemnts are not specializable
+Call runOnModule from ProfilerPass
+number of time callee is used:3
+number of time caller is used:2
+TOUCH A CALL SITE
+EPSILON:1.050000e+01
+all arguemnts are not specializable
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+14 2930 504 344
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+14 2930 504 344
+Call runOnModule from ProfilerPass
+number of time callee is used:4
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:1.050000e+01
+processing i8* %opaque...
+processing i32 %items...
+i32 %items	User:  %mul = mul nsw i32 %size, %items, !dbg !154
+processing   %mul = mul nsw i32 %size, %items, !dbg !154...
+  %mul = mul nsw i32 %size, %items, !dbg !154	User:  %conv = sext i32 %mul to i64, !dbg !155
+processing   %conv = sext i32 %mul to i64, !dbg !155...
+  %conv = sext i32 %mul to i64, !dbg !155	User:  %call = tail call noalias i8* @malloc(i64 %conv) #10, !dbg !156
+processing   %call = tail call noalias i8* @malloc(i64 %conv) #10, !dbg !156...
+  %call = tail call noalias i8* @malloc(i64 %conv) #10, !dbg !156	User:  ret i8* %call, !dbg !158
+processing   ret i8* %call, !dbg !158...
+processing i32 %size...
+i32 %size	User:  %mul = mul nsw i32 %size, %items, !dbg !154
+processing   %mul = mul nsw i32 %size, %items, !dbg !154...
+  %mul = mul nsw i32 %size, %items, !dbg !154	User:  %conv = sext i32 %mul to i64, !dbg !155
+processing   %conv = sext i32 %mul to i64, !dbg !155...
+  %conv = sext i32 %mul to i64, !dbg !155	User:  %call = tail call noalias i8* @malloc(i64 %conv) #10, !dbg !156
+processing   %call = tail call noalias i8* @malloc(i64 %conv) #10, !dbg !156...
+  %call = tail call noalias i8* @malloc(i64 %conv) #10, !dbg !156	User:  ret i8* %call, !dbg !158
+processing   ret i8* %call, !dbg !158...
+trace so far:1 8 0 0 5 0 0 28 230 18 42 37 27 0 3 3 14 2930 504 344 4 0 0
+Feature vector: 1 8 0 0 5 0 0 28 230 18 42 37 27 0 3 3 14 2930 504 344 4 0 0
+Invoke MLpolicy
+Module feature: 14 2930 504 344 4 0
+sample:9.415893e-01 threshold:1.050000e+01
+sample:1.608875e-01 threshold:5.000000e-01
+Intra-specializing call to 'default_bzalloc' in function 'BZ2_bzWriteOpen' on arguments [0=(i8* null),1=(i32 55768),2=(i32 1)]
+before specialization:
+8
+force inlining...
+after specialization:
+8
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+number of time callee is used:2
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:1.050000e+01
+all arguemnts are not specializable
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+number of time callee is used:2
+number of time caller is used:0
+TOUCH A CALL SITE
+EPSILON:1.050000e+01
+all arguemnts are not specializable
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Call runOnModule from ProfilerPass
+Profiling after each function in M
+15 2938 505 349
+Done 1 pass of MLPolicy. Early break. ...progress...
+calling destructor with file /home/workspace/OCCAM/examples/linux/bzip2/slash/run28/86988collected_data.csv
+file closed
