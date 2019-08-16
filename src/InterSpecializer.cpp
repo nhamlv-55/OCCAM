@@ -64,7 +64,7 @@
 
 using namespace llvm;
 
-static cl::opt<std::string> LogFilename("Ppeval-database", cl::desc("Specify output database filename"), cl::value_desc("database"));
+static cl::opt<std::string> LogFilename("Pspecialize-database", cl::desc("Specify output database filename"), cl::value_desc("database"));
 
 static cl::opt<previrt::SpecializationPolicyType>
 SpecPolicy("Pspecialize-policy",
@@ -89,9 +89,9 @@ SpecCompOut("Pspecialize-output",
             cl::init(""),
             cl::NotHidden,
             cl::desc("Specify the output file for the specialized module"));
-static cl::opt<float> Epsilon("Ppeval-epsilon", cl::desc("Epsilon for MLPolicy"));
+static cl::opt<float> Epsilon("Pspecialize-epsilon", cl::desc("Epsilon for MLPolicy"));
 
-static cl::opt<bool> UseGRPC("Ppeval-grpc", cl::desc("Use GRPC mode"), cl::init(false));
+static cl::opt<bool> UseGRPC("Pspecialize-grpc", cl::desc("Use GRPC mode"), cl::init(false));
 namespace previrt
 {
 
