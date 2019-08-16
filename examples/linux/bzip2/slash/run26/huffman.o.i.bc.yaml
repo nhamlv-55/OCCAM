@@ -1,0 +1,2385 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: huffman.c, Line: 98, Column: 7 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - Callee:          BZ2_bz__AssertH__fail
+  - String:          ' will not be inlined into '
+  - Caller:          BZ2_hbMakeCodeLengths
+    DebugLoc:        { File: huffman.c, Line: 67, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: huffman.c, Line: 112, Column: 7 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - Callee:          BZ2_bz__AssertH__fail
+  - String:          ' will not be inlined into '
+  - Caller:          BZ2_hbMakeCodeLengths
+    DebugLoc:        { File: huffman.c, Line: 67, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 101, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 102, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 95, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 101, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 101, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 95, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 101, Column: 34 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 102, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 102, Column: 34 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 108, Column: 22 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 105, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 95, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 101, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 95, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 101, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 101, Column: 34 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 102, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 102, Column: 34 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 108, Column: 22 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 105, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 101, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 102, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 163, Column: 40 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 183, Column: 14 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 183, Column: 41 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: huffman.c, Line: 185, Column: 50 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 194, Column: 27 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 195, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 19 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: huffman.c, Line: 190, Column: 51 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 19 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 195, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 43 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: huffman.c, Line: 190, Column: 51 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 43 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 195, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 19 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 199, Column: 15 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: huffman.c, Line: 185, Column: 50 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 41 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 188, Column: 50 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 186, Column: 53 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 194, Column: 27 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 195, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 19 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: huffman.c, Line: 190, Column: 51 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 19 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 195, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 43 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: huffman.c, Line: 190, Column: 51 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 43 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 195, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: huffman.c, Line: 199, Column: 19 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: huffman.c, Line: 199, Column: 15 }
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: huffman.c, Line: 79, Column: 4 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or vectorize width and interleave count are both set to 1'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: huffman.c, Line: 79, Column: 4 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or vectorize width and interleave count are both set to 1'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: huffman.c, Line: 142, Column: 7 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or vectorize width and interleave count are both set to 1'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: huffman.c, Line: 142, Column: 7 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or vectorize width and interleave count are both set to 1'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 118, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 109, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: huffman.c, Line: 102, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by vectorizer
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: huffman.c, Line: 102, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by vectorizer
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NoCFGForSelect
+DebugLoc:        { File: huffman.c, Line: 102, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          control flow cannot be substituted for a select
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 102, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: huffman.c, Line: 102, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by analyzer
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 102, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by vectorizer
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by vectorizer
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NoCFGForSelect
+DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          control flow cannot be substituted for a select
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by analyzer
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 101, Column: 56 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 95, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 95, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 95, Column: 10 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 101, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 102, Column: 15 }
+Function:        BZ2_hbMakeCodeLengths
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NoCFGForSelect
+DebugLoc:        { File: huffman.c, Line: 163, Column: 54 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          control flow cannot be substituted for a select
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 162, Column: 7 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 162, Column: 7 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 162, Column: 7 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NoCFGForSelect
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          control flow cannot be substituted for a select
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 161, Column: 4 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeStoreToLoopInvariantAddress
+DebugLoc:        { File: huffman.c, Line: 161, Column: 4 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          write to a loop invariant address could not be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 161, Column: 4 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: huffman.c, Line: 163, Column: 14 }
+Function:        BZ2_hbAssignCodes
+Args:            
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NoCFGForSelect
+DebugLoc:        { File: huffman.c, Line: 183, Column: 52 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          control flow cannot be substituted for a select
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 182, Column: 7 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 182, Column: 7 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 182, Column: 7 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: huffman.c, Line: 186, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 186, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantIdentifyArrayBounds
+DebugLoc:        { File: huffman.c, Line: 186, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          cannot identify array bounds
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 186, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: huffman.c, Line: 193, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: huffman.c, Line: 193, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: huffman.c, Line: 198, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or vectorize width and interleave count are both set to 1'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: huffman.c, Line: 198, Column: 4 }
+Function:        BZ2_hbCreateDecodeTables
+Args:            
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or vectorize width and interleave count are both set to 1'
+...
