@@ -42,7 +42,7 @@ class PolicyGradient(BasePolicy):
 
         for i in range(no_of_iter):
             start_time = time.time()
-            if (i+1)%4 == 0:
+            if (i+1)%10 == 0:
                 print("performance at iteration %s"%str(i))
                 self.evaluate(tag="eval%s"%str(i))
             eps_threshold = -1 #set to -1 to always use policy
@@ -52,10 +52,10 @@ class PolicyGradient(BasePolicy):
                     QueryOracleServicer(self.net, debug = False), server)
                 server.add_insecure_port('[::]:50051')
                 server.start()
-                self.run_policy(no_of_sampling, eps_threshold)
+                self.run_policy(no_of_sampling, eps_threshold, i)
                 server.stop(0)
             else:
-                self.run_policy(no_of_sampling, eps_threshold)
+                self.run_policy(no_of_sampling, eps_threshold, i)
             run_policy_time = time.time()
             print("Rollout %s runs in %s seconds"%(no_of_sampling, run_policy_time - start_time))
             dataset = Dataset(self.dataset_path, size = no_of_sampling)
