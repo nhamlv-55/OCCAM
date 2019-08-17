@@ -16,14 +16,14 @@ import grpc
 
 import Previrt_pb2
 import Previrt_pb2_grpc
-from grpc_server import QueryOracleServicer
+from grpc_server import QueryOracleServicer, Mode
 
 torch.manual_seed(0)
 np.random.seed(0)
 
 debug_print_limit = 6
-lr = 0.01
-minimize = False
+lr = 0.001
+minimize = True
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
@@ -49,7 +49,7 @@ class PolicyGradient(BasePolicy):
             if self.grpc_mode:
                 server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
                 Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-                    QueryOracleServicer(self.net, debug = False), server)
+                    QueryOracleServicer(mode = Mode.TRAINING, net = self.net, debug = False), server)
                 server.add_insecure_port('[::]:50051')
                 server.start()
                 self.run_policy(no_of_sampling, eps_threshold, i)
