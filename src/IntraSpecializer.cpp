@@ -145,7 +145,6 @@ namespace previrt {
     }
 
     bool modified = false;
-    int iteration = 0;
 
     while (!worklist.empty()) {
       Instruction *ci = worklist.back();
@@ -167,21 +166,21 @@ namespace previrt {
       if(SpecPolicy==ML){
         ProfilerPass &p = getAnalysis<ProfilerPass>();
         p.runOnModule(M);
-        const unsigned callee_no_of_uses = callee->getNumUses();
+        //const unsigned callee_no_of_uses = callee->getNumUses();
         const unsigned caller_no_of_uses = caller->getNumUses();
-        errs()<<"number of time callee is used:"<<callee_no_of_uses<<"\n";
-        errs()<<"number of time caller is used:"<<caller_no_of_uses<<"\n";
+        //errs()<<"number of time callee is used:"<<callee_no_of_uses<<"\n";
+        //errs()<<"number of time caller is used:"<<caller_no_of_uses<<"\n";
         //errs()<<"callee:"<<*callee<<"\n";
         //errs()<<"caller:"<<*caller<<"\n";
         //        errs()<<"Number of time callee is used:"<<no_of_uses<<std::endl;
         std::vector<float> module_features ;
-        //module_features.push_back((float)p.getNumFuncs());
-        //module_features.push_back((float)p.getTotalInst());
-        //module_features.push_back((float)p.getTotalBlocks());
-        //module_features.push_back((float)p.getTotalDirectCalls());
+        module_features.push_back((float)p.getNumFuncs());
+        module_features.push_back((float)p.getTotalInst());
+        module_features.push_back((float)p.getTotalBlocks());
+        module_features.push_back((float)p.getTotalDirectCalls());
         //module_features.push_back((float)callee_no_of_uses);
-        module_features.push_back((float)worklist.size());
-        //module_features.push_back((float)caller_no_of_uses);
+        //module_features.push_back((float)worklist.size());
+        module_features.push_back((float)caller_no_of_uses);
 
         specialize = policy->specializeOn(cs, specScheme, module_features, &client);
         //try dump policy
