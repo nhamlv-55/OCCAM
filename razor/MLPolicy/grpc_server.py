@@ -75,6 +75,8 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         if self.debug: print("init QueryOracleServicer...")
         self.module_trace = {}
         self.mode = mode
+        self.say_no = False
+        self.say_yes = False
 
     def handle_meta(self, meta):
         meta, worklist = meta.split("Worklist:\n")
@@ -132,10 +134,23 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     def Query(self, request, context):
         if self.debug: print(self.mode)
         if self.mode == Mode.INTERACTIVE:
+            #immediately return results if flags are set
+            if self.say_no:
+                return Previrt_pb2.Prediction(pred=False)
+            if self.say_yes:
+                return Previrt_pb2.Prediction(pred=True)
+
+            #normal pipeline
             self.print_state(request)
-            pred = raw_input("Should I specialize? ")
+            pred = raw_input("Should I specialize? ([y]es/[n]o/[Y]es for this callsite and the rest/[N]o for this callsite and the rest)")
             if pred.strip()=="y":
                 pred = True
+            elif pred.strip()=="Y":
+                pred = True
+                self.say_yes = True
+            elif pred.strip()=="N":
+                pred = False
+                self.say_no  = True
             else:
                 pred = False
         elif self.mode == Mode.TRY_1_CS:
