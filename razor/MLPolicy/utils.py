@@ -11,6 +11,7 @@ import json
 import subprocess
 import argparse
 import math
+import GSA_util.GSA as gsa
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 Step   = namedtuple('Step', ('state', 'prob', 'action'))
@@ -78,7 +79,6 @@ class Dataset(object):
         with open(run+"/rop_stats.txt", "r") as f:
             for l in f.readlines():
                 if "Unique gadgets found" in l:
-
                     tokens = l.strip().split(":")
                     v = int(tokens[1].strip())
                     k = tokens[0]
@@ -277,6 +277,16 @@ def gen_new_meta(workdir, bootstrap_runs, run_command):
     print(runners_cmd)
     runners = subprocess.check_output(runners_cmd.split(), cwd = workdir)
 
+    #use GSA to get ROP stats
+    binary_name = workdir.split("/")[-1]
+    original = os.path.join(workdir, "slash/runnone/%s"%binary_name)
+    variants_dict = {"agg": os.path.join(workdir, "slash/runagg/%s"%binary_name)}
+    for i in range(bootstrap_runs):
+        variants_dict[str(i)]=os.path.join(workdir, "slash/run%s/%s"%(str(i), binary_name))
+    directory_name = os.path.join(workdir, "gsa_stat")
+    if not os.path.exists(directory_name):
+        os.mkdir(directory_name)
+    gsa.run_gsa(original, variants_dict, directory_name)
     dataset_bootstrap = Dataset(dataset_path)
     dataset_bootstrap.sort()
     dataset_bootstrap.dump()
