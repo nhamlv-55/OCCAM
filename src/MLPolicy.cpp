@@ -265,9 +265,10 @@ namespace previrt {
       
       for (unsigned i = 0, e = CS.arg_size(); i < e; ++i) {
         Constant *cst = dyn_cast<Constant>(CS.getArgument(i));
-        rso<<"\n";
         // XXX: cst can be nullptr
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
+          cst->print(rso);
+          rso<<"\n";
           slice.push_back(cst);
           argument_features.push_back(1);
           // count how many branch insts are affected
