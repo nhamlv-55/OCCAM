@@ -210,5 +210,7 @@ message State {
 }
 
 message Prediction {
-  required bool pred = 1;
+  required float q_yes = 1;
+  required float q_no = 2 ;
+  required bool pred = 3;
 }

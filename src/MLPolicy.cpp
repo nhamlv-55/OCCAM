@@ -321,8 +321,10 @@ namespace previrt {
               ss << features[i];
             }
           std::string state = ss.str();
-          final_decision = q->Query(q->MakeState(state, rso.str()+wl_rso.str(), *trace));
-
+          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, rso.str()+wl_rso.str(), *trace));
+          final_decision = prediction.pred();
+          q_Yes = prediction.q_yes();
+          q_No  = prediction.q_no();
           errs()<<"final_decision:"<<final_decision<<"\n";
         }else{
           torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
