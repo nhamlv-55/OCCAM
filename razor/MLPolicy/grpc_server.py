@@ -64,8 +64,8 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             "M_no_of_blocks",
             "M_no_of_direct_calls",
            # "callee_no_of_use",
-           #"current_worklist_size",
-           "caller_no_of_use",
+            "caller_no_of_use",
+            "current_worklist_size",
             "branch_cnt",
             "affected_inst"
         ]
@@ -136,9 +136,9 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         if self.mode == Mode.INTERACTIVE:
             #immediately return results if flags are set
             if self.say_no:
-                return Previrt_pb2.Prediction(pred=False)
+                return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=False)
             if self.say_yes:
-                return Previrt_pb2.Prediction(pred=True)
+                return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=True)
 
             #normal pipeline
             self.print_state(request)
@@ -153,6 +153,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
                 self.say_no  = True
             else:
                 pred = False
+            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=pred)
         elif self.mode == Mode.TRY_1_CS:
             meta = request.meta
             trace = np.array(request.trace)
@@ -165,6 +166,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
                 pred = True
             else:
                 pred = False
+            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=pred)
         elif self.mode == Mode.TRAINING:
             if self.debug: self.print_state(request)
             features = [int(s) for s in request.features.split(',')]
@@ -174,10 +176,11 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             logits = self.net.forward(features).view(-1).detach().numpy()
             if self.debug: print(logits)
             pred = np.random.choice([False, True], p=logits)
-            
             if self.debug: print(pred)
+            return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], pred = pred)
         #context.set_trailing_metadata(('metadata_for_testint', b'I agree'),)
-        return Previrt_pb2.Prediction(pred=pred)
+        else:
+            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=pred)
 
 def serve(mode, p = -1, n = -1):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
