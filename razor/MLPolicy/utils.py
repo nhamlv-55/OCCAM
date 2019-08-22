@@ -306,6 +306,106 @@ def gen_new_meta(workdir, bootstrap_runs, run_command):
     with open(os.path.join(workdir, "metadata.json"), "w") as f:
         json.dump(metadata, f, indent=4, sort_keys=True)
 
+class Atomizer(object):
+    '''
+    encode the llvm IR (the token-format)
+    In this encoding scheme, every instruction is a list of `words`
+    Each `words` is a list of `chars` (`symbols`)
+    The first token (opt code) in each instruction is regarded as 1 `char`
+    For each operand in the instruction, we split them into chunk of continuous char and digits,
+    for examples: `br tobool1  if.then103 if.else103`
+    => [['br'],
+    ['tobool', '1'],
+    ['if.then', '1','0','3'],
+    ['if.else', '1','0','3']
+    ]
+    
+    '''
+    def __init__(self):
+        self.symbol_vocab = set()
+        self.symbol2idx = {}
+        self.idx2symbol = {}
+        for i in range(10):
+            self.symbol2idx[str(i)] = i
+            self.idx2symbol[i] = str(i)
+        self.word2idx = {}
+        self.idx2word = {}
+
+    def handle_symbol(self, sym):
+        if sym not in self.symbol2idx:
+            self.symbol2idx[sym] = len(self.symbol2idx)
+            self.idx2symbol[len(self.idx2symbol)] = sym
+
+    
+    def split_token(self, token):
+        '''
+        split a token into a list of symbols and add these symbols to the symbol vocab
+        '''
+        token+="0" #a hack to not have to handle edge cases
+        symbols = [] 
+        current_s = ""
+        for c in token:
+            if c.isdigit():
+                self.handle_symbol(current_s)
+                symbols.append(self.symbol2idx[current_s])
+                current_s = c
+            else:
+                if current_s.isdigit():
+                    symbols.append(self.symbol2idx[current_s])
+                    current_s = c
+                else: current_s+=c
+        return symbols
+
+    def normalize_ptr(self, insts):
+        '''
+        given a list of insts in the token-form, create a map of ptr to map from ptr0x55c5f7f542a0 to a simpler token like ptr__12
+        return the ptr_map and the new list of insts
+        '''
+        ptr_map = {}
+        new_insts = []
+        for l in insts:
+            new_tokens = []
+            tokens = l.split()
+            for t in tokens:
+                if t.startswith("ptr0x"):
+                    if t in ptr_map:
+                        t = ptr_map[t]
+                    else:
+                        ptr_map[t] = "ptr__"+str(len(ptr_map))
+                        t = ptr_map[t]
+                new_tokens.append(t)
+            rewritten_inst = " ".join(new_tokens)
+            new_insts.append(rewritten_inst)
+        return ptr_map, new_insts
+
+    def encode(self, insts):
+        '''
+        take in a list of insts in the token-format and return a numpy array
+        '''
+        encoded = []
+        ptr_map, new_insts = self.normalize_ptr(insts)
+        for inst in new_insts:
+            inst_as_list = []
+            tokens = inst.split()
+            opt_code = tokens[0]
+            self.handle_symbol(opt_code)
+            inst_as_list.append([self.symbol2idx[opt_code]])
+            for operand in tokens[1:]:
+                inst_as_list.append(self.split_token(operand))
+            encoded.append(inst_as_list)
+        return encoded
+
+    def decode(self, array):
+        '''
+        take in a 3d array and decode it back to original form
+        '''
+        for l in array:
+
+            for tok in l:
+                for sym in tok:
+                    print(self.idx2symbol[sym],)
+                print(" ")
+            print("\n")
 
 if __name__== "__main__":
     OCCAM_HOME = os.environ['OCCAM_HOME']
