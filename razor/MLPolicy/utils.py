@@ -316,9 +316,10 @@ class Atomizer(object):
     for examples: `br tobool1  if.then103 if.else103`
     => [['br'],
     ['tobool', '1'],
-    ['if.then', '1','0','3'],
-    ['if.else', '1','0','3']
+    ['if','then', '1','0','3'],
+    ['if','else', '1','0','3']
     ]
+    We also split at `.` (dot) because this is a special character
     
     '''
     def __init__(self):
@@ -345,7 +346,11 @@ class Atomizer(object):
         symbols = [] 
         current_s = ""
         for c in token:
-            if c.isdigit():
+            if c==".":
+                self.handle_symbol(current_s)
+                symbols.append(self.symbol2idx[current_s])
+                current_s = ""
+            elif c.isdigit():
                 self.handle_symbol(current_s)
                 symbols.append(self.symbol2idx[current_s])
                 current_s = c
