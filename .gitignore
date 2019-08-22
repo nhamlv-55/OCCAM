@@ -8,5 +8,7 @@
 *.DS_Store
 model.pt
 examples/
-/examples/fib/slash/
-*/slash/
+*/slash
+*/GPATH
+*/GRTAGS
+*/GTAGS
