@@ -77,10 +77,14 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         self.mode = mode
         self.say_no = False
         self.say_yes = False
+        self.atomizer = Atomizer()
 
     def handle_meta(self, meta):
         meta, worklist = meta.split("Worklist:\n")
         meta = meta.split("\n")
+        _ = self.atomizer.encode(meta)
+        print("encoded:", _)
+        print("decoded:", self.atomizer.decode(_))
         meta_text = []
         module = meta[0]
         if module not in self.module_trace:
