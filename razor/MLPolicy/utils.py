@@ -382,9 +382,12 @@ class Atomizer(object):
         '''
         take in a list of insts in the token-format and return a numpy array
         '''
+        
         encoded = []
         ptr_map, new_insts = self.normalize_ptr(insts)
         for inst in new_insts:
+            if len(inst)==0:
+                continue
             inst_as_list = []
             tokens = inst.split()
             opt_code = tokens[0]
@@ -403,7 +406,7 @@ class Atomizer(object):
 
             for tok in l:
                 for sym in tok:
-                    print(self.idx2symbol[sym],)
+                    print(self.idx2symbol[sym], end = ";")
                 print(" ")
             print("\n")
 
