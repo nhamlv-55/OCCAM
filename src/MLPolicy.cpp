@@ -31,7 +31,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 //
-
 #include <random>
 #include "MLPolicy.h"
 #include "llvm/ADT/SCCIterator.h"
@@ -39,6 +38,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "llvm/Analysis/LoopInfo.h"
+#include "utils/UberIRDumper.h"
 using namespace llvm;
 using namespace torch;
 namespace previrt {
@@ -250,9 +250,12 @@ namespace previrt {
       slice.reserve(CS.arg_size()); 
       std::string user_str;
       std::string wl_str;
+      std::string tokens_str;
+      llvm::raw_string_ostream tokens_rso(tokens_str);
       llvm::raw_string_ostream rso(user_str);
       llvm::raw_string_ostream wl_rso(wl_str);
       wl_rso<<"Worklist:\n";
+      tokens_rso<<"Tokens:\n";
       rso<<"Module:";
       rso<<CS.getParent()->getParent()->getParent()->getModuleIdentifier();
       rso<<"\n";
@@ -321,7 +324,9 @@ namespace previrt {
               ss << features[i];
             }
           std::string state = ss.str();
-          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, rso.str()+wl_rso.str(), *trace));
+          utils::dump_IR_as_tokens(*callee, &tokens_rso);
+          tokens_rso<<"End tokens:\n";
+          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, tokens_rso.str()+rso.str()+wl_rso.str(), *trace));
           final_decision = prediction.pred();
           q_Yes = prediction.q_yes();
           q_No  = prediction.q_no();
