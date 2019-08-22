@@ -9,6 +9,6 @@
 model.pt
 examples/
 */slash
-*/GPATH
-*/GRTAGS
-*/GTAGS
+GPATH
+GRTAGS
+GTAGS
