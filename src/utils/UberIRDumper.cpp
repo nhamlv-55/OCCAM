@@ -7,6 +7,7 @@ namespace utils {
 
   using namespace llvm;
   bool dump_IR_as_tokens(const Instruction& I, raw_string_ostream* s){
+    *s << I.getOpcodeName()<< " ";
     for(unsigned i = 0; i < I.getNumOperands(); ++i){
         Value *opnd = I.getOperand(i);
         if (opnd->hasName()) {
@@ -15,8 +16,8 @@ namespace utils {
         } else {
           *s << " ptr" << opnd;
         }
-        *s << "\n";
     }
+    *s << "\n";
     return true;
 
   }
