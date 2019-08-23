@@ -41,7 +41,7 @@ class Mode(Enum):
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
-    def __init__(self, mode, net = None, debug = False, p = -1, n = -1):
+    def __init__(self, mode, atomizer = None, net = None, debug = False, p = -1, n = -1):
         self.names = [
             "block_count",
             "inst_count",
@@ -77,7 +77,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         self.mode = mode
         self.say_no = False
         self.say_yes = False
-        self.atomizer = Atomizer()
+        self.atomizer = atomizer
 
     def handle_meta(self, meta, coloring = False):
         meta, worklist = meta.split("Worklist:\n")
@@ -88,7 +88,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         print("callee_idx", callee_idx)
         callee = meta[callee_idx+1:caller_idx]
         caller = meta[caller_idx+1:-1]
-        print("symbols2idx:", self.atomizer.symbol2idx)
+        print("symbols2idx:", self.atomizer.idx2symbol)
         print("no of unique symboles:", len(self.atomizer.symbol2idx))
         meta_text = []
         module = meta[0]
