@@ -6,5 +6,5 @@ main: main.c
 	get-bc main
 
 clean:
-	rm -f *~ .*.bc *.bc *.ll .*.o *.manifest manifest main main_slash
+	rm -f *~ .*.bc *.bc *.ll .*.o main main_slash
 	rm -rf slash
