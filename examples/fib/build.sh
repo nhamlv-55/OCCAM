@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-
-#make the bitcode
-#default values
 INTER_SPEC="none"
 INTRA_SPEC="machine-learning"
 DEVIRT="none"
@@ -73,12 +70,13 @@ rm -rf $DATABASE
 mkdir -p $DATABASE
 #slash --no-strip --intra-spec-policy=aggressive --inter-spec-policy=none --stats --work-dir=slash/agg manifest 
 
-SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE} --epsilon=$EPSILON"
+SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats ${OPT_OPTIONS} --database=${DATABASE} --epsilon=$EPSILON"
 echo "============================================================"
 echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"
 slash ${SLASH_OPTS} --work-dir=slash/$PREFIX manifest
 
+ROPgadget --binary slash/$PREFIX/fib > slash/$PREFIX/rop_stats.txt
 #debugging stuff below:
 for bitcode in slash/$PREFIX/*.bc; do
     echo "$bitcode"

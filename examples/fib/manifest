@@ -1,5 +1,5 @@
 { "main" : "main.bc"
-, "binary"  : "main"
+, "binary"  : "fib"
 , "modules"    : []
 , "native_libs" : []
 , "constraints"    : [1, "main", "a" ]
