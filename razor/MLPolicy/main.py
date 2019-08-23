@@ -58,7 +58,7 @@ if __name__=="__main__":
         gen_new_meta()
     elif action=="train-scratch":
         #policy = DoubleQPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
-        policy = PolicyGradient(workdir, model_path, TinyFFNSoftmax, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
+        policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
         #policy = DAgger(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":
