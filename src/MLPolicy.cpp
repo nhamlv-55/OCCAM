@@ -70,6 +70,15 @@ namespace previrt {
     outFile.flush();
     outFile.close();
     errs() << "file closed" << "\n";
+
+    database->append(".state_encoded");
+    std::ofstream outFile2(*database);
+    errs() << "calling destructor with file " << *database << "\n";
+    outFile2 << *state_encoded;
+    outFile2.flush();
+    outFile2.close();
+    errs() << "file closed" << "\n";
+
   }
 
   void MLPolicy::markRecursiveFunctions() {
@@ -252,17 +261,24 @@ namespace previrt {
       std::string wl_str;
       std::string tokens_str;
       llvm::raw_string_ostream tokens_rso(tokens_str);
-      llvm::raw_string_ostream rso(user_str);
+      //llvm::raw_string_ostream rso(user_str);
       llvm::raw_string_ostream wl_rso(wl_str);
       wl_rso<<"Worklist:\n";
       tokens_rso<<"Tokens:\n";
-      rso<<"Module:";
-      rso<<CS.getParent()->getParent()->getParent()->getModuleIdentifier();
-      rso<<"\n";
-      rso<<"Function:";
-      rso<<callee->getName();
-      rso<<"\n; Body:\n";
-      callee->print(rso);
+      //      rso<<"Module:";
+      //      rso<<CS.getParent()->getParent()->getParent()->getModuleIdentifier();
+      //      //dump raw IR caller and callee to grpc:
+      //      rso<<"\n";
+      //      rso<<"Callee:";
+      //      rso<<callee->getName();
+      //      rso<<"\n; Body:\n";
+      //      callee->print(rso);
+      //
+      //      rso<<"Caller:";
+      //      rso<<caller->getName();
+      //      rso<<"\n; Body:\n";
+      //      caller->print(rso);
+
       std::vector<Value*> worklist;
       float affected_inst = 0;
       
@@ -270,8 +286,7 @@ namespace previrt {
         Constant *cst = dyn_cast<Constant>(CS.getArgument(i));
         // XXX: cst can be nullptr
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
-          cst->print(rso);
-          rso<<"\n";
+          tokens_rso << "Const " << cst << "\n";
           slice.push_back(cst);
           argument_features.push_back(1);
           // count how many branch insts are affected
@@ -324,12 +339,17 @@ namespace previrt {
               ss << features[i];
             }
           std::string state = ss.str();
+          //dump caller and callee tokens to grpc
+          tokens_rso << "Callee:\n";
           utils::dump_IR_as_tokens(*callee, &tokens_rso);
+          tokens_rso << "Caller:\n";
+          utils::dump_IR_as_tokens(*caller, &tokens_rso);
           tokens_rso<<"End tokens:\n";
-          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, tokens_rso.str()+rso.str()+wl_rso.str(), *trace));
+          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, tokens_rso.str()+wl_rso.str(), *trace));
           final_decision = prediction.pred();
           q_Yes = prediction.q_yes();
           q_No  = prediction.q_no();
+          state_encoded->append(prediction.state_encoded());
           errs()<<"final_decision:"<<final_decision<<"\n";
         }else{
           torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
