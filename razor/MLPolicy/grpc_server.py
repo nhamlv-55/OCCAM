@@ -82,9 +82,8 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     def handle_meta(self, meta):
         meta, worklist = meta.split("Worklist:\n")
         meta = meta.split("\n")
-        _ = self.atomizer.encode(meta)
-        print("encoded:", _)
-        print("decoded:", self.atomizer.decode(_))
+        print("symbols2idx:", self.atomizer.symbol2idx)
+        print("no of unique symboles:", len(self.atomizer.symbol2idx))
         meta_text = []
         module = meta[0]
         if module not in self.module_trace:
@@ -140,9 +139,9 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         if self.mode == Mode.INTERACTIVE:
             #immediately return results if flags are set
             if self.say_no:
-                return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=False)
+                return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=False)
             if self.say_yes:
-                return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=True)
+                return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=True)
 
             #normal pipeline
             self.print_state(request)
@@ -157,12 +156,13 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
                 self.say_no  = True
             else:
                 pred = False
-            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=pred)
+            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty",pred=pred)
         elif self.mode == Mode.TRY_1_CS:
             meta = request.meta
             trace = np.array(request.trace)
             trace = trace.reshape(-1, len(self.names))
             module, meta_text = self.handle_meta(meta)
+            state_encoded = self.atomizer.encode(meta.split("\n"))
             print(self.module_trace)
             if self.debug:
                 for l in meta_text: print(l)
@@ -170,8 +170,10 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
                 pred = True
             else:
                 pred = False
-            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=pred)
+            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = state_encoded,  pred=pred)
         elif self.mode == Mode.TRAINING:
+            meta = request.meta
+            state_encoded = self.atomizer.encode(meta.split("\n"))
             if self.debug: self.print_state(request)
             features = [int(s) for s in request.features.split(',')]
             features = torch.FloatTensor([features])
@@ -181,7 +183,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             if self.debug: print(logits)
             pred = np.random.choice([False, True], p=logits)
             if self.debug: print(pred)
-            return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], pred = pred)
+            return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = pred)
         #context.set_trailing_metadata(('metadata_for_testint', b'I agree'),)
         else:
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=pred)

@@ -213,4 +213,5 @@ message Prediction {
   required float q_yes = 1;
   required float q_no = 2 ;
   required bool pred = 3;
+  required string state_encoded = 4;
 }
