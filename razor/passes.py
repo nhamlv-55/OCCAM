@@ -306,7 +306,7 @@ def peval(input_file, output_file, \
             
     if policy <> 'none':
         if policy == 'machine-learning':
-            max_intra_specializer_iteration = 9999999
+            max_intra_specializer_iteration = 1 
         else:
             max_intra_specializer_iteration = 9999999
         out = ['blah']
