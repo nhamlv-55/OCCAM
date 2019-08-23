@@ -1,5 +1,5 @@
 { "main" : "bzip2.o.bc"
-, "binary"  : "bzip2_slashed"
+, "binary"  : "bzip2"
   , "modules"    : ["blocksort.o.bc", "bzlib.o.bc", "compress.o.bc", "crctable.o.bc", "decompress.o.bc", "huffman.o.bc", "randtable.o.bc"]
 , "ldflags" : []
 , "native_libs" : []
