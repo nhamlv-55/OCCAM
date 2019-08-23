@@ -385,33 +385,35 @@ class Atomizer(object):
 
     def encode(self, insts):
         '''
-        take in a list of insts in the token-format and return a numpy array
+        take in a list of insts in the token-format and return an encoded string.
+        We can return a numpy here but using a string we are forcing the same format across the log and the policy
         '''
-        
-        encoded = []
+        encoded_str = ""
         ptr_map, new_insts = self.normalize_ptr(insts)
         for inst in new_insts:
             if len(inst)==0:
                 continue
-            inst_as_list = []
             tokens = inst.split()
             opt_code = tokens[0]
             self.handle_symbol(opt_code)
-            inst_as_list.append([self.symbol2idx[opt_code]])
+            encoded_str+=str(self.symbol2idx[opt_code])+" "
             for operand in tokens[1:]:
-                inst_as_list.append(self.split_token(operand))
-            encoded.append(inst_as_list)
-        return encoded
+                token_symbols_idx = self.split_token(operand)
+                encoded_str+="-".join([str(idx) for idx in token_symbols_idx])
+                encoded_str+=" "
+            encoded_str+="\n"
+        return encoded_str
 
     def decode(self, array):
         '''
-        take in a 3d array and decode it back to original form
+        take in an encoded string and decode it back to original form
         '''
         for l in array:
-
-            for tok in l:
-                for sym in tok:
-                    print(self.idx2symbol[sym], end = ";")
+            tokens = l.strip().split()
+            for tok in tokens:
+                syms = tok.split("-")
+                for sym in syms:
+                    print(self.idx2symbol[int(sym)]),
                 print(" ")
             print("\n")
 
