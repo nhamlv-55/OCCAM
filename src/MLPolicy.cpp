@@ -264,7 +264,7 @@ namespace previrt {
       //llvm::raw_string_ostream rso(user_str);
       llvm::raw_string_ostream wl_rso(wl_str);
       wl_rso<<"Worklist:\n";
-      tokens_rso<<"Tokens:\n";
+      //tokens_rso<<"Tokens:\n";
       //      rso<<"Module:";
       //      rso<<CS.getParent()->getParent()->getParent()->getModuleIdentifier();
       //      //dump raw IR caller and callee to grpc:

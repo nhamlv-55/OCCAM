@@ -79,9 +79,15 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         self.say_yes = False
         self.atomizer = Atomizer()
 
-    def handle_meta(self, meta):
+    def handle_meta(self, meta, coloring = False):
         meta, worklist = meta.split("Worklist:\n")
         meta = meta.split("\n")
+        callee_idx = meta.index("Callee:")
+        caller_idx = meta.index("Caller:")
+        print("caller_idx", caller_idx)
+        print("callee_idx", callee_idx)
+        callee = meta[callee_idx+1:caller_idx]
+        caller = meta[caller_idx+1:-1]
         print("symbols2idx:", self.atomizer.symbol2idx)
         print("no of unique symboles:", len(self.atomizer.symbol2idx))
         meta_text = []
@@ -90,29 +96,32 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             self.module_trace[module] = {"spec_pos": len(self.module_trace)}
         worklist = worklist.split("\n")
         uses = []
-        for l in worklist:
-            if "User:" not in l:
-                continue
-            value, use = l.split("User:")
-            value.strip()
-            use.strip()
-            uses.append(use)
-            meta_text.append(colored(l, "yellow"))
-        for l in meta:
-            if l.strip()=="":
-                continue
-            contain_use = False
-            for u in uses:
-                if u in l:
-                    if l.startswith("  br"):
-                        meta_text.append(colored(l, "red"))
-                    else:
-                        meta_text.append(colored(l, "green"))
-                    contain_use = True
-                    break
-            if not contain_use:
-                meta_text.append(l)
-        return module, meta_text
+        if coloring:
+            for l in worklist:
+                if "User:" not in l:
+                    continue
+                value, use = l.split("User:")
+                value.strip()
+                use.strip()
+                uses.append(use)
+                meta_text.append(colored(l, "yellow"))
+            for l in meta:
+                if l.strip()=="":
+                    continue
+                contain_use = False
+                for u in uses:
+                    if u in l:
+                        if l.startswith("  br"):
+                            meta_text.append(colored(l, "red"))
+                        else:
+                            meta_text.append(colored(l, "green"))
+                        contain_use = True
+                        break
+                if not contain_use:
+                    meta_text.append(l)
+        else:
+            meta_text = meta
+        return module, meta_text, caller, callee
 
     def print_state(self, request):
         features = request.features
@@ -125,11 +134,15 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             return
         trace = trace.reshape(-1, len(self.names))
         meta = request.meta
-        _, meta_text = self.handle_meta(meta)
+        _, meta_text, caller, callee = self.handle_meta(meta)
         print("trace:")
         print(trace)
-        print("meta:")
-        for l in meta_text: print(l)
+        #print("meta:")
+        #for l in meta_text: print(l)
+        print("caller:")
+        for l in caller: print(l)
+        print("callee:")
+        for l in callee: print(l)
         print("state:")
         for i in range(len(features)):
             print(self.names[i], ":", features[i])
@@ -161,7 +174,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             meta = request.meta
             trace = np.array(request.trace)
             trace = trace.reshape(-1, len(self.names))
-            module, meta_text = self.handle_meta(meta)
+            module, meta_text, caller, callee = self.handle_meta(meta)
             state_encoded = self.atomizer.encode(meta.split("\n"))
             print(self.module_trace)
             if self.debug:
@@ -173,7 +186,10 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = state_encoded,  pred=pred)
         elif self.mode == Mode.TRAINING:
             meta = request.meta
-            state_encoded = self.atomizer.encode(meta.split("\n"))
+            _, _, caller, callee = self.handle_meta(meta)
+            caller_encoded = self.atomizer.encode(caller)
+            callee_encoded = self.atomizer.encode(callee)
+            state_encoded = "caller:\n"+caller_encoded+"callee:\n"+callee_encoded+"----\n"
             if self.debug: self.print_state(request)
             features = [int(s) for s in request.features.split(',')]
             features = torch.FloatTensor([features])
