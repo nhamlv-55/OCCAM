@@ -7,7 +7,7 @@ namespace utils {
 
   using namespace llvm;
   bool dump_IR_as_tokens(const Instruction& I, raw_string_ostream* s){
-    *s << I.getOpcodeName()<< " ";
+    *s <<" "<< I.getOpcodeName()<< " ";
     for(unsigned i = 0; i < I.getNumOperands(); ++i){
         Value *opnd = I.getOperand(i);
         if (opnd->hasName()) {
@@ -23,7 +23,7 @@ namespace utils {
   }
   
   bool dump_IR_as_tokens(const BasicBlock& BB, raw_string_ostream* s){
-    *s << "  BasicBlock " << BB.getName().str() << "\n";
+    *s << "BasicBlock " << BB.getName().str() << "\n";
     for (const Instruction &I : BB) {
       dump_IR_as_tokens(I, s);
     }
