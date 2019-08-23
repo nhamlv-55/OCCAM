@@ -115,7 +115,7 @@ function dynamic_link() {
 	echo "Something failed while running slash"
 	exit 1
     fi
-    ROPgadget --binary $DATABASE/bzip2_slashed > $DATABASE/rop_stats.txt
+    ROPgadget --binary $DATABASE/bzip2 > $DATABASE/rop_stats.txt
     #cp ./slash_specialized/bzip2_slashed .
 }
 
