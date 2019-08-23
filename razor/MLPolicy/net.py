@@ -23,19 +23,19 @@ class TinyFFNSoftmax(Net):
     def __init__(self, metadata):
         Net.__init__(self, metadata)
         #print("features len:", self.features_len)
-        #self.fc_f1 = nn.Linear(self.features_len, self.features_len, bias = True)  
+        self.fc_f1 = nn.Linear(self.features_len, self.features_len, bias = True)  
         self.fc_f2 = nn.Linear(self.features_len, 2, bias = True)
     def forward(self, x): 
         if DEBUG: print(x, x.size())
-        #features = x - self.mean
+        features = x - self.mean
         #if DEBUG: print("x after subtract mean:", features)
-        #features /= self.std
+        features /= self.std
         #print("x after normalization:", x)
-        #features = x.to(torch.float)
+        features = x.to(torch.float)
         #if DEBUG: print("x after normalization:", features)
-        #h_f = F.tanh(self.fc_f1(x))
+        h_f = F.relu(self.fc_f1(x))
         #if DEBUG: print("h_f:",h_f)
-        h_f2 = self.fc_f2(x)
+        h_f2 = F.relu(self.fc_f2(x))
         if DEBUG: print("h_f2:", h_f2)
         output = F.softmax(h_f2, dim = -1)
         return output
@@ -67,10 +67,10 @@ class FeedForwardSingleInputSoftmax(Net):
     def __init__(self, metadata):
         Net.__init__(self, metadata)
         print(self.features_len)
-        self.fc_f1 = nn.Linear(self.features_len, self.features_len, bias = True)  
-        self.fc_f2 = nn.Linear(self.features_len, self.features_len/2, bias = True)
-        self.fc_f3 = nn.Linear(self.features_len/2, self.features_len/4, bias = True)
-        self.fc_f4 = nn.Linear(self.features_len/4, 2, bias = True)
+        self.fc_f1 = nn.Linear(self.features_len, self.features_len )  
+        self.fc_f2 = nn.Linear(self.features_len, self.features_len/2)
+        self.fc_f3 = nn.Linear(self.features_len/2, self.features_len/4)
+        self.fc_f4 = nn.Linear(self.features_len/4, 2)
     def forward(self, x): 
         if DEBUG: print(x, x.size())
         features = x- self.mean.view(-1)
