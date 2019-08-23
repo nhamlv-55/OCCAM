@@ -179,8 +179,8 @@ namespace previrt {
         module_features.push_back((float)p.getTotalBlocks());
         module_features.push_back((float)p.getTotalDirectCalls());
         //module_features.push_back((float)callee_no_of_uses);
-        //module_features.push_back((float)worklist.size());
         module_features.push_back((float)caller_no_of_uses);
+        module_features.push_back((float)worklist.size());
 
         specialize = policy->specializeOn(cs, specScheme, module_features, &client);
         //try dump policy
