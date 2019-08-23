@@ -20,7 +20,7 @@ public:
     : stub_(previrt::proto::QueryOracle::NewStub(channel)) {
   }
 
-  bool Query(previrt::proto::State s ) {
+  previrt::proto::Prediction Query(previrt::proto::State s ) {
     llvm::errs()<<"call query with s="<<s.features()<<"\n";
     previrt::proto::Prediction p;
 
@@ -38,9 +38,12 @@ public:
     Status status = stub_->Query(&context, s, &p);
     if (!status.ok()) {
       llvm::errs() << "Query rpc failed.\n";
-      return false;
+      p.set_q_yes(-1);
+      p.set_q_no(-1);
+      p.set_pred(false);
+      return p;
     }
-    return p.pred();
+    return p;
   }
 
   previrt::proto::State MakeState(const std::string& features, const std::string& meta, const std::vector<float>& trace) {
