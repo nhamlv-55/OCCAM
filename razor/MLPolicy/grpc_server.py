@@ -84,12 +84,12 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         meta = meta.split("\n")
         callee_idx = meta.index("Callee:")
         caller_idx = meta.index("Caller:")
-        print("caller_idx", caller_idx)
-        print("callee_idx", callee_idx)
+        if self.debug: print("caller_idx", caller_idx)
+        if self.debug: print("callee_idx", callee_idx)
         callee = meta[callee_idx+1:caller_idx]
         caller = meta[caller_idx+1:-1]
-        print("symbols2idx:", self.atomizer.idx2symbol)
-        print("no of unique symboles:", len(self.atomizer.symbol2idx))
+        if self.debug: print("symbols2idx:", self.atomizer.idx2symbol)
+        if self.debug: print("no of unique symboles:", len(self.atomizer.symbol2idx))
         meta_text = []
         module = meta[0]
         if module not in self.module_trace:
@@ -202,7 +202,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = pred)
         #context.set_trailing_metadata(('metadata_for_testint', b'I agree'),)
         else:
-            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, pred=pred)
+            return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=False)
 
 def serve(mode, p = -1, n = -1):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
