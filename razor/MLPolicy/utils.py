@@ -2,7 +2,6 @@ from __future__ import print_function
 import os
 import glob
 import numpy as np
-import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
 import random
@@ -18,6 +17,41 @@ Step   = namedtuple('Step', ('state', 'prob', 'action'))
 np.set_printoptions(precision=6, suppress=True)
 GAMMA = 0.99
 DEBUG = False
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+#Plot the rewards
+def plot(no_of_sampling, no_of_run, workdir, graph_file):
+    plt.clf()
+    iters = []
+    means = []
+    stdevs = []
+
+    def read_rop_stats(iteration, run):
+        res_path = os.path.join(workdir, "slash_run%s/run%s/rop_stats.txt"%(str(iteration), str(run)))
+        res = open(res_path, "r").readlines()[-1]
+        tokens = res.strip().split()
+        return int(tokens[-1])
+
+    for i in range(1, no_of_run):
+        run_results = []
+        for j in range(no_of_sampling):
+            run_results.append(read_rop_stats(i,j))
+        iters.append(i)
+        means.append(np.mean(run_results))
+        stdevs.append(np.std(run_results))
+
+    x = np.array(iters)
+    y = np.array(means)
+    e = np.array(stdevs)
+
+    plt.errorbar(x, y, e, linestyle='None', marker='^')
+
+    plt.savefig(os.path.join(workdir, graph_file))
+
+#ReplayMemory
 class ReplayMemory(object):
     def __init__(self, capacity):
         self.capacity = capacity
