@@ -373,8 +373,9 @@ def optimize(input_file, output_file, use_seaopt, extra_opts, disable_inlining =
     input_file = input_file.split("/")[-1]
     if iteration is not None:
         input_file+=str(iteration)
-    args+=['-stats', '-stats-json',
-           '-pass-remarks-output=%s.yaml'%input_file]
+
+#    args+=['-stats', '-stats-json',
+#           '-pass-remarks-output=%s.yaml'%input_file]
     if disable_inlining:
         args += ['-inline-threshold=-100']
     return driver.run(utils.get_opt(use_seaopt), args, stderr_filename = '%s.opt_log.json'%input_file)
