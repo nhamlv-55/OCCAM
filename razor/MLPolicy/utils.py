@@ -23,11 +23,20 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 #Plot the rewards
-def plot(no_of_sampling, no_of_run, workdir, graph_file):
+def plot(no_of_sampling, no_of_run, workdir, graph_file, metric = None):
     plt.clf()
     iters = []
     means = []
     stdevs = []
+
+    def read_profiler(iteration, run, metrics):
+        res_path = os.path.join(workdir, "slash_run%s/run%s/0AfterSpecialization_results.txt"%(str(iteration), str(run)))
+        res = open(res_path, "r").readlines()
+        for l in res:
+            if metrics in l:
+                tokens = l.strip().split()
+                return int(tokens[0])
+
 
     def read_rop_stats(iteration, run):
         res_path = os.path.join(workdir, "slash_run%s/run%s/rop_stats.txt"%(str(iteration), str(run)))
@@ -38,7 +47,10 @@ def plot(no_of_sampling, no_of_run, workdir, graph_file):
     for i in range(1, no_of_run):
         run_results = []
         for j in range(no_of_sampling):
-            run_results.append(read_rop_stats(i,j))
+            if metric is None:
+                run_results.append(read_rop_stats(i,j))
+            else:
+                run_results.append(read_profiler(i, j, metric))
         iters.append(i)
         means.append(np.mean(run_results))
         stdevs.append(np.std(run_results))
@@ -127,7 +139,7 @@ class Dataset(object):
                 result[k] = v
         return result
     
-    def score(self, result, metric="Unique gadgets found"):
+    def score(self, result, metric="Number of instructions"):
         return result[metric]*1.0
         #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
         #return result["Statically unknown memory accesses"]
