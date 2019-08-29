@@ -18,7 +18,7 @@ README included with this project for more information.
 from __future__ import print_function
 import argparse
 import sys
-
+import json
 # Third Party Imports
 
 
@@ -26,6 +26,23 @@ import sys
 from utility import *
 from static_analyzer.GadgetSet import GadgetSet
 from static_analyzer.GadgetStats import GadgetStats
+
+def single_run(workdir, run):
+    result = {}
+    #get detailed gadget counts
+    binary_name = workdir.split("/")[-1]
+    binary_path = os.path.join(workdir, "slash/%s"%run, binary_name)
+    print(binary_path)
+    gadget_counts = GadgetSet("gadget_count", binary_path, False)
+    result["Total unique gadgets"] = len(gadget_counts.totalUniqueGadgets)
+    result["ROP gadgets"] = len(gadget_counts.ROPGadgets)
+    result["JOP gadgets"] = len(gadget_counts.JOPGadgets)
+    result["COP gadgets"] = len(gadget_counts.COPGadgets)
+    
+    with open(os.path.join(workdir, "slash/%s"%run, "gadget_count.json"), "w") as f:
+        json.dump(result, f, indent=4, sort_keys=True)
+    return result
+
 
 def run_gsa(original, variants_dict, directory_name):
     # Start Evaluating
@@ -64,7 +81,6 @@ def run_gsa(original, variants_dict, directory_name):
         stat_counts = stat_counts + str(len(stat.variant.JOPGadgets)) + " (" + str(stat.JOPCountDiff) + "; " + rate_format.format(stat.JOPCountReduction) + "),"
         stat_counts = stat_counts + str(len(stat.variant.COPGadgets)) + " (" + str(stat.COPCountDiff) + "; " + rate_format.format(stat.COPCountReduction) + ")\r"
         file_lines.append(stat_counts)
-
     try:
         file = open(directory_name + "/GadgetCounts_Reduction.csv", "w")
         file.writelines(file_lines)
@@ -282,3 +298,15 @@ def run_gsa(original, variants_dict, directory_name):
         file.close()
     except OSError as osErr:
         print(osErr)
+
+if __name__== "__main__":
+    OCCAM_HOME = os.environ['OCCAM_HOME']
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r', default="run0", help='Which run is it?')
+    parser.add_argument('-f', default=os.path.join(OCCAM_HOME,"examples/portfolio/tree"), help='work_dir')
+    args = parser.parse_args()
+    run = args.r
+    model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model") 
+    work_dir   = args.f
+    single_run(work_dir, run)
+

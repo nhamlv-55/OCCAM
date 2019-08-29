@@ -18,8 +18,8 @@ import Previrt_pb2
 import Previrt_pb2_grpc
 from grpc_server import QueryOracleServicer, Mode
 
-torch.manual_seed(0)
-np.random.seed(0)
+torch.manual_seed(1)
+np.random.seed(1)
 
 debug_print_limit = 6
 lr = 0.01
@@ -42,7 +42,7 @@ class PolicyGradient(BasePolicy):
 
         for i in range(no_of_iter):
             start_time = time.time()
-            if (i+1)%10 == 0:
+            if (i+1)%100 == 0:
                 print("performance at iteration %s"%str(i))
                 self.evaluate(tag="eval%s"%str(i))
             eps_threshold = -1 #set to -1 to always use policy
@@ -58,7 +58,7 @@ class PolicyGradient(BasePolicy):
                 self.run_policy(no_of_sampling, eps_threshold, i)
             run_policy_time = time.time()
             print("Rollout %s runs in %s seconds"%(no_of_sampling, run_policy_time - start_time))
-            dataset = Dataset(self.dataset_path, size = no_of_sampling)
+            dataset = Dataset(self.dataset_path, metric = self.metadata["metric"], size = no_of_sampling)
             trajectory_data = dataset.get_trajectory_data(normalize_rewards = True)
             collect_data_time = time.time()
             print("Processing data in ", collect_data_time - run_policy_time)

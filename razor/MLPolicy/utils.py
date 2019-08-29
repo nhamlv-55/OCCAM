@@ -23,32 +23,32 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 #Plot the rewards
-def plot(no_of_sampling, no_of_run, workdir, graph_file, metric = None):
+def plot(no_of_sampling, no_of_run, workdir, graph_file, metric = "Total unique gadgets"):
     plt.clf()
     iters = []
     means = []
     stdevs = []
 
-    def read_profiler(iteration, run, metrics):
+    def read_profiler(iteration, run, metric):
         res_path = os.path.join(workdir, "slash_run%s/run%s/0AfterSpecialization_results.txt"%(str(iteration), str(run)))
         res = open(res_path, "r").readlines()
         for l in res:
-            if metrics in l:
+            if metric in l:
                 tokens = l.strip().split()
                 return int(tokens[0])
 
 
-    def read_rop_stats(iteration, run):
-        res_path = os.path.join(workdir, "slash_run%s/run%s/rop_stats.txt"%(str(iteration), str(run)))
-        res = open(res_path, "r").readlines()[-1]
-        tokens = res.strip().split()
-        return int(tokens[-1])
+    def read_rop_stats(iteration, run, metric):
+        res_path = os.path.join(workdir, "slash_run%s/run%s/"%(str(iteration), str(run)))
+        with open(res_path+"/gadget_count.json", "r") as f:
+            data = json.load(f)
+            return int(data[metric])
 
     for i in range(1, no_of_run):
         run_results = []
         for j in range(no_of_sampling):
-            if metric is None:
-                run_results.append(read_rop_stats(i,j))
+            if "gadgets" in metric:
+                run_results.append(read_rop_stats(i,j, metric))
             else:
                 run_results.append(read_profiler(i, j, metric))
         iters.append(i)
@@ -84,9 +84,10 @@ class ReplayMemory(object):
         return len(self.memory)
 
 class Dataset(object):
-    def __init__(self, folder, n_unused_stat = 3, size=99999999):
+    def __init__(self, folder, metric, n_unused_stat = 3, size=99999999):
         self.folder = folder
-        print(self.folder)
+        self.metric = metric
+        print(self.folder, self.metric)
         self.n_unused_stat = n_unused_stat
         self.all_data = []
         self.collect(size)
@@ -122,13 +123,13 @@ class Dataset(object):
 
     def get_stat(self, run):
         result = {}
-        with open(run+"/rop_stats.txt", "r") as f:
-            for l in f.readlines():
-                if "Unique gadgets found" in l:
-                    tokens = l.strip().split(":")
-                    v = int(tokens[1].strip())
-                    k = tokens[0]
-                    result[k] = v
+        #get rop gadgets count
+        with open(run+"/gadget_count.json", "r") as f:
+            data = json.load(f)
+            for k in data:
+                result[k]= data[k]
+ 
+        #get instruction counts
         with open(run+"/0AfterSpecialization_results.txt", "r") as f:
             for l in f.readlines():
                 if "[" in l:
@@ -139,8 +140,8 @@ class Dataset(object):
                 result[k] = v
         return result
     
-    def score(self, result, metric="Number of instructions"):
-        return result[metric]*1.0
+    def score(self, result):
+        return result[self.metric]*1.0
         #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
         #return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
@@ -302,7 +303,10 @@ def discount_rewards(rewards, gamma):
         cumulative_rewards = cumulative_rewards * gamma + rewards[i]
         discounted_rewards[i] = cumulative_rewards
     return discounted_rewards
-def gen_new_meta(workdir, bootstrap_runs, run_command):
+def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, metric = None):
+    if metric is None:
+        print("Need to provide metric")
+        return
     dataset_path = os.path.join(workdir, "slash")
     metadata = {}
     # run slash without the model to see how many features we are using
@@ -320,20 +324,21 @@ def gen_new_meta(workdir, bootstrap_runs, run_command):
         job_ids +=" %s"%str(jid)
     #run the jobs
     runners_cmd = "parallel %s -epsilon 10.5 -folder {} 2>/dev/null ::: %s"%(run_command, job_ids)
-    print(runners_cmd)
+    print(runners_cmd) 
     runners = subprocess.check_output(runners_cmd.split(), cwd = workdir)
 
     #use GSA to get ROP stats
-    binary_name = workdir.split("/")[-1]
-    original = os.path.join(workdir, "slash/runnone/%s"%binary_name)
-    variants_dict = {"agg": os.path.join(workdir, "slash/runagg/%s"%binary_name)}
-    for i in range(bootstrap_runs):
-        variants_dict[str(i)]=os.path.join(workdir, "slash/run%s/%s"%(str(i), binary_name))
-    directory_name = os.path.join(workdir, "gsa_stat")
-    if not os.path.exists(directory_name):
-        os.mkdir(directory_name)
-    gsa.run_gsa(original, variants_dict, directory_name)
-    dataset_bootstrap = Dataset(dataset_path)
+    if get_rop_detail:
+        binary_name = workdir.split("/")[-1]
+        original = os.path.join(workdir, "slash/runnone/%s"%binary_name)
+        variants_dict = {"agg": os.path.join(workdir, "slash/runagg/%s"%binary_name)}
+        for i in range(bootstrap_runs):
+            variants_dict[str(i)]=os.path.join(workdir, "slash/run%s/%s"%(str(i), binary_name))
+        directory_name = os.path.join(workdir, "gsa_stat")
+        if not os.path.exists(directory_name):
+            os.mkdir(directory_name)
+        gsa.run_gsa(original, variants_dict, directory_name)
+    dataset_bootstrap = Dataset(dataset_path, metric)
     dataset_bootstrap.sort()
     dataset_bootstrap.dump()
     print("features_len:", dataset_bootstrap.features_len)
@@ -349,6 +354,7 @@ def gen_new_meta(workdir, bootstrap_runs, run_command):
     metadata["min_score"] = dataset_bootstrap.all_data[-1]["score"]
     metadata["maxx"] = dataset_bootstrap.maxx.tolist()
     metadata["minn"] = dataset_bootstrap.minn.tolist()
+    metadata["metric"] = dataset_bootstrap.metric
     with open(os.path.join(workdir, "metadata.json"), "w") as f:
         json.dump(metadata, f, indent=4, sort_keys=True)
 
@@ -468,8 +474,10 @@ if __name__== "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', default=100, help='number of trial runs to get meta data')
     parser.add_argument('-f', default=os.path.join(OCCAM_HOME,"examples/portfolio/tree"), help='work_dir')
+    parser.add_argument('-m', default="Total unique gadgets", help='metrics to get')
     args = parser.parse_args()
     bootstrap_runs = int(args.n)
     model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model") 
     work_dir   = args.f
-    gen_new_meta(work_dir, bootstrap_runs, "./build.sh ")
+    metric = args.m
+    gen_new_meta(work_dir, bootstrap_runs, "./build.sh ", metric = metric)
