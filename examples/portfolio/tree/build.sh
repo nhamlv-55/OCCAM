@@ -99,4 +99,5 @@ echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"
 slash ${SLASH_OPTS} --work-dir=slash/$PREFIX tree.manifest.constraints
 
-ROPgadget --binary slash/$PREFIX/tree > slash/$PREFIX/rop_stats.txt
+#ROPgadget --binary slash/$PREFIX/tree > slash/$PREFIX/rop_stats.txt
+python ${OCCAM_HOME}/razor/MLPolicy/GSA_util/GSA.py -r $PREFIX -f ${PWD} 
