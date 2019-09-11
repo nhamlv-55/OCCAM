@@ -311,6 +311,7 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
     metadata = {}
     # run slash without the model to see how many features we are using
     print("run check_format to see if we change the number of features")
+    print("metric:", metric)
     #clear previous runs
     if os.path.exists(dataset_path):
         clear_prev_runs = subprocess.check_output(("rm -rf %s"%dataset_path).split())
