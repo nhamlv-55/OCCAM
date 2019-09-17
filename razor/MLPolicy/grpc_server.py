@@ -19,7 +19,7 @@ import math
 import logging
 from enum import Enum
 import grpc
-
+import os
 import Previrt_pb2
 import Previrt_pb2_grpc
 import numpy as np
@@ -28,9 +28,11 @@ import torch
 from utils import *
 from net import * 
 from termcolor import colored
-
+from inst2vec import task_utils as TU 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 _INTERACTIVE = False
+OCCAM_HOME = os.environ["OCCAM_HOME"]
+
 
 class Mode(Enum):
     INTERACTIVE = 0
@@ -41,7 +43,7 @@ class Mode(Enum):
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
-    def __init__(self, mode, atomizer = None, net = None, debug = False, p = -1, n = -1):
+    def __init__(self, mode, workdir, atomizer = None, net = None, debug = False, p = -1, n = -1):
         self.names = [
             "block_count",
             "inst_count",
@@ -78,7 +80,12 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         self.say_no = False
         self.say_yes = False
         self.atomizer = atomizer
-
+        self.get_meta(workdir)
+        self.rewriter = TU.IRTransformer(os.path.join(OCCAM_HOME, "razor/MLPolicy/inst2vec/published_results/data/vocabulary"), self.meta["struct_dict"])
+    def get_meta(self, workdir):
+        with open(os.path.join(workdir, "metadata.json"), "r") as metafile:
+            self.meta = json.load(metafile)
+    
     def handle_meta(self, meta, coloring = False):
         meta, worklist = meta.split("Worklist:\n")
         meta = meta.split("\n")
@@ -121,6 +128,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
                     meta_text.append(l)
         else:
             meta_text = meta
+        
         return module, meta_text, caller, callee
 
     def print_state(self, request):
@@ -134,13 +142,22 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             return
         trace = trace.reshape(-1, len(self.names))
         meta = request.meta
-        _, meta_text, caller, callee = self.handle_meta(meta)
+        caller = request.caller.splitlines()
+        callee = request.callee.splitlines()
+
+        stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee], ["caller", "callee"])
+        rewritten_caller = rewritten_ir[0]
+        rewritten_callee = rewritten_ir[1]
+        
+        # _, meta_text, caller, callee = self.handle_meta(meta)
         print("trace:")
         print(trace)
         #print("meta:")
         #for l in meta_text: print(l)
         print("caller:")
         for l in caller: print(l)
+        print("rewritten caller:")
+        for l in rewritten_caller: print(l)
         print("callee:")
         for l in callee: print(l)
         print("state:")
@@ -204,10 +221,10 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         else:
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=False)
 
-def serve(mode, p = -1, n = -1):
+def serve(mode, p, n, workdir):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-        QueryOracleServicer(mode = mode, p = p, n = n), server)
+        QueryOracleServicer(mode = mode, p = p, n = n, workdir = workdir), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     try:
@@ -231,10 +248,12 @@ if __name__ == '__main__':
     parser.add_argument('-p', default = 10, type=int, help='position to specialize')
     parser.add_argument('-n', default = 3, type=int, help ='module to specialize')
     parser.add_argument('-mode', default = 'interactive', type=str, help = 'grpc mode: training, interactive, try_1_cs')
+    parser.add_argument('-workdir', default = '/home/workspace/OCCAM/examples/portfolio/tree')
     args = parser.parse_args()
     p = args.p
     n = args.n
-    mode = args.mode 
+    mode = args.mode
+    workdir= args.workdir
     if mode=='training':
         mode = Mode.TRAINING
     elif mode=='interactive':
@@ -247,5 +266,5 @@ if __name__ == '__main__':
     #    print("spec_position:", i)
     #    try_1_cs(i)
     logging.basicConfig()
-    serve(mode = mode, p = p, n = n)
+    serve(mode, p, n, workdir)
 

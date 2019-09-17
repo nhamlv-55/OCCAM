@@ -28,7 +28,7 @@ import re
 import wget
 import zipfile
 import rgx_utils as rgx
-from inst2vec import inst2vec_preprocess as i2v_prep
+import inst2vec_preprocess as i2v_prep
 from collections import defaultdict
 from absl import flags
 
@@ -416,16 +416,9 @@ def llvm_ir_to_trainable(folder_ir):
 # Transform an IR into trainable data to be used as input data in tasks
 ########################################################################################################################
 class IRTransformer:
-    def __init__(self, vocabulary_dir ):
+    def __init__(self, vocabulary_dir, struct_dict ):
         self.vocabulary_dir = vocabulary_dir
-
-
-    def llvm_ir_to_input(self, raw_data, file_names):
-        # Source code transformation: simple pre-processing
-        print('\n--- Pre-process code')
-        preprocessed_data, functions_declared_in_files = i2v_prep.preprocess(raw_data)
-        preprocessed_data_with_structure_def = raw_data
-
+        self.struct_dict = struct_dict
         ############################################################################################################
         # Load vocabulary and cut off statements
 
@@ -437,20 +430,62 @@ class IRTransformer:
         # Load dictionary and cutoff statements
         print('\tLoading dictionary from file', dictionary_pickle)
         with open(dictionary_pickle, 'rb') as f:
-            dictionary = pickle.load(f)
+            self.dictionary = pickle.load(f)
         print('\tLoading cut off statements from file', cutoff_stmts_pickle)
         with open(cutoff_stmts_pickle, 'rb') as f:
-            stmts_cut_off = pickle.load(f)
-        stmts_cut_off = set(stmts_cut_off)
+            self.stmts_cut_off = pickle.load(f)
+        self.stmts_cut_off = set(self.stmts_cut_off)
 
+
+    def inline_struct_using_dict(self, data):
+        """
+        Inline structure types so that the code has no more named structures but only explicit aggregate types
+        And construct a dictionary of these named structures
+        :param data: input data as a list of files where each file is a list of strings
+        :return: data: modified input data
+                dictio: list of dictionaries corresponding to source files,
+                        where each dictionary has entries ["structure name", "corresponding literal structure"]
+        """
+        print('\tConstructing dictionary of structures and inlining structures...')
+        dictio = defaultdict(list)
+        dict_temp = self.struct_dict
+
+        # Loop on all files in the dataset
+        for i in range(len(data)):
+            # If the dictionary is empty
+            if not dict_temp:
+                found_type = False
+                for l in data[i]:
+                    if re.match(rgx.struct_name + ' = type (<?\{ .* \}|opaque|{})', l):
+                        found_type = True
+                        break
+                assert not found_type, "Structures' dictionary is empty for file containing type definitions: \n" + \
+                                    data[i][0] + '\n' + data[i][1] + '\n' + data[i] + '\n'
+
+            # Use the constructed dictionary to substitute named structures
+            # by their corresponding literal structure throughout the program
+            data[i] = inline_struct_types_in_file(data[i], dict_temp)
+
+            # Add the entries of the dictionary to the big dictionary
+            for k, v in dict_temp.items():
+                dictio[k].append(v)
+
+        return data, dictio
+
+
+    def llvm_ir_to_input(self, raw_data, file_names):
+        print("------------------")
+        print(raw_data[0][:10])
+        # Source code transformation: simple pre-processing
+        print('\n--- Pre-process code')
+        preprocessed_data, functions_declared_in_files = i2v_prep.preprocess(raw_data)
         ############################################################################################################
         # IR processing (inline structures, abstract statements)
 
         # Source code transformation: inline structure types
         print('\n--- Inline structure types')
-        processed_data, structures_dictionary = inline_struct_types_txt(preprocessed_data,
-                                                                        preprocessed_data_with_structure_def)
 
+        processed_data, dictio = self.inline_struct_using_dict(preprocessed_data)
         # Source code transformation: identifier processing (abstract statements)
         print('\n--- Abstract statements from identifiers')
         processed_data = abstract_statements_from_identifiers_txt(processed_data)
@@ -465,17 +500,17 @@ class IRTransformer:
                     continue
 
                 # check whether this is an unknown
-                if stmt in stmts_cut_off:
+                if stmt in self.stmts_cut_off:
                     stmt = rgx.unknown_token
                     unknown_counter += 1
 
                 # lookup and add to list
-                if stmt not in dictionary.keys():
+                if stmt not in self.dictionary.keys():
                     #print("NOT IN DICTIONARY:", stmt)
                     stmt = rgx.unknown_token
                     unknown_counter += 1
 
-                stmt_indexed.append(dictionary[stmt])
+                stmt_indexed.append(self.dictionary[stmt])
             results.append(stmt_indexed)
 
         return results, processed_data
