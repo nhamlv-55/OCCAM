@@ -11,6 +11,9 @@ import subprocess
 import argparse
 import math
 import GSA_util.GSA as gsa
+
+from inst2vec import inst2vec_preprocess as i2v_prep
+
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 Step   = namedtuple('Step', ('state', 'prob', 'action'))
@@ -303,17 +306,37 @@ def discount_rewards(rewards, gamma):
         cumulative_rewards = cumulative_rewards * gamma + rewards[i]
         discounted_rewards[i] = cumulative_rewards
     return discounted_rewards
+
+
 def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, metric = None):
     if metric is None:
         print("Need to provide metric")
         return
-    dataset_path = os.path.join(workdir, "slash")
     metadata = {}
+
+    binary_name = workdir.split("/")[-1]
+    print("running on binary file %s.bc"%binary_name)
+    # grab the struct dictionaries from the bc
+    if not os.path.exists(os.path.join(workdir, binary_name+".ll")):
+        #run llvm-dis
+        bc_path = os.path.join(workdir, binary_name+".bc")
+        ll_path = os.path.join(workdir, binary_name+".ll")
+        llvm_dis_cmd = "llvm-dis %s -o=%s"%(bc_path, ll_path)
+        print("running %s"%llvm_dis_cmd)
+        subprocess.check_output(llvm_dis_cmd.split(), cwd = workdir)
+
+    with open(os.path.join(workdir, binary_name+".ll"), "r") as ll_file:
+        raw_data = ll_file.read().splitlines()
+        _, struct_dict = i2v_prep.construct_struct_types_dictionary_for_file(raw_data)
+    
+    metadata["struct_dict"] = struct_dict    
+    dataset_path = os.path.join(workdir, "slash")
     # run slash without the model to see how many features we are using
     print("run check_format to see if we change the number of features")
     print("metric:", metric)
     #clear previous runs
     if os.path.exists(dataset_path):
+        print("clearning previous runs...")
         clear_prev_runs = subprocess.check_output(("rm -rf %s"%dataset_path).split())
     #run with policy none
     run_none = subprocess.check_output("./build.sh -intra-spec none -folder none".split(), cwd = workdir)
@@ -330,7 +353,7 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
 
     #use GSA to get ROP stats
     if get_rop_detail:
-        binary_name = workdir.split("/")[-1]
+        print("getting ROP details...")
         original = os.path.join(workdir, "slash/runnone/%s"%binary_name)
         variants_dict = {"agg": os.path.join(workdir, "slash/runagg/%s"%binary_name)}
         for i in range(bootstrap_runs):
