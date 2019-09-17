@@ -9,6 +9,7 @@
 model.pt
 examples/
 */slash
+*/published_results
 GPATH
 GRTAGS
 GTAGS
