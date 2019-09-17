@@ -46,10 +46,14 @@ public:
     return p;
   }
 
-  previrt::proto::State MakeState(const std::string& features, const std::string& meta, const std::vector<float>& trace) {
+  previrt::proto::State MakeState(const std::string& features, const std::string& meta, const std::string& caller, const std::string& callee, const std::string& module, const std::string& callsite, const std::vector<float>& trace) {
     previrt::proto::State s;
     s.set_features(features);
     s.set_meta(meta);
+    s.set_caller(caller);
+    s.set_callee(callee);
+    s.set_module(module);
+    s.set_callsite(callsite);
     //throw trace to proto message
     for(size_t i = 0; i < trace.size(); i++){
       s.add_trace((int)trace[i]);

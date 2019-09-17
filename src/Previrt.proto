@@ -207,11 +207,15 @@ message State {
   required string features = 1;
   repeated uint32 trace = 2;
   optional string meta = 3;
+  optional string caller = 4;
+  optional string callee = 5;
+  optional string module = 6;
+  optional string callsite = 7;
 }
 
 message Prediction {
   required float q_yes = 1;
   required float q_no = 2 ;
   required bool pred = 3;
-  required string state_encoded = 4;
+  optional string state_encoded = 4;
 }

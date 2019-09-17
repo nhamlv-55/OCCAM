@@ -257,12 +257,15 @@ namespace previrt {
       bool specialize = false;
       std::vector<unsigned> argument_features;
       slice.reserve(CS.arg_size()); 
-      std::string user_str;
+      //std::string user_str;
       std::string wl_str;
-      std::string tokens_str;
-      llvm::raw_string_ostream tokens_rso(tokens_str);
+      //std::string tokens_str;
+      //llvm::raw_string_ostream tokens_rso(tokens_str);
       //llvm::raw_string_ostream rso(user_str);
       llvm::raw_string_ostream wl_rso(wl_str);
+
+      
+
       wl_rso<<"Worklist:\n";
       //tokens_rso<<"Tokens:\n";
       //      rso<<"Module:";
@@ -286,7 +289,7 @@ namespace previrt {
         Constant *cst = dyn_cast<Constant>(CS.getArgument(i));
         // XXX: cst can be nullptr
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
-          tokens_rso << "Const " << cst << "\n";
+          //tokens_rso << "Const " << cst << "\n";
           slice.push_back(cst);
           argument_features.push_back(1);
           // count how many branch insts are affected
@@ -340,12 +343,22 @@ namespace previrt {
             }
           std::string state = ss.str();
           //dump caller and callee tokens to grpc
-          tokens_rso << "Callee:\n";
-          utils::dump_IR_as_tokens(*callee, &tokens_rso);
-          tokens_rso << "Caller:\n";
-          utils::dump_IR_as_tokens(*caller, &tokens_rso);
-          tokens_rso<<"End tokens:\n";
-          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, tokens_rso.str()+wl_rso.str(), *trace));
+          /////////////////////////////////////////////////////
+          // tokens_rso << "Callee:\n";                      //
+          // utils::dump_IR_as_tokens(*callee, &tokens_rso); //
+          // tokens_rso << "Caller:\n";                      //
+          // utils::dump_IR_as_tokens(*caller, &tokens_rso); //
+          // tokens_rso<<"End tokens:\n";                    //
+          /////////////////////////////////////////////////////
+          std::string caller_ir;
+          llvm::raw_string_ostream caller_rso(caller_ir);
+          caller->print(caller_rso);
+
+          std::string callee_ir;
+          llvm::raw_string_ostream callee_rso(callee_ir);
+          callee->print(callee_rso);
+
+          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, "meta", caller_rso.str(), callee_rso.str(), "module_ir", "callsite_ir", *trace));
           final_decision = prediction.pred();
           q_Yes = prediction.q_yes();
           q_No  = prediction.q_no();
