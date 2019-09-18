@@ -12,6 +12,19 @@ from sklearn import preprocessing
 import torch.optim as optim
 import argparse
 import subprocess
+
+#stuffs from openAI baselines
+import sys
+import re
+import multiprocessing
+import os.path as osp
+import gym
+from collections import defaultdict
+import tensorflow as tf
+import numpy as np
+
+from importlib import import_module
+
 # LSTM in pytorch expects input in form (seq_len, batch_size, input_size), hence we use view(len, 1, -1)
 # Before getting to the example, note a few things. Pytorch's LSTM expects all of its inputs to be 3D tensors.
 # The semantics of the axes of these tensors is important.
@@ -53,12 +66,34 @@ def evaluate(model_path):
     _ = subprocess.check_output("./build.sh -epsilon 0 -folder eval 2>eval.log".split(), cwd = workdir)
     print(_)
     print("done evaluation")
+
+#baselines main
+def main(args):
+    # configure logger, disable logging in child MPI processes (with rank > 0)
+
+    arg_parser = common_arg_parser()
+    args, unknown_args = arg_parser.parse_known_args(args)
+    extra_args = parse_cmdline_kwargs(unknown_args)
+
+    if MPI is None or MPI.COMM_WORLD.Get_rank() == 0:
+        rank = 0
+        configure_logger(args.log_path)
+    else:
+        rank = MPI.COMM_WORLD.Get_rank()
+        configure_logger(args.log_path, format_strs=[])
+
+    model, env = train(args, extra_args)
+
+    return model
+
+
 if __name__=="__main__":
     if action=="gen-meta":
         gen_new_meta()
     elif action=="train-scratch":
         #policy = DoubleQPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
-        policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
+        #policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
+        policy = PolicyGradient(workdir, model_path, UberNet, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
         #policy = DAgger(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":
