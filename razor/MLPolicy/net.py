@@ -23,6 +23,7 @@ class TinyFFNSoftmax(Net):
     #Use tanh for easier training (only with tiny net)
     def __init__(self, metadata):
         Net.__init__(self, metadata)
+        self.net_type = "TinyFFNSoftmax"
         #print("features len:", self.features_len)
         self.fc_f1 = nn.Linear(self.features_len, self.features_len, bias = True)  
         self.fc_f2 = nn.Linear(self.features_len, 2, bias = True)
@@ -44,6 +45,7 @@ class TinyFFNSoftmax(Net):
 class FeedForwardSingleInput(Net):
     def __init__(self, metadata):
         Net.__init__(self, metadata)
+        self.net_type = "FeedForwardSingleInput"
         print(self.features_len)
         self.fc_f1 = nn.Linear(self.features_len, self.features_len, bias = True)  
         self.fc_f2 = nn.Linear(self.features_len, self.features_len/2, bias = True)
@@ -67,6 +69,7 @@ class FeedForwardSingleInput(Net):
 class FeedForwardSingleInputSoftmax(Net):
     def __init__(self, metadata):
         Net.__init__(self, metadata)
+        self.net_type = "FeedForwardSingleInputSoftmax"
         print(self.features_len)
         self.fc_f1 = nn.Linear(self.features_len, self.features_len )  
         self.fc_f2 = nn.Linear(self.features_len, self.features_len/2)
@@ -104,6 +107,7 @@ def create_emb_layer(emb_file, non_trainable = False):
 class UberNet(Net):
     def __init__(self, metadata, dim_hidden = 64, num_layers = 2):
         Net.__init__(self, metadata)
+        self.net_type = "UberNet"
         emb_file = '/home/workspace/OCCAM/razor/MLPolicy/inst2vec/published_results/data/vocabulary/emb.p'
         self.embedding, num_emb, dim_emb = create_emb_layer(emb_file, True)
         self.dim_hidden = dim_hidden
