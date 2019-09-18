@@ -5,7 +5,7 @@ import torch
 import numpy as np
 import pickle
 DEBUG = False
-DEBUG = True
+#DEBUG = True
 
 torch.set_printoptions(sci_mode = False)
 
@@ -106,8 +106,9 @@ def create_emb_layer(emb_file, non_trainable = False):
     return emb_layer, num_emb, dim_emb
 
 class UberNet(Net):
-    def __init__(self, metadata, dim_hidden = 64, num_layers = 2):
+    def __init__(self, metadata, dim_hidden = 64, num_layers = 1):
         Net.__init__(self, metadata)
+        self.max_sequence_len = metadata["max_sequence_len"]
         self.net_type = "UberNet"
         emb_file = '/home/workspace/OCCAM/razor/MLPolicy/inst2vec/published_results/data/vocabulary/emb.p'
         self.embedding, num_emb, dim_emb = create_emb_layer(emb_file, True)
@@ -127,22 +128,31 @@ class UberNet(Net):
         x = x.long()
         if DEBUG: print("x:", x.size())
         split_index = np.where(x == 0)[0]
-        caller = x[:, :1000]
-        callee = x[:, 1000:]
+        caller_len = x[:, 0]
+        callee_len = x[:, 1]
+        print("caller_len:", caller_len, "callee_len:", callee_len)
+        x = x[:, 2:]
+        print("x after cutoff", x.size())
+        caller = x[:, :self.max_sequence_len]
+        callee = x[:, self.max_sequence_len:]
         print("caller:", caller)
         print("callee:", callee)
-        print(self.embedding(caller).float())
-        h_caller, _  = self.gru_caller(self.embedding(caller).float())
-        h_callee, _ = self.gru_callee(self.embedding(callee).float())
+        print("caller_len:", caller_len)
+        print("callee_len:", callee_len)
+        packed_caller = nn.utils.rnn.pack_padded_sequence(self.embedding(caller), caller_len, batch_first=True)
+        packed_callee = nn.utils.rnn.pack_padded_sequence(self.embedding(callee), callee_len, batch_first=True)
+        _, last_h_caller  = self.gru_caller(packed_caller.float())
+        _, last_h_callee = self.gru_callee(packed_callee.float())
         #h_args   = self.gru_args(self.embedding_args(args)) 
-        print("h_caller:", h_caller.size(), "h_callee:", h_callee.size())
-        concat  = torch.cat((h_caller, h_callee), -1)
-        print("concat:", concat.size())
+        print("h_caller:", last_h_caller.size(), "h_callee:", last_h_callee.size())
+        concat  = torch.cat((last_h_caller, last_h_callee), -1)
+        if DEBUG: print("concat:", concat.size())
         h_fc1 = F.relu(self.fc1(concat))
         h_fc2 = F.relu(self.fc2(h_fc1))
         h_fc3 = F.relu(self.fc3(h_fc2))
-        output = F.softmax(self.fc4(h_fc3))
-        return output
+        output = F.softmax(self.fc4(h_fc3), dim = -1)
+        print("logit size:", output.size())
+        return output[-1]
     
     def init_hidden(self, batch_size):
         return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size))

@@ -35,7 +35,7 @@ class BasePolicy(object):
     def save_model(self, model_path):
         if self.debug: print("running a trial")
         if self.net.net_type=="UberNet":
-            output = self.net.forward(torch.tensor(np.ones([1, 2000])))
+            output = self.net.forward(torch.tensor(np.ones([1, 2+2*self.metadata["max_sequence_len"]])))
         else:
             output = self.net.forward(torch.tensor(self.metadata["sample_inputs"]).view(1, -1))
         if self.debug: print("trial run's output:", output)
