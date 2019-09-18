@@ -16,7 +16,7 @@ from inst2vec import inst2vec_preprocess as i2v_prep
 
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
-Step   = namedtuple('Step', ('state', 'prob', 'action'))
+Step   = namedtuple('Step', ('state', 'rnn_state', 'prob', 'action'))
 np.set_printoptions(precision=6, suppress=True)
 GAMMA = 0.99
 DEBUG = False
@@ -108,18 +108,30 @@ class Dataset(object):
         total = 0
         for fname in csv_files:
             sub_episode = []
+            #read .csv file
             with open(fname, "r") as f:
-                for l in f.readlines():
-                    if l.startswith("TOUCH A CALL"):
-                        continue
-                    total+=1
-                    tokens = l.strip().split(',')
-                    tokens = [float(t) for t in tokens]
-                    raw_data.append(tokens)
-                    state = tokens[:-self.n_unused_stat]
-                    prob = tokens[-3:-1]
-                    action = tokens[-1]
-                    sub_episode.append(Step(state, prob, action))
+                f_data = f.readlines()
+            with open(fname+".state_encoded") as f_encoded:
+                f_enc_data = f_encoded.readlines()
+                
+            for i in range(len(f_data)):
+                l = f_data[i]
+                if len(f_enc_data)>0:
+                    rnn_state = f_enc_data[i]
+                    rnn_state = [int(t) for t in rnn_state.strip().split()]
+                    #print(len(rnn_state))
+                    #print(rnn_state[:10])
+                    assert len(rnn_state)==4000
+                else:
+                    rnn_state = []
+                total+=1
+                tokens = l.strip().split(',')
+                tokens = [float(t) for t in tokens]
+                raw_data.append(tokens)
+                state = tokens[:-self.n_unused_stat]
+                prob = tokens[-3:-1]
+                action = tokens[-1]
+                sub_episode.append(Step(state, rnn_state, prob, action))
             if len(sub_episode)>0:
                 episode_data.append(sub_episode)
         return raw_data, episode_data, total
@@ -201,24 +213,27 @@ class Dataset(object):
     # for Policy Gradient
     def get_trajectory_data(self, normalize_rewards = False):
         batch_states = []
+        batch_rnn_states = []
         batch_actions = []
         batch_rewards = []
         batch_probs = []
         for eps in self.all_data:
+            rnn_states = []
             states = []
             actions = []
             probs = []
             
             for sub_episode in eps["episode_data"]:
                 for step in sub_episode:
+                    rnn_states.append(step.rnn_state)
                     states.append(step.state)
                     actions.append(step.action)
                     probs.append(step.prob)
             #try aliased states shuffling (only for 3 )
             if(len(states)==3):
                 random.shuffle(states)
+            batch_rnn_states.extend(rnn_states)
             batch_states.extend(states)
-
             batch_actions.extend(actions)
             batch_probs.extend(probs)
             #rewards = [eps["score"]]*len(states)
@@ -231,7 +246,7 @@ class Dataset(object):
             if DEBUG: print("after subtract mean:", batch_rewards)
             batch_rewards /= np.std(batch_rewards)
             if DEBUG: print("after / std : ", batch_rewards)
-        return batch_states, batch_actions, batch_rewards, batch_probs 
+        return batch_states, batch_rnn_states, batch_actions, batch_rewards, batch_probs 
     def push_to_memory(self, memory):
 
         ##################################################
@@ -314,8 +329,7 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
         return
     metadata = {}
     metadata["padding_idx"] = 8565 #hard coded. = no of entry in inst2vec vocab
-    metadata["sample_input_rnn"] = [[1, 2, 3], [4, 5, 6]]
-    metadata["max_sequence_len"] = 1000 #hardcoded. assuming the longest len of a function is 1000
+    metadata["max_sequence_len"] = 2000 #hardcoded. assuming the longest len of a function is 2000
     binary_name = workdir.split("/")[-1]
     print("running on binary file %s.bc"%binary_name)
     # grab the struct dictionaries from the bc
