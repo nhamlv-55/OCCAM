@@ -222,6 +222,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             meta = request.meta
             caller = request.caller.splitlines()
             callee = request.callee.splitlines()
+            args = request.args
             stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee], ["caller", "callee"])
             rewritten_caller = rewritten_ir[0]
             rewritten_callee = rewritten_ir[1]
@@ -234,7 +235,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             len_callee = len(encoded_callee)
             encoded_callee.extend([self.meta["padding_idx"]]*(self.meta["max_sequence_len"] - len(stmt_index[1])))
 
-            encoded_args = [1]
+            encoded_args = [int(e) for e in args.strip().split()]
             len_args = len(encoded_args)
             encoded_args.extend([0]*(self.meta["max_args_len"] - len_args))
 
@@ -243,7 +244,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             state_encoded +=str(len_callee)+" "
             state_encoded +=str(len_args)+" "
 
-            print("state_encoded with len caller and callee:", state_encoded)
+            print("state_encoded header:", state_encoded)
             for e in encoded_caller:
                 state_encoded+=str(e)+" "
             for e in encoded_callee:

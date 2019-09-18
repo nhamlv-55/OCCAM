@@ -255,7 +255,7 @@ namespace previrt {
     if (callee && allowSpecialization(callee)) {
       // directly borrow from AggressiveSpecPolicy
       bool specialize = false;
-      std::vector<unsigned> argument_features;
+      std::string args_state = "";
       slice.reserve(CS.arg_size()); 
       //std::string user_str;
       std::string wl_str;
@@ -291,7 +291,7 @@ namespace previrt {
         if (SpecializationPolicy::isConstantSpecializable(cst)) {
           //tokens_rso << "Const " << cst << "\n";
           slice.push_back(cst);
-          argument_features.push_back(1);
+          args_state+="1 ";
           // count how many branch insts are affected
           unsigned arg_index = 0;
           for(auto arg = callee->arg_begin(); arg != callee->arg_end(); ++arg, ++arg_index) {
@@ -304,7 +304,7 @@ namespace previrt {
           no_of_const++;
         } else { 
           slice.push_back(nullptr);
-          argument_features.push_back(0);
+          args_state+="0 ";
         }
       }
       wl_rso<<"End worklist:\n";
@@ -358,7 +358,7 @@ namespace previrt {
           llvm::raw_string_ostream callee_rso(callee_ir);
           callee->print(callee_rso);
 
-          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, "meta", caller_rso.str(), callee_rso.str(), "module_ir", "callsite_ir", *trace));
+          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, "meta", caller_rso.str(), callee_rso.str(), "module_ir", args_state, *trace));
           final_decision = prediction.pred();
           q_Yes = prediction.q_yes();
           q_No  = prediction.q_no();

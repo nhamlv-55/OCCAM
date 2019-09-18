@@ -106,20 +106,22 @@ def create_emb_layer(emb_file, non_trainable = False):
     return emb_layer, num_emb, dim_emb
 
 class UberNet(Net):
-    def __init__(self, metadata, dim_hidden = 64, num_layers = 1):
+    def __init__(self, metadata, dim_hidden = 64, dim_hidden_args = 16, dim_emb_args = 4, num_layers = 1):
         Net.__init__(self, metadata)
         self.max_sequence_len = metadata["max_sequence_len"]
         self.net_type = "UberNet"
         emb_file = '/home/workspace/OCCAM/razor/MLPolicy/inst2vec/published_results/data/vocabulary/emb.p'
         self.embedding, num_emb, dim_emb = create_emb_layer(emb_file, True)
+        self.embedding_args = nn.Embedding(2, dim_emb_args) 
         print(self.embedding)
         self.dim_hidden = dim_hidden
         self.num_layers = num_layers
+        self.dim_hidden_args = dim_hidden_args
         self.gru_caller = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
         self.gru_callee = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
-        #self.gru_args   = nn.GRU(dim_emb_args, dim_hidden_args, num_layers, batch_first = True)
+        self.gru_args   = nn.GRU(dim_emb_args, dim_hidden_args, num_layers, batch_first = True)
 
-        self.fc1 = nn.Linear(self.dim_hidden + self.dim_hidden , 128)
+        self.fc1 = nn.Linear(self.dim_hidden + self.dim_hidden + self.dim_hidden_args , 128)
         self.fc2 = nn.Linear(128, 64)
         self.fc3 = nn.Linear(64, 32)
         self.fc4 = nn.Linear(32, 2)
@@ -131,28 +133,31 @@ class UberNet(Net):
         caller_len = x[:, 0]
         callee_len = x[:, 1]
         args_len   = x[:, 2]
-        print("caller_len:", caller_len, "callee_len:", callee_len, "args_len:", args_len)
+        #print("caller_len:", caller_len, "callee_len:", callee_len, "args_len:", args_len)
         x = x[:, 3:]
-        print("x after cutoff", x.size())
+        #print("x after cutoff", x.size())
         caller = x[:, :self.max_sequence_len]
         callee = x[:, self.max_sequence_len:2*self.max_sequence_len]
         args   = x[:, 2*self.max_sequence_len:]
-        print("caller:", caller)
-        print("callee:", callee)
-        print("args:", args)
+        #print("caller:", caller)
+        #print("callee:", callee)
+        #print("args:", args)
         packed_caller = nn.utils.rnn.pack_padded_sequence(self.embedding(caller), caller_len, batch_first=True, enforce_sorted = False)
         packed_callee = nn.utils.rnn.pack_padded_sequence(self.embedding(callee), callee_len, batch_first=True, enforce_sorted = False)
-        _, last_h_caller  = self.gru_caller(packed_caller.float())
+        packed_args   = nn.utils.rnn.pack_padded_sequence(self.embedding_args(args), args_len, batch_first=True, enforce_sorted = False)
+        #print("packed args",packed_args)
+        _, last_h_caller = self.gru_caller(packed_caller.float())
         _, last_h_callee = self.gru_callee(packed_callee.float())
+        _, last_h_args   = self.gru_args(packed_args.float())
         #h_args   = self.gru_args(self.embedding_args(args)) 
-        print("h_caller:", last_h_caller.size(), "h_callee:", last_h_callee.size())
-        concat  = torch.cat((last_h_caller, last_h_callee), -1)
+        #print("h_caller:", last_h_caller.size(), "h_callee:", last_h_callee.size(), "h_args:", last_h_args.size())
+        concat  = torch.cat((last_h_caller, last_h_callee, last_h_args), -1)
         if DEBUG: print("concat:", concat.size())
         h_fc1 = F.relu(self.fc1(concat))
         h_fc2 = F.relu(self.fc2(h_fc1))
         h_fc3 = F.relu(self.fc3(h_fc2))
         output = F.softmax(self.fc4(h_fc3), dim = -1)
-        print("logit size:", output.size())
+        #print("logit size:", output.size())
         return output[-1]
     
     def init_hidden(self, batch_size):

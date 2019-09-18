@@ -210,7 +210,7 @@ message State {
   optional string caller = 4;
   optional string callee = 5;
   optional string module = 6;
-  optional string callsite = 7;
+  optional string args = 7;
 }
 
 message Prediction {
