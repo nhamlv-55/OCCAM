@@ -121,7 +121,7 @@ class Dataset(object):
                     rnn_state = [int(t) for t in rnn_state.strip().split()]
                     #print(len(rnn_state))
                     #print(rnn_state[:10])
-                    assert len(rnn_state)==4000
+                    assert len(rnn_state)==4103 #(2*2000+100+3)
                 else:
                     rnn_state = []
                 total+=1
@@ -330,6 +330,7 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
     metadata = {}
     metadata["padding_idx"] = 8565 #hard coded. = no of entry in inst2vec vocab
     metadata["max_sequence_len"] = 2000 #hardcoded. assuming the longest len of a function is 2000
+    metadata["max_args_len"] = 100 #hardcoded. assuming the longest len of args is 100
     binary_name = workdir.split("/")[-1]
     print("running on binary file %s.bc"%binary_name)
     # grab the struct dictionaries from the bc

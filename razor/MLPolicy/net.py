@@ -130,17 +130,18 @@ class UberNet(Net):
         split_index = np.where(x == 0)[0]
         caller_len = x[:, 0]
         callee_len = x[:, 1]
-        print("caller_len:", caller_len, "callee_len:", callee_len)
-        x = x[:, 2:]
+        args_len   = x[:, 2]
+        print("caller_len:", caller_len, "callee_len:", callee_len, "args_len:", args_len)
+        x = x[:, 3:]
         print("x after cutoff", x.size())
         caller = x[:, :self.max_sequence_len]
-        callee = x[:, self.max_sequence_len:]
+        callee = x[:, self.max_sequence_len:2*self.max_sequence_len]
+        args   = x[:, 2*self.max_sequence_len:]
         print("caller:", caller)
         print("callee:", callee)
-        print("caller_len:", caller_len)
-        print("callee_len:", callee_len)
-        packed_caller = nn.utils.rnn.pack_padded_sequence(self.embedding(caller), caller_len, batch_first=True)
-        packed_callee = nn.utils.rnn.pack_padded_sequence(self.embedding(callee), callee_len, batch_first=True)
+        print("args:", args)
+        packed_caller = nn.utils.rnn.pack_padded_sequence(self.embedding(caller), caller_len, batch_first=True, enforce_sorted = False)
+        packed_callee = nn.utils.rnn.pack_padded_sequence(self.embedding(callee), callee_len, batch_first=True, enforce_sorted = False)
         _, last_h_caller  = self.gru_caller(packed_caller.float())
         _, last_h_callee = self.gru_callee(packed_callee.float())
         #h_args   = self.gru_args(self.embedding_args(args)) 

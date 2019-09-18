@@ -229,32 +229,37 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             encoded_caller = stmt_index[0]
             len_caller = len(encoded_caller)
             encoded_caller.extend([self.meta["padding_idx"]]*(self.meta["max_sequence_len"] - len(stmt_index[0])))
+
             encoded_callee = stmt_index[1]
             len_callee = len(encoded_callee)
             encoded_callee.extend([self.meta["padding_idx"]]*(self.meta["max_sequence_len"] - len(stmt_index[1])))
 
+            encoded_args = [1]
+            len_args = len(encoded_args)
+            encoded_args.extend([0]*(self.meta["max_args_len"] - len_args))
+
             state_encoded = ""
             state_encoded +=str(len_caller)+" "
             state_encoded +=str(len_callee)+" "
+            state_encoded +=str(len_args)+" "
+
             print("state_encoded with len caller and callee:", state_encoded)
             for e in encoded_caller:
                 state_encoded+=str(e)+" "
             for e in encoded_callee:
                 state_encoded+=str(e)+" "
+            for e in encoded_args:
+                state_encoded+=str(e)+" "
             state_encoded+="\n"
             #print(state_encoded)
-            #################################################################
-            # print("encoded_caller", encoded_caller)                       #
-            # print("encoded_callee", encoded_callee)                       #
-            features = [len_caller, len_callee] + encoded_caller + encoded_callee     #
-            features = torch.FloatTensor([features])                      #
-            print(features.shape)                                        #
+            features = [len_caller, len_callee, len_args] + encoded_caller + encoded_callee + encoded_args     #
+            features = torch.FloatTensor([features])
+            print(features.shape)
             # #print(self.net)                                              #
             logits = self.net.forward(features).view(-1).detach().numpy() #
             print("logits:", logits)                                  #
             pred = np.random.choice([False, True], p=logits)              #
             # if self.debug: print(pred)                                    #
-            #################################################################
             return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = pred)
         else:
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=False)
