@@ -38,7 +38,7 @@ class Mode(Enum):
     INTERACTIVE = 0
     TRAINING = 1
     TRY_1_CS = 2
-
+    TRAINING_RNN = 3
 #IMPORTANT: use 2>grpc_log to debug. Search for `calling application`
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
@@ -218,6 +218,41 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             if self.debug: print(pred)
             return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = pred)
         #context.set_trailing_metadata(('metadata_for_testint', b'I agree'),)
+        elif self.mode == Mode.TRAINING_RNN:
+            meta = request.meta
+            caller = request.caller.splitlines()
+            callee = request.callee.splitlines()
+            stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee], ["caller", "callee"])
+            rewritten_caller = rewritten_ir[0]
+            rewritten_callee = rewritten_ir[1]
+
+            encoded_caller = stmt_index[0]
+            encoded_caller.extend([self.meta["padding_idx"]]*(self.meta["max_sequence_len"] - len(stmt_index[0])))
+            encoded_callee = stmt_index[1]
+            encoded_callee.extend([self.meta["padding_idx"]]*(self.meta["max_sequence_len"] - len(stmt_index[1])))
+
+            state_encoded = ""
+            for e in encoded_caller:
+                state_encoded+=str(e)+" "
+            for e in encoded_callee:
+                state_encoded+=str(e)+" "
+            state_encoded+="\n"
+            #print(state_encoded)
+            #################################################################
+            # if self.debug: self.print_state(request)                      #
+            # print("encoded_caller", encoded_caller)                       #
+            # print("encoded_callee", encoded_callee)                       #
+            # features = [int(s) for s in request.features.split(',')]      #
+            # features = torch.FloatTensor([features])                      #
+            # #print(features.shape)                                        #
+            # #print(self.net)                                              #
+            # logits = self.net.forward(features).view(-1).detach().numpy() #
+            # if self.debug: print(logits)                                  #
+            # pred = np.random.choice([False, True], p=logits)              #
+            # if self.debug: print(pred)                                    #
+            #################################################################
+            logits = [0.5, 0.5]
+            return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = False)
         else:
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=False)
 
@@ -260,6 +295,8 @@ if __name__ == '__main__':
         mode = Mode.INTERACTIVE
     elif mode == 'try_1_cs':
         mode = Mode.TRY_1_CS
+    elif mode == 'training_rnn':
+        mode = Mode.TRAINING_RNN
     else:
         quit()
     #for i in range(21):
