@@ -569,7 +569,7 @@ def remove_non_representative_code(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: input data with non-representative lines of code removed
     """
-    print('Removing non-representative code ...')
+    #print('Removing non-representative code ...')
     for i in range(len(data)):
         data[i] = [line for line in data[i] if keep(line)]
 
@@ -582,7 +582,7 @@ def remove_leading_spaces(data):
     :param data: input data as a list of files, where each file is a list of strings
     :return: input data with leading spaces removed
     """
-    print('Removing leading spaces ...')
+    #print('Removing leading spaces ...')
     for i in range(len(data)):
         for j in range(len(data[i])):
             data[i][j] = data[i][j].strip()
@@ -596,7 +596,7 @@ def remove_trailing_comments_and_metadata(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: modified input data
     """
-    print('Removing trailing comments and metadata ...')
+    #print('Removing trailing comments and metadata ...')
 
     for i in range(len(data)):
         for j in range(len(data[i])):
@@ -712,7 +712,7 @@ def remove_structure_definitions(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: input data with non-representative lines of code removed
     """
-    print('Removing structure (aggregate types) definitions ...')
+    #print('Removing structure (aggregate types) definitions ...')
     for i in range(len(data)):
         data[i] = [line for line in data[i] if not re.match('%.* = type (<?{ .* }|opaque|{})', line)]
 
