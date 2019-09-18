@@ -48,8 +48,12 @@ class PolicyGradient(BasePolicy):
             eps_threshold = -1 #set to -1 to always use policy
             if self.grpc_mode:
                 server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-                Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-                    QueryOracleServicer(mode = Mode.TRAINING, atomizer = self.atomizer, net = self.net, debug = False), server)
+                if self.net.net_type == "UberNet":
+                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
+                        QueryOracleServicer(mode = Mode.TRAINING_RNN, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = True), server)
+                else:
+                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
+                        QueryOracleServicer(mode = Mode.TRAINING, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = True), server)
                 server.add_insecure_port('[::]:50051')
                 server.start()
                 self.run_policy(no_of_sampling, eps_threshold, i)
@@ -71,9 +75,11 @@ class PolicyGradient(BasePolicy):
 
     def optimize(self, trajectory_data, iteration):
         batch_states = trajectory_data[0]
-        batch_actions = trajectory_data[1]
-        batch_rewards = trajectory_data[2]
+        batch_rnn_states = trajectory_data[1]
+        batch_actions = trajectory_data[2]
+        batch_rewards = trajectory_data[3]
         self.optimizer.zero_grad()
+        rnn_state_tensor = torch.tensor(batch_rnn_states)
         state_tensor = torch.tensor(batch_states)
         reward_tensor = torch.tensor(batch_rewards)
         # Actions are used as indices, must be LongTensor
@@ -81,7 +87,10 @@ class PolicyGradient(BasePolicy):
 
         print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
-        predict_tensor = self.net.forward(state_tensor)
+        if self.net.net_type == "UberNet":
+            predict_tensor = self.net.forward(rnn_state_tensor)
+        else:
+            predict_tensor = self.net.forward(state_tensor)
         logprob = torch.log(predict_tensor).view(-1,2).double()
         if self.debug: print("state_tensor:", state_tensor[:debug_print_limit])
         if self.debug: print("predict_tensor:", predict_tensor[:debug_print_limit])
