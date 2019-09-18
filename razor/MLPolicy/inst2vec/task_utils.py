@@ -168,7 +168,7 @@ def remove_local_identifiers(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: modified input data
     """
-    print('\tRemoving local identifiers ...')
+    #print('\tRemoving local identifiers ...')
     for i in range(len(data)):
         for j in range(len(data[i])):
             data[i][j] = re.sub(rgx.local_id, "<%ID>", data[i][j])
@@ -182,7 +182,7 @@ def remove_global_identifiers(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: modified input data
     """
-    print('\tRemoving global identifiers ...')
+    #print('\tRemoving global identifiers ...')
     for i in range(len(data)):
         for j in range(len(data[i])):
             data[i][j] = re.sub(rgx.global_id, "<@ID>", data[i][j])
@@ -196,7 +196,7 @@ def remove_labels(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: modified input data
     """
-    print('\tRemoving labels ...')
+    #print('\tRemoving labels ...')
     for i in range(len(data)):
         for j in range(len(data[i])):
             if re.match(r'; <label>:\d+:?(\s+; preds = )?', data[i][j]):
@@ -224,7 +224,7 @@ def replace_unnamed_values(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: modified input data
     """
-    print('\tRemoving immediate values ...')
+    #print('\tRemoving immediate values ...')
     for i in range(len(data)):
         for j in range(len(data[i])):
             data[i][j] = re.sub(r' ' + rgx.immediate_value_float_hexa, " <FLOAT>", data[i][j])  # hexadecimal notation
@@ -246,7 +246,7 @@ def remove_index_types(data):
     :param data: input data as a list of files where each file is a list of strings
     :return: modified input data
     """
-    print('\tRemoving index types ...')
+    #print('\tRemoving index types ...')
     for i in range(len(data)):
         for j in range(len(data[i])):
             if re.match("<%ID> = extractelement", data[i][j]) is not None or \
@@ -446,7 +446,7 @@ class IRTransformer:
                 dictio: list of dictionaries corresponding to source files,
                         where each dictionary has entries ["structure name", "corresponding literal structure"]
         """
-        print('\tConstructing dictionary of structures and inlining structures...')
+        #print('\tConstructing dictionary of structures and inlining structures...')
         dictio = defaultdict(list)
         dict_temp = self.struct_dict
 
@@ -474,8 +474,8 @@ class IRTransformer:
 
 
     def llvm_ir_to_input(self, raw_data, file_names):
-        print("------------------")
-        print(raw_data[0][:10])
+        #print("------------------")
+        #print(raw_data[0][:10])
         # Source code transformation: simple pre-processing
         print('\n--- Pre-process code')
         preprocessed_data, functions_declared_in_files = i2v_prep.preprocess(raw_data)
@@ -483,11 +483,11 @@ class IRTransformer:
         # IR processing (inline structures, abstract statements)
 
         # Source code transformation: inline structure types
-        print('\n--- Inline structure types')
+        #print('\n--- Inline structure types')
 
         processed_data, dictio = self.inline_struct_using_dict(preprocessed_data)
         # Source code transformation: identifier processing (abstract statements)
-        print('\n--- Abstract statements from identifiers')
+        #print('\n--- Abstract statements from identifiers')
         processed_data = abstract_statements_from_identifiers_txt(processed_data)
 
         results = list()

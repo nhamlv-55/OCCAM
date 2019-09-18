@@ -652,7 +652,7 @@ def collapse_stmt_units_to_a_line(data):
     :return: modified input data
     """
     to_track = ''
-    print('Collapsing statement units into one line ...')
+    #print('Collapsing statement units into one line ...')
     erase_token = 'to_erase'  # Helper variable to mark lines to be erased
     separator = '\n '
 
