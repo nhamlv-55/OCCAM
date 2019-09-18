@@ -313,7 +313,9 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
         print("Need to provide metric")
         return
     metadata = {}
-
+    metadata["padding_idx"] = 8565 #hard coded. = no of entry in inst2vec vocab
+    metadata["sample_input_rnn"] = [[1, 2, 3], [4, 5, 6]]
+    metadata["max_sequence_len"] = 1000 #hardcoded. assuming the longest len of a function is 1000
     binary_name = workdir.split("/")[-1]
     print("running on binary file %s.bc"%binary_name)
     # grab the struct dictionaries from the bc
