@@ -2,9 +2,10 @@ from __future__ import print_function
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-
+import numpy as np
+import pickle
 DEBUG = False
-#DEBUG = True
+DEBUG = True
 
 torch.set_printoptions(sci_mode = False)
 
@@ -87,45 +88,54 @@ class FeedForwardSingleInputSoftmax(Net):
         if DEBUG: print("output:", output)
         return output
 
-def create_emb_layer(emb_matrix, non_trainable = False):
-    num_emb, emb_size = emb_matrix.shape
-    print num_emb, emb_size
-    emb_layer = nn.Embedding(num_emb, emb_size)
+def create_emb_layer(emb_file, non_trainable = False):
+    emb_matrix = np.load(emb_file, allow_pickle = True)
+    num_emb, dim_emb = emb_matrix.shape
+    print(num_emb)
+    # add padding_idx
+    emb_matrix = np.append(emb_matrix, np.zeros([1, dim_emb]), axis = 0)
+    print(emb_matrix[num_emb])
+    emb_layer = nn.Embedding(num_emb + 1, dim_emb, padding_idx = num_emb )
     emb_layer.weight = nn.Parameter(torch.from_numpy(emb_matrix))
     if non_trainable:
         emb_layer.weight.requires_grad = False
-    return emb_layer, num_emb, emb_size
+    return emb_layer, num_emb, dim_emb
 
-class UberNet(nn.Module):
-    def __init__(self, weights_matrix, hidden_size, num_layers):
-        super(self).__init__()
-        self.embedding, num_embeddings, embedding_dim = create_emb_layer(weights_matrix, True)
-        self.hidden_size = hidden_size
+class UberNet(Net):
+    def __init__(self, metadata, dim_hidden = 64, num_layers = 2):
+        Net.__init__(self, metadata)
+        emb_file = '/home/workspace/OCCAM/razor/MLPolicy/inst2vec/published_results/data/vocabulary/emb.p'
+        self.embedding, num_emb, dim_emb = create_emb_layer(emb_file, True)
+        self.dim_hidden = dim_hidden
         self.num_layers = num_layers
-        self.gru_caller = nn.GRU(embedding_dim, hidden_size_caller, num_layers_caller, batch_first = True)
-        self.gru_callee = nn.GRU(embedding_dim, hidden_size_callee, num_layers_callee, batch_first = True)
-        self.gru_args   = nn.GRU(embedding_dim_args, hidden_size_args, num_layers_args, batch_first = True)
+        self.gru_caller = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
+        self.gru_callee = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
+        #self.gru_args   = nn.GRU(dim_emb_args, dim_hidden_args, num_layers, batch_first = True)
 
-        self.fc1 = nn.Linear(self.h_size_caller + self.h_size_callee + self.h_size_args, 128)
+        self.fc1 = nn.Linear(self.dim_hidden + self.dim_hidden , 128)
         self.fc2 = nn.Linear(128, 64)
         self.fc3 = nn.Linear(64, 32)
         self.fc4 = nn.Linear(32, 2)
     
-    def forward(self, caller, callee, args):
-
+    def forward(self, x):
+        x = x.long()
+        if DEBUG: print("x:", x.size())
+        split_index = np.where(x == 0)[0]
+        caller = x[:split_index[0]]
+        callee = x[split_index[0]+1:]
+        print("caller:", caller)
+        print("callee:", callee)
         h_caller = self.gru_caller(self.embedding(caller))
         h_callee = self.gru_callee(self.embedding(callee))
-        h_args   = self.gru_args(self.embedding_args(args)) 
-        print("h_caller:", h_caller.size(), "h_callee:", h_callee.size(), "h_args:", h_args.size())
-        concat  = torch.cat((h_caller, h_callee, h_args), 1)
+        #h_args   = self.gru_args(self.embedding_args(args)) 
+        print("h_caller:", h_caller.size(), "h_callee:", h_callee.size())
+        concat  = torch.cat((h_caller, h_callee), 1)
         print("concat:", concat.size())
         h_fc1 = F.relu(self.fc1(concat))
         h_fc2 = F.relu(self.fc2(h_fc1))
         h_fc3 = F.relu(self.fc3(h_f2))
         output = F.softmax(self.fc4(h_fc3))
         return output
-    def forward(self, inp, hidden):
-        return self.gru(self.embedding(inp), hidden)
     
     def init_hidden(self, batch_size):
         return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size))
