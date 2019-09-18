@@ -95,6 +95,7 @@ def create_emb_layer(emb_file, non_trainable = False):
     emb_matrix = np.load(emb_file, allow_pickle = True)
     num_emb, dim_emb = emb_matrix.shape
     print(num_emb)
+    print("embedding dtype:", emb_matrix.dtype)
     # add padding_idx
     emb_matrix = np.append(emb_matrix, np.zeros([1, dim_emb]), axis = 0)
     print(emb_matrix[num_emb])
@@ -110,6 +111,7 @@ class UberNet(Net):
         self.net_type = "UberNet"
         emb_file = '/home/workspace/OCCAM/razor/MLPolicy/inst2vec/published_results/data/vocabulary/emb.p'
         self.embedding, num_emb, dim_emb = create_emb_layer(emb_file, True)
+        print(self.embedding)
         self.dim_hidden = dim_hidden
         self.num_layers = num_layers
         self.gru_caller = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
@@ -125,19 +127,20 @@ class UberNet(Net):
         x = x.long()
         if DEBUG: print("x:", x.size())
         split_index = np.where(x == 0)[0]
-        caller = x[:split_index[0]]
-        callee = x[split_index[0]+1:]
+        caller = x[:, :1000]
+        callee = x[:, 1000:]
         print("caller:", caller)
         print("callee:", callee)
-        h_caller = self.gru_caller(self.embedding(caller))
-        h_callee = self.gru_callee(self.embedding(callee))
+        print(self.embedding(caller).float())
+        h_caller, _  = self.gru_caller(self.embedding(caller).float())
+        h_callee, _ = self.gru_callee(self.embedding(callee).float())
         #h_args   = self.gru_args(self.embedding_args(args)) 
         print("h_caller:", h_caller.size(), "h_callee:", h_callee.size())
-        concat  = torch.cat((h_caller, h_callee), 1)
+        concat  = torch.cat((h_caller, h_callee), -1)
         print("concat:", concat.size())
         h_fc1 = F.relu(self.fc1(concat))
         h_fc2 = F.relu(self.fc2(h_fc1))
-        h_fc3 = F.relu(self.fc3(h_f2))
+        h_fc3 = F.relu(self.fc3(h_fc2))
         output = F.softmax(self.fc4(h_fc3))
         return output
     
