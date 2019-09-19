@@ -94,10 +94,11 @@ class Dataset(object):
         self.n_unused_stat = n_unused_stat
         self.all_data = []
         self.collect(size)
-        self.calculate_stats()
-        self.features_len = self.mean.shape[0] - n_unused_stat
-        self.mean = self.mean[:self.features_len]
-        self.std  = self.std[:self.features_len]
+        if self.no_good_runs > 0:
+            self.calculate_stats()
+            self.features_len = self.mean.shape[0] - n_unused_stat
+            self.mean = self.mean[:self.features_len]
+            self.std  = self.std[:self.features_len]
 
     def merge_csv(self, csv_files):
         episode_data = []
@@ -115,8 +116,10 @@ class Dataset(object):
                 f_enc_data = f_encoded.readlines()
 
             #broken run
-            if len(f_enc_data) > 0 and len(f_data)!=len(f_enc_data):
-                print("error in %s"%fname)
+            if len(f_data)!=len(f_enc_data):
+                if DEBUG:
+                    print("error in %s"%fname)
+                    print("there are only %s lines in .encoded_state"%str(len(f_enc_data)))
                 return
 
             #read data
@@ -200,7 +203,7 @@ class Dataset(object):
         runs = glob.glob(self.folder+"/run*")
         sorted(runs)
         size = min(len(runs), size)
-        counter = 0
+        self.no_good_runs = 0
         for r in runs[:size]:
             run_data = {}
             #print(r)
@@ -218,9 +221,8 @@ class Dataset(object):
             run_data["raw_result"] = result
             run_data["total"] = total
             self.all_data.append(run_data)
-            counter+=1
-        print("collected %s good runs out of %s runs"%(str(counter), str(size)))
-        return counter 
+            self.no_good_runs+=1
+        print("collected %s good runs out of %s runs"%(str(self.no_good_runs), str(size)))
 
     def sort(self):
         self.all_data.sort(key=lambda x: x["score"])

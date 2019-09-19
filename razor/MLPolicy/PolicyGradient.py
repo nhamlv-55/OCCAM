@@ -22,8 +22,9 @@ torch.manual_seed(1)
 #np.random.seed(1)
 
 debug_print_limit = 6
-lr = 0.001
+lr = 0.01
 minimize = True
+MIN_USABLE_RUNS = 45
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
@@ -50,8 +51,9 @@ class PolicyGradient(BasePolicy):
 #                server = grpc.server(futures.ThreadPoolExecutor(max_workers=40))
                 if self.net.net_type == "UberNet":
                     workers = serve_multiple(20, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
+                    time.sleep(3) #make sure all models and dicts are loaded into grpc_server
                     self.run_policy(no_of_sampling, eps_threshold, i)
-                    time.sleep(10) #terrible hack, for now
+                    time.sleep(3) #make sure all clients have finished
                     for w in workers:
                         #w.join()
                         w.terminate()
@@ -70,6 +72,10 @@ class PolicyGradient(BasePolicy):
             run_policy_time = time.time()
             print("Rollout %s runs in %s seconds"%(no_of_sampling, run_policy_time - start_time))
             dataset = Dataset(self.dataset_path, metric = self.metadata["metric"], size = no_of_sampling)
+            #abort bad runs
+            if dataset.no_good_runs < MIN_USABLE_RUNS:
+                print("too many broken runs")
+                continue
             trajectory_data = dataset.get_trajectory_data(normalize_rewards = True)
             collect_data_time = time.time()
             print("Processing data in ", collect_data_time - run_policy_time)
@@ -92,7 +98,14 @@ class PolicyGradient(BasePolicy):
         # Actions are used as indices, must be LongTensor
         action_tensor = torch.LongTensor(batch_actions)
 
-        print("number of unbroken runs in last rollout: ", state_tensor.shape[0])
+        #check rnn_state_tensor
+        if rnn_state_tensor.shape[-1]==0:
+            print("ERROR: broken!")
+            print(trajectory_data)
+            #do not optimize
+            return
+
+        print("piece of rnn_state", rnn_state_tensor[:debug_print_limit])
         print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
         if self.net.net_type == "UberNet":
