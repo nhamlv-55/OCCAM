@@ -22,9 +22,9 @@ torch.manual_seed(1)
 #np.random.seed(1)
 
 debug_print_limit = 6
-lr = 0.01
+lr = 0.001
 minimize = True
-MIN_USABLE_RUNS = 45
+MIN_USABLE_RUNS = 4
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
@@ -50,7 +50,7 @@ class PolicyGradient(BasePolicy):
             if self.grpc_mode:
 #                server = grpc.server(futures.ThreadPoolExecutor(max_workers=40))
                 if self.net.net_type == "UberNet":
-                    workers = serve_multiple(20, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
+                    workers = serve_multiple(10, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
                     time.sleep(3) #make sure all models and dicts are loaded into grpc_server
                     self.run_policy(no_of_sampling, eps_threshold, i)
                     time.sleep(3) #make sure all clients have finished

@@ -35,7 +35,7 @@ class BasePolicy(object):
     def save_model(self, model_path):
         if self.debug: print("running a trial")
         if self.net.net_type=="UberNet":
-            output = self.net.forward(torch.tensor(np.ones([1, 3+2*self.metadata["max_sequence_len"]+self.metadata["max_args_len"] + 5 ])))
+            output = self.net.forward(torch.tensor(np.ones([1, 4+2*self.metadata["max_sequence_len"]+self.metadata["max_args_len"] + 5 + 5 ])))
         else:
             output = self.net.forward(torch.tensor(self.metadata["sample_inputs"]).view(1, -1))
         if self.debug: print("trial run's output:", output)
@@ -51,8 +51,9 @@ class BasePolicy(object):
     def run_policy(self, no_of_sampling, eps_threshold, iteration):
         #clear previous runs
         if os.path.exists(self.dataset_path):
-
-            clear_prev_runs = subprocess.check_output(("mv %s %s_run%s"%(self.dataset_path, self.dataset_path, str(iteration)) ).split())
+            mv_command = "mv %s %s_run%s"%(self.dataset_path, self.dataset_path, str(iteration))
+            print(mv_command)
+            clear_prev_runs = subprocess.check_output(mv_command.split())
         job_ids = ""
         for jid in range(no_of_sampling):
             job_ids +=" %s"%str(jid)

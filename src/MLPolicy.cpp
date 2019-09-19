@@ -324,7 +324,7 @@ namespace previrt {
       features.push_back(affected_inst);
       trace->insert(trace->end(), features.begin(), features.end());
 
-      //build a calling context of k instructions before and k instructions after
+      //build a calling context of k instructions before 
       Instruction* current = CS.getInstruction();
       for(int i=0 ;  i < window_size; i++){
         if(current==nullptr){
@@ -338,6 +338,21 @@ namespace previrt {
           current = current->getPrevNode();
         }
       }
+      //build a calling context of k instructions after
+      current = CS.getInstruction();
+      for(int i=0 ;  i < window_size; i++){
+        if(current==nullptr){
+          ctx_rso<<"NONE\n";
+          errs()<<"NONE\n";
+        }else{
+          current->print(errs());
+          errs()<<"\n";
+          current->print(ctx_rso);
+          ctx_rso<<"\n";
+          current = current->getNextNode();
+        }
+      }
+
 
       //      features.push_back((float)M->getInstructionCount ());
       //features.insert( features.end(), (*trace).begin(), (*trace).end());

@@ -225,7 +225,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             caller = request.caller.splitlines()
             callee = request.callee.splitlines()
             ctx = request.module.splitlines()
-
+            features = [int(e) for e in request.features.split(',')]
             args = request.args
             stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee, ctx], ["caller", "callee", "ctx"])
             rewritten_caller = rewritten_ir[0]
@@ -253,13 +253,14 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             encoded_args.extend([0]*(self.meta["max_args_len"] - len_args))
 
             encoded_ctx  = stmt_index[2]
-            
+
+            caller_usage = features[-4]
 
             state_encoded = ""
             state_encoded +=str(len_caller)+" "
             state_encoded +=str(len_callee)+" "
             state_encoded +=str(len_args)+" "
-
+            state_encoded +=str(caller_usage)+" "
             #print("state_encoded header:", state_encoded)
             for e in encoded_caller:
                 state_encoded+=str(e)+" "
@@ -271,7 +272,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
                 state_encoded+=str(e)+" "
             state_encoded+="\n"
             if self.debug: print(state_encoded)
-            features = [len_caller, len_callee, len_args] + encoded_caller + encoded_callee + encoded_args + encoded_ctx    #
+            features = [len_caller, len_callee, len_args, caller_usage] + encoded_caller + encoded_callee + encoded_args + encoded_ctx    #
             features = torch.FloatTensor([features])
             if self.debug: print(features.shape)
             # #print(self.net)                                              #
