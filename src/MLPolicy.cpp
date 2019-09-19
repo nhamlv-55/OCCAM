@@ -264,8 +264,9 @@ namespace previrt {
       //llvm::raw_string_ostream rso(user_str);
       llvm::raw_string_ostream wl_rso(wl_str);
 
-      
-
+      std::string calling_ctx;
+      llvm::raw_string_ostream ctx_rso(calling_ctx);
+      const int window_size = 5;
       wl_rso<<"Worklist:\n";
       //tokens_rso<<"Tokens:\n";
       //      rso<<"Module:";
@@ -322,6 +323,22 @@ namespace previrt {
       features.push_back(branch_cnt);
       features.push_back(affected_inst);
       trace->insert(trace->end(), features.begin(), features.end());
+
+      //build a calling context of k instructions before and k instructions after
+      Instruction* current = CS.getInstruction();
+      for(int i=0 ;  i < window_size; i++){
+        if(current==nullptr){
+          ctx_rso<<"NONE\n";
+          errs()<<"NONE\n";
+        }else{
+          current->print(errs());
+          errs()<<"\n";
+          current->print(ctx_rso);
+          ctx_rso<<"\n";
+          current = current->getPrevNode();
+        }
+      }
+
       //      features.push_back((float)M->getInstructionCount ());
       //features.insert( features.end(), (*trace).begin(), (*trace).end());
       //std::vector<float> trace_mask = std::vector<float>(42-(*trace).size(), 0);
@@ -358,7 +375,7 @@ namespace previrt {
           llvm::raw_string_ostream callee_rso(callee_ir);
           callee->print(callee_rso);
 
-          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, "meta", caller_rso.str(), callee_rso.str(), "module_ir", args_state, *trace));
+          previrt::proto::Prediction prediction = q->Query(q->MakeState(state, "meta", caller_rso.str(), callee_rso.str(), ctx_rso.str(), args_state, *trace));
           final_decision = prediction.pred();
           q_Yes = prediction.q_yes();
           q_No  = prediction.q_no();

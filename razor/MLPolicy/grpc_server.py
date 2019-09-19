@@ -144,7 +144,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         meta = request.meta
         caller = request.caller.splitlines()
         callee = request.callee.splitlines()
-
+        calling_ctx = request.module.splitlines()
         stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee], ["caller", "callee"])
         rewritten_caller = rewritten_ir[0]
         rewritten_callee = rewritten_ir[1]
@@ -163,6 +163,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         print("state:")
         for i in range(len(features)):
             print(self.names[i], ":", features[i])
+        for l in calling_ctx: print(l)
 
     def Query(self, request, context):
         if self.debug: print(self.mode)
@@ -222,43 +223,57 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             meta = request.meta
             caller = request.caller.splitlines()
             callee = request.callee.splitlines()
+            ctx = request.module.splitlines()
+
+            for l in ctx:
+                print(l)
+
             args = request.args
-            stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee], ["caller", "callee"])
+            stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee, ctx], ["caller", "callee", "ctx"])
             rewritten_caller = rewritten_ir[0]
             rewritten_callee = rewritten_ir[1]
+            rewritten_ctx    = rewritten_ir[2]
+
+            for l in rewritten_ctx:
+                print(l)
 
             encoded_caller = stmt_index[0]
             len_caller = len(encoded_caller)
-            encoded_caller.extend([self.meta["padding_idx"]]*(self.meta["max_sequence_len"] - len(stmt_index[0])))
+            encoded_caller.extend([0]*(self.meta["max_sequence_len"] - len(stmt_index[0])))
 
             encoded_callee = stmt_index[1]
             len_callee = len(encoded_callee)
-            encoded_callee.extend([self.meta["padding_idx"]]*(self.meta["max_sequence_len"] - len(stmt_index[1])))
+            encoded_callee.extend([0]*(self.meta["max_sequence_len"] - len(stmt_index[1])))
 
             encoded_args = [int(e) for e in args.strip().split()]
             len_args = len(encoded_args)
             encoded_args.extend([0]*(self.meta["max_args_len"] - len_args))
+
+            encoded_ctx  = stmt_index[2]
+            
 
             state_encoded = ""
             state_encoded +=str(len_caller)+" "
             state_encoded +=str(len_callee)+" "
             state_encoded +=str(len_args)+" "
 
-            print("state_encoded header:", state_encoded)
+            #print("state_encoded header:", state_encoded)
             for e in encoded_caller:
                 state_encoded+=str(e)+" "
             for e in encoded_callee:
                 state_encoded+=str(e)+" "
             for e in encoded_args:
                 state_encoded+=str(e)+" "
+            for e in encoded_ctx:
+                state_encoded+=str(e)+" "
             state_encoded+="\n"
-            #print(state_encoded)
-            features = [len_caller, len_callee, len_args] + encoded_caller + encoded_callee + encoded_args     #
+            if self.debug: print(state_encoded)
+            features = [len_caller, len_callee, len_args] + encoded_caller + encoded_callee + encoded_args + encoded_ctx    #
             features = torch.FloatTensor([features])
-            print(features.shape)
+            if self.debug: print(features.shape)
             # #print(self.net)                                              #
             logits = self.net.forward(features).view(-1).detach().numpy() #
-            print("logits:", logits)                                  #
+            if self.debug: print("logits:", logits)                                  #
             pred = np.random.choice([False, True], p=logits)              #
             # if self.debug: print(pred)                                    #
             return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = pred)

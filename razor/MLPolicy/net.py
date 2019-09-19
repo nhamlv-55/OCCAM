@@ -5,7 +5,7 @@ import torch
 import numpy as np
 import pickle
 DEBUG = False
-#DEBUG = True
+DEBUG = True
 
 torch.set_printoptions(sci_mode = False)
 
@@ -113,15 +113,15 @@ class UberNet(Net):
         emb_file = '/home/workspace/OCCAM/razor/MLPolicy/inst2vec/published_results/data/vocabulary/emb.p'
         self.embedding, num_emb, dim_emb = create_emb_layer(emb_file, True)
         self.embedding_args = nn.Embedding(2, dim_emb_args) 
-        print(self.embedding)
+        #print(self.embedding)
         self.dim_hidden = dim_hidden
         self.num_layers = num_layers
         self.dim_hidden_args = dim_hidden_args
         self.gru_caller = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
         self.gru_callee = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
+        self.gru_ctx    = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
         self.gru_args   = nn.GRU(dim_emb_args, dim_hidden_args, num_layers, batch_first = True)
-
-        self.fc1 = nn.Linear(self.dim_hidden + self.dim_hidden + self.dim_hidden_args , 128)
+        self.fc1 = nn.Linear(self.dim_hidden + self.dim_hidden + self.dim_hidden +  self.dim_hidden_args , 128)
         self.fc2 = nn.Linear(128, 64)
         self.fc3 = nn.Linear(64, 32)
         self.fc4 = nn.Linear(32, 2)
@@ -138,10 +138,13 @@ class UberNet(Net):
         #print("x after cutoff", x.size())
         caller = x[:, :self.max_sequence_len]
         callee = x[:, self.max_sequence_len:2*self.max_sequence_len]
-        args   = x[:, 2*self.max_sequence_len:]
-        #print("caller:", caller)
-        #print("callee:", callee)
-        #print("args:", args)
+        args   = x[:, 2*self.max_sequence_len:-5]
+        ctx    = x[:, -5:]
+
+        if DEBUG: print("caller:", caller)
+        if DEBUG: print("callee:", callee)
+        if DEBUG: print("args:", args)
+        if DEBUG: print("ctx:", ctx)
         packed_caller = nn.utils.rnn.pack_padded_sequence(self.embedding(caller), caller_len, batch_first=True, enforce_sorted = False)
         packed_callee = nn.utils.rnn.pack_padded_sequence(self.embedding(callee), callee_len, batch_first=True, enforce_sorted = False)
         packed_args   = nn.utils.rnn.pack_padded_sequence(self.embedding_args(args), args_len, batch_first=True, enforce_sorted = False)
@@ -149,9 +152,10 @@ class UberNet(Net):
         _, last_h_caller = self.gru_caller(packed_caller.float())
         _, last_h_callee = self.gru_callee(packed_callee.float())
         _, last_h_args   = self.gru_args(packed_args.float())
+        _, last_h_ctx    = self.gru_ctx(self.embedding(ctx).float())
         #h_args   = self.gru_args(self.embedding_args(args)) 
         #print("h_caller:", last_h_caller.size(), "h_callee:", last_h_callee.size(), "h_args:", last_h_args.size())
-        concat  = torch.cat((last_h_caller, last_h_callee, last_h_args), -1)
+        concat  = torch.cat((last_h_caller, last_h_callee, last_h_args, last_h_ctx), -1)
         if DEBUG: print("concat:", concat.size())
         h_fc1 = F.relu(self.fc1(concat))
         h_fc2 = F.relu(self.fc2(h_fc1))

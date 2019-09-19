@@ -113,7 +113,9 @@ class Dataset(object):
                 f_data = f.readlines()
             with open(fname+".state_encoded") as f_encoded:
                 f_enc_data = f_encoded.readlines()
-                
+            if len(f_enc_data) > 0 and len(f_data)!=len(f_enc_data):
+                print("error in %s"%fname)
+                return 
             for i in range(len(f_data)):
                 l = f_data[i]
                 if len(f_enc_data)>0:
@@ -121,7 +123,7 @@ class Dataset(object):
                     rnn_state = [int(t) for t in rnn_state.strip().split()]
                     #print(len(rnn_state))
                     #print(rnn_state[:10])
-                    assert len(rnn_state)==4103 #(2*2000+100+3)
+                    assert len(rnn_state)==4108 #(2*2000+100+3+5)
                 else:
                     rnn_state = []
                 total+=1

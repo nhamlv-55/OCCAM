@@ -22,7 +22,7 @@ torch.manual_seed(1)
 np.random.seed(1)
 
 debug_print_limit = 6
-lr = 0.01
+lr = 0.001
 minimize = True
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
@@ -47,10 +47,10 @@ class PolicyGradient(BasePolicy):
                 self.evaluate(tag="eval%s"%str(i))
             eps_threshold = -1 #set to -1 to always use policy
             if self.grpc_mode:
-                server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+                server = grpc.server(futures.ThreadPoolExecutor(max_workers=40))
                 if self.net.net_type == "UberNet":
                     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-                        QueryOracleServicer(mode = Mode.TRAINING_RNN, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = True), server)
+                        QueryOracleServicer(mode = Mode.TRAINING_RNN, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = False), server)
                 else:
                     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
                         QueryOracleServicer(mode = Mode.TRAINING, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = True), server)
@@ -129,7 +129,7 @@ class PolicyGradient(BasePolicy):
 
     def evaluate(self, tag="eval"):
         if self.grpc_mode:
-             server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+             server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
              Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
                  QueryOracleServicer(self.net, debug = True), server)
              server.add_insecure_port('[::]:50051')
