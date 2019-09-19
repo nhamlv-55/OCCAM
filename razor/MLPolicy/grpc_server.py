@@ -29,6 +29,7 @@ from utils import *
 from net import * 
 from termcolor import colored
 from inst2vec import task_utils as TU 
+import multiprocessing
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 _INTERACTIVE = False
 OCCAM_HOME = os.environ["OCCAM_HOME"]
@@ -282,10 +283,14 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         else:
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=False)
 
-def serve(mode, p, n, workdir):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+
+
+
+def _run_server(mode, p, n, workdir, net):
+    options = (('grpc.so_reuseport', 1),)
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1), options = options)
     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-        QueryOracleServicer(mode = mode, p = p, n = n, workdir = workdir), server)
+        QueryOracleServicer(mode = mode, p = p, n = n, workdir = workdir, net = net), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     try:
@@ -293,6 +298,21 @@ def serve(mode, p, n, workdir):
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
+
+
+def serve_multiple(no_of_servers, mode, p, n, workdir, net):
+        workers = []
+        for _ in range(no_of_servers):
+            # NOTE: It is imperative that the worker subprocesses be forked before
+            # any gRPC servers start up. See
+            # https://github.com/grpc/grpc/issues/16001 for more details.
+            worker = multiprocessing.Process(
+                target=_run_server, args = (mode, p, n, workdir, net))
+            worker.start()
+            workers.append(worker)
+        return workers
+        for worker in workers:
+            worker.join()
 
 def try_1_cs(p):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))

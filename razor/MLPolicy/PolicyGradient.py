@@ -16,8 +16,8 @@ import grpc
 
 import Previrt_pb2
 import Previrt_pb2_grpc
-from grpc_server import QueryOracleServicer, Mode
-
+from grpc_server import QueryOracleServicer, Mode, serve_multiple
+import multiprocessing
 torch.manual_seed(1)
 np.random.seed(1)
 
@@ -47,17 +47,22 @@ class PolicyGradient(BasePolicy):
                 self.evaluate(tag="eval%s"%str(i))
             eps_threshold = -1 #set to -1 to always use policy
             if self.grpc_mode:
-                server = grpc.server(futures.ThreadPoolExecutor(max_workers=40))
+#                server = grpc.server(futures.ThreadPoolExecutor(max_workers=40))
                 if self.net.net_type == "UberNet":
-                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-                        QueryOracleServicer(mode = Mode.TRAINING_RNN, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = False), server)
-                else:
-                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-                        QueryOracleServicer(mode = Mode.TRAINING, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = True), server)
-                server.add_insecure_port('[::]:50051')
-                server.start()
-                self.run_policy(no_of_sampling, eps_threshold, i)
-                server.stop(0)
+                    workers = serve_multiple(2, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
+                    self.run_policy(no_of_sampling, eps_threshold, i)
+                    for w in workers:
+                        w.terminate()
+                        w.join()
+#                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
+#                        QueryOracleServicer(mode = Mode.TRAINING_RNN, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = False), server)
+#                else:
+#                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
+#                        QueryOracleServicer(mode = Mode.TRAINING, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = True), server)
+#                server.add_insecure_port('[::]:50051')
+#                server.start()
+#                self.run_policy(no_of_sampling, eps_threshold, i)
+#                server.stop(0)
             else:
                 self.run_policy(no_of_sampling, eps_threshold, i)
             run_policy_time = time.time()
