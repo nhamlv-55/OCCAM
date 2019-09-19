@@ -225,17 +225,19 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             callee = request.callee.splitlines()
             ctx = request.module.splitlines()
 
-            for l in ctx:
-                print(l)
-
             args = request.args
             stmt_index, rewritten_ir = self.rewriter.llvm_ir_to_input([caller, callee, ctx], ["caller", "callee", "ctx"])
             rewritten_caller = rewritten_ir[0]
             rewritten_callee = rewritten_ir[1]
             rewritten_ctx    = rewritten_ir[2]
 
-            for l in rewritten_ctx:
-                print(l)
+            if self.debug:
+                for l in ctx:
+                    print(l)
+
+
+                for l in rewritten_ctx:
+                    print(l)
 
             encoded_caller = stmt_index[0]
             len_caller = len(encoded_caller)

@@ -477,7 +477,7 @@ class IRTransformer:
         #print("------------------")
         #print(raw_data[0][:10])
         # Source code transformation: simple pre-processing
-        print('\n--- Pre-process code')
+        #print('\n--- Pre-process code')
         preprocessed_data, functions_declared_in_files = i2v_prep.preprocess(raw_data)
         ############################################################################################################
         # IR processing (inline structures, abstract statements)
