@@ -113,9 +113,13 @@ class Dataset(object):
                 f_data = f.readlines()
             with open(fname+".state_encoded") as f_encoded:
                 f_enc_data = f_encoded.readlines()
+
+            #broken run
             if len(f_enc_data) > 0 and len(f_data)!=len(f_enc_data):
                 print("error in %s"%fname)
-                return 
+                return
+
+            #read data
             for i in range(len(f_data)):
                 l = f_data[i]
                 if len(f_enc_data)>0:
@@ -196,11 +200,17 @@ class Dataset(object):
         runs = glob.glob(self.folder+"/run*")
         sorted(runs)
         size = min(len(runs), size)
+        counter = 0
         for r in runs[:size]:
             run_data = {}
             #print(r)
             csv_files = glob.glob(r+"/*.csv")
-            _, episode_data, total = self.merge_csv(csv_files)
+            csv_datas = self.merge_csv(csv_files)
+            #only use data from unbroken runs
+            if csv_datas is not None:
+                _, episode_data, total = csv_datas
+            else:
+                continue
             result = self.get_stat(r)
             self.raw_data.extend(_)
             run_data["episode_data"] = episode_data
@@ -208,6 +218,9 @@ class Dataset(object):
             run_data["raw_result"] = result
             run_data["total"] = total
             self.all_data.append(run_data)
+            counter+=1
+        print("collected %s good runs out of %s runs"%(str(counter), str(size)))
+        return counter 
 
     def sort(self):
         self.all_data.sort(key=lambda x: x["score"])

@@ -19,7 +19,7 @@ import Previrt_pb2_grpc
 from grpc_server import QueryOracleServicer, Mode, serve_multiple
 import multiprocessing
 torch.manual_seed(1)
-np.random.seed(1)
+#np.random.seed(1)
 
 debug_print_limit = 6
 lr = 0.001
@@ -49,11 +49,13 @@ class PolicyGradient(BasePolicy):
             if self.grpc_mode:
 #                server = grpc.server(futures.ThreadPoolExecutor(max_workers=40))
                 if self.net.net_type == "UberNet":
-                    workers = serve_multiple(2, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
+                    workers = serve_multiple(20, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
                     self.run_policy(no_of_sampling, eps_threshold, i)
+                    time.sleep(10) #terrible hack, for now
                     for w in workers:
+                        #w.join()
                         w.terminate()
-                        w.join()
+                        print("%s is terminated"%str(w))
 #                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
 #                        QueryOracleServicer(mode = Mode.TRAINING_RNN, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = False), server)
 #                else:
@@ -90,6 +92,7 @@ class PolicyGradient(BasePolicy):
         # Actions are used as indices, must be LongTensor
         action_tensor = torch.LongTensor(batch_actions)
 
+        print("number of unbroken runs in last rollout: ", state_tensor.shape[0])
         print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
         if self.net.net_type == "UberNet":

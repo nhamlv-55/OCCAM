@@ -276,9 +276,12 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             if self.debug: print(features.shape)
             # #print(self.net)                                              #
             logits = self.net.forward(features).view(-1).detach().numpy() #
-            if self.debug: print("logits:", logits)                                  #
-            pred = np.random.choice([False, True], p=logits)              #
-            # if self.debug: print(pred)                                    #
+            if self.debug: print("logits:", logits)
+            #numpy random is not random for some reasons
+            #pred = np.random.choice([False, True], p=logits)              #
+            coin = random.random()
+            pred = not (coin<logits[0])
+            if self.debug: print(pred)                                    #
             return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = pred)
         else:
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = "empty", pred=False)
@@ -311,8 +314,8 @@ def serve_multiple(no_of_servers, mode, p, n, workdir, net):
             worker.start()
             workers.append(worker)
         return workers
-        for worker in workers:
-            worker.join()
+#        for worker in workers:
+#            worker.join()
 
 def try_1_cs(p):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))

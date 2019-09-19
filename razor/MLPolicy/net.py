@@ -5,7 +5,7 @@ import torch
 import numpy as np
 import pickle
 DEBUG = False
-DEBUG = True
+#DEBUG = True
 
 torch.set_printoptions(sci_mode = False)
 
@@ -129,7 +129,6 @@ class UberNet(Net):
     def forward(self, x):
         x = x.long()
         if DEBUG: print("x:", x.size())
-        split_index = np.where(x == 0)[0]
         caller_len = x[:, 0]
         callee_len = x[:, 1]
         args_len   = x[:, 2]
