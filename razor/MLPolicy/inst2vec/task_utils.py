@@ -428,10 +428,10 @@ class IRTransformer:
         cutoff_stmts_pickle = os.path.join(folder_vocabulary, 'cutoff_stmts_pickle')
 
         # Load dictionary and cutoff statements
-        print('\tLoading dictionary from file', dictionary_pickle)
+        #print('\tLoading dictionary from file', dictionary_pickle)
         with open(dictionary_pickle, 'rb') as f:
             self.dictionary = pickle.load(f)
-        print('\tLoading cut off statements from file', cutoff_stmts_pickle)
+        #print('\tLoading cut off statements from file', cutoff_stmts_pickle)
         with open(cutoff_stmts_pickle, 'rb') as f:
             self.stmts_cut_off = pickle.load(f)
         self.stmts_cut_off = set(self.stmts_cut_off)
