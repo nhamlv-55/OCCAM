@@ -22,9 +22,9 @@ torch.manual_seed(1)
 #np.random.seed(1)
 
 debug_print_limit = 6
-lr = 0.001
+lr = 0.01
 minimize = True
-MIN_USABLE_RUNS = 4
+MIN_USABLE_RUNS = 1
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
@@ -32,7 +32,8 @@ class PolicyGradient(BasePolicy):
             self.net = network_type(self.metadata, network_hp)
         else:
             self.net = network_type(self.metadata)
-        self.atomizer = Atomizer() 
+        #self.atomizer = Atomizer()
+
     def train(self, model_path, no_of_sampling, no_of_iter, from_scratch):
         collect_encoded_state = False
         if from_scratch:
@@ -44,9 +45,9 @@ class PolicyGradient(BasePolicy):
 
         for i in range(no_of_iter):
             start_time = time.time()
-            if (i+1)%1000 == 0:
-                print("performance at iteration %s"%str(i))
-                self.evaluate(tag="eval%s"%str(i))
+            if (i+1)%3 == 0:
+                fig_name = self.metadata["metric"].replace(" ", "_")
+                self.plot(no_of_sampling, i, fig_name)
             eps_threshold = -1 #set to -1 to always use policy
             if self.grpc_mode:
                 if self.net.net_type == "UberNet":
@@ -57,8 +58,8 @@ class PolicyGradient(BasePolicy):
                     time.sleep(3) #make sure all clients have finished
                     for w in workers:
                         w.terminate()
-                        print("%s is terminated"%str(w))
-                    
+                        if self.debug: print("%s is terminated"%str(w))
+                    print("all grpc workers are terminated")
                 else:
                     workers = serve_multiple(10, Mode.TRAINING, 1, 1, self.workdir, self.net)
                     time.sleep(1) #make sure all models and dicts are loaded into grpc_server
@@ -157,6 +158,10 @@ class PolicyGradient(BasePolicy):
     def forward(self, state):
         state_tensor = torch.tensor(state)
         return self.net.forward((state_tensor)).view(-1, 2)
+
+    def plot(self,no_of_sampling, iteration, fig_name ):
+        metric = self.metadata["metric"]
+        plot(no_of_sampling, iteration, self.workdir, fig_name, self.metadata["agg_results"][metric], self.metadata["none_results"][metric], self.metadata["metric"] )
 
     def evaluate(self, tag="eval"):
         if self.grpc_mode:

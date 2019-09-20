@@ -26,7 +26,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 #Plot the rewards
-def plot(no_of_sampling, no_of_run, workdir, graph_file, metric = "Total unique gadgets"):
+def plot(no_of_sampling, no_of_run, workdir, graph_file, agg, opt,  metric = "Total unique gadgets", ext = "pdf"):
     plt.clf()
     iters = []
     means = []
@@ -40,6 +40,13 @@ def plot(no_of_sampling, no_of_run, workdir, graph_file, metric = "Total unique 
                 tokens = l.strip().split()
                 return int(tokens[0])
 
+    #legacy code
+    def read_rop_profiler(iteration, run, metric):
+        res_path = os.path.join(workdir, "slash_run%s/run%s/rop_stats.txt"%(str(iteration), str(run)))
+        res = open(res_path, "r").readlines()
+        rop_count = int(res[-1].strip().split()[-1])
+        return rop_count
+
 
     def read_rop_stats(iteration, run, metric):
         res_path = os.path.join(workdir, "slash_run%s/run%s/"%(str(iteration), str(run)))
@@ -52,19 +59,31 @@ def plot(no_of_sampling, no_of_run, workdir, graph_file, metric = "Total unique 
         for j in range(no_of_sampling):
             if "gadgets" in metric:
                 run_results.append(read_rop_stats(i,j, metric))
+            elif "legacy" in metric:
+                run_results.append(read_rop_profiler(i, j, metric))
             else:
                 run_results.append(read_profiler(i, j, metric))
         iters.append(i)
         means.append(np.mean(run_results))
         stdevs.append(np.std(run_results))
 
+    plot_name = "%s_%s_%s.%s"%(graph_file, no_of_sampling, no_of_run, ext)
+    json_name = "%s_%s_%s.%s"%(graph_file, no_of_sampling, no_of_run, "json")
+
     x = np.array(iters)
     y = np.array(means)
     e = np.array(stdevs)
 
     plt.errorbar(x, y, e, linestyle='None', marker='^')
+    plt.axhline(y=agg, color='r', linestyle='-')
+    plt.axhline(y=opt, color='orange', linestyle='-')
+    plt.savefig(os.path.join(workdir, plot_name))
 
-    plt.savefig(os.path.join(workdir, graph_file))
+    #save the summary
+    summary = {"iters": iters, "means": means, "stdevs": stdevs, "agg": agg, "opt": opt}
+    with open(os.path.join(workdir, json_name), "w") as f:
+        json.dump(summary, f, indent=4, sort_keys=True)
+
 
 #ReplayMemory
 class ReplayMemory(object):
@@ -163,6 +182,10 @@ class Dataset(object):
                 v = int(tokens[0])
                 k = " ".join(tokens[1:])
                 result[k] = v
+        if "agg" in run:
+            self.agg_results = result
+        if "none" in run:
+            self.none_results = result
         return result
     
     def score(self, result):
@@ -414,6 +437,8 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
     metadata["maxx"] = dataset_bootstrap.maxx.tolist()
     metadata["minn"] = dataset_bootstrap.minn.tolist()
     metadata["metric"] = dataset_bootstrap.metric
+    metadata["agg_results"] = dataset_bootstrap.agg_results
+    metadata["none_results"]= dataset_bootstrap.none_results
     with open(os.path.join(workdir, "metadata.json"), "w") as f:
         json.dump(metadata, f, indent=4, sort_keys=True)
 
