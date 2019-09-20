@@ -34,6 +34,7 @@ class PolicyGradient(BasePolicy):
             self.net = network_type(self.metadata)
         self.atomizer = Atomizer() 
     def train(self, model_path, no_of_sampling, no_of_iter, from_scratch):
+        collect_encoded_state = False
         if from_scratch:
             print("Create a new model")
             self.save_model(model_path)
@@ -43,19 +44,27 @@ class PolicyGradient(BasePolicy):
 
         for i in range(no_of_iter):
             start_time = time.time()
-            if (i+1)%100 == 0:
+            if (i+1)%1000 == 0:
                 print("performance at iteration %s"%str(i))
                 self.evaluate(tag="eval%s"%str(i))
             eps_threshold = -1 #set to -1 to always use policy
             if self.grpc_mode:
-#                server = grpc.server(futures.ThreadPoolExecutor(max_workers=40))
                 if self.net.net_type == "UberNet":
+                    collect_encoded_state = True
                     workers = serve_multiple(10, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
                     time.sleep(3) #make sure all models and dicts are loaded into grpc_server
                     self.run_policy(no_of_sampling, eps_threshold, i)
                     time.sleep(3) #make sure all clients have finished
                     for w in workers:
-                        #w.join()
+                        w.terminate()
+                        print("%s is terminated"%str(w))
+                    
+                else:
+                    workers = serve_multiple(10, Mode.TRAINING, 1, 1, self.workdir, self.net)
+                    time.sleep(1) #make sure all models and dicts are loaded into grpc_server
+                    self.run_policy(no_of_sampling, eps_threshold, i)
+                    time.sleep(1) #make sure all clients have finished
+                    for w in workers:
                         w.terminate()
                         print("%s is terminated"%str(w))
 #                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
@@ -71,7 +80,7 @@ class PolicyGradient(BasePolicy):
                 self.run_policy(no_of_sampling, eps_threshold, i)
             run_policy_time = time.time()
             print("Rollout %s runs in %s seconds"%(no_of_sampling, run_policy_time - start_time))
-            dataset = Dataset(self.dataset_path, metric = self.metadata["metric"], size = no_of_sampling)
+            dataset = Dataset(self.dataset_path, collect_encoded_state = collect_encoded_state, metric = self.metadata["metric"], size = no_of_sampling)
             #abort bad runs
             if dataset.no_good_runs < MIN_USABLE_RUNS:
                 print("too many broken runs")
@@ -98,17 +107,18 @@ class PolicyGradient(BasePolicy):
         # Actions are used as indices, must be LongTensor
         action_tensor = torch.LongTensor(batch_actions)
 
-        #check rnn_state_tensor
-        if rnn_state_tensor.shape[-1]==0:
-            print("ERROR: broken!")
-            print(trajectory_data)
-            #do not optimize
-            return
+        print("state_tensor:", state_tensor.shape, "reward_tensor:", reward_tensor.shape, "action_tensor:", action_tensor.shape)
 
-        print("piece of rnn_state", rnn_state_tensor[:debug_print_limit])
-        print(state_tensor.shape, reward_tensor.shape, action_tensor.shape)
         # Calculate loss
         if self.net.net_type == "UberNet":
+            #check rnn_state_tensor
+            if rnn_state_tensor.shape[-1]==0:
+                print("ERROR: broken!")
+                print(trajectory_data)
+                #do not optimize
+                return
+
+            print("piece of rnn_state", rnn_state_tensor[:debug_print_limit])
             predict_tensor = self.net.forward(rnn_state_tensor)
         else:
             predict_tensor = self.net.forward(state_tensor)

@@ -5,7 +5,7 @@ import torch
 import numpy as np
 import pickle
 DEBUG = False
-DEBUG = True
+#DEBUG = True
 
 torch.set_printoptions(sci_mode = False)
 
@@ -96,10 +96,7 @@ def create_emb_layer(emb_file, non_trainable = False):
     num_emb, dim_emb = emb_matrix.shape
     print(num_emb)
     print("embedding dtype:", emb_matrix.dtype)
-    # add padding_idx
-    emb_matrix = np.append(emb_matrix, np.zeros([1, dim_emb]), axis = 0)
-    print(emb_matrix[num_emb])
-    emb_layer = nn.Embedding(num_emb + 1, dim_emb, padding_idx = num_emb )
+    emb_layer = nn.Embedding(num_emb + 1, dim_emb)
     emb_layer.weight = nn.Parameter(torch.from_numpy(emb_matrix))
     if non_trainable:
         emb_layer.weight.requires_grad = False
@@ -123,11 +120,10 @@ class UberNet(Net):
         self.gru_caller = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
         self.gru_callee = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
         self.gru_ctx    = nn.GRU(dim_emb, dim_hidden, num_layers, batch_first = True)
-        self.gru_args   = nn.GRU(dim_emb_args, dim_hidden_args, num_layers, batch_first = True)
+        self.gru_args   = nn.GRU(dim_emb_args, dim_hidden_args, 1, batch_first = True)
         self.fc1 = nn.Linear(self.dim_hidden + self.dim_hidden + self.dim_hidden +  self.dim_hidden_args + len(self.extra_feat) , 128)
         self.fc2 = nn.Linear(128, 64)
-        self.fc3 = nn.Linear(64, 32)
-        self.fc4 = nn.Linear(32, 2)
+        self.fc3 = nn.Linear(64, 2)
     
     def forward(self, x):
         x = x.long()
@@ -135,7 +131,7 @@ class UberNet(Net):
         caller_len = x[:, 0]
         callee_len = x[:, 1]
         args_len   = x[:, 2]
-        caller_usage = x[:, 3]
+        caller_usage = x[:, 3].float()/100
         if DEBUG: print("caller_usage:", caller_usage)
         #print("caller_len:", caller_len, "callee_len:", callee_len, "args_len:", args_len)
         x = x[:, 4:]
@@ -159,12 +155,12 @@ class UberNet(Net):
         _, last_h_ctx    = self.gru_ctx(self.embedding(ctx).float())
         #h_args   = self.gru_args(self.embedding_args(args)) 
         #print("h_caller:", last_h_caller.size(), "h_callee:", last_h_callee.size(), "h_args:", last_h_args.size())
-        concat  = torch.cat((last_h_caller[-1], last_h_callee[-1], last_h_args[-1], last_h_ctx[-1], caller_usage.float().view(-1, 1)), -1)
-        if DEBUG: print("concat:", concat.size())
+        concat  = torch.cat((last_h_caller[-1], last_h_callee[-1], last_h_args[-1], last_h_ctx[-1], caller_usage.view(-1, 1) ), -1)
+        if DEBUG: print("concat:", concat)
         h_fc1 = F.relu(self.fc1(concat))
         h_fc2 = F.relu(self.fc2(h_fc1))
         h_fc3 = F.relu(self.fc3(h_fc2))
-        output = F.softmax(self.fc4(h_fc3), dim = -1)
+        output = F.softmax(h_fc3, dim = -1)
         #print("logit size:", output.size())
         return output
     

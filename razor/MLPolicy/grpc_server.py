@@ -204,11 +204,11 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
                 pred = False
             return Previrt_pb2.Prediction(q_no = -1, q_yes = -1, state_encoded = state_encoded,  pred=pred)
         elif self.mode == Mode.TRAINING:
-            meta = request.meta
-            _, _, caller, callee = self.handle_meta(meta)
-            caller_encoded = self.atomizer.encode(caller)
-            callee_encoded = self.atomizer.encode(callee)
-            state_encoded = "caller:\n"+caller_encoded+"callee:\n"+callee_encoded+"----\n"
+            #meta = request.meta
+            #_, _, caller, callee = self.handle_meta(meta)
+            #caller_encoded = self.atomizer.encode(caller)
+            #callee_encoded = self.atomizer.encode(callee)
+            #state_encoded = "caller:\n"+caller_encoded+"callee:\n"+callee_encoded+"----\n"
             if self.debug: self.print_state(request)
             features = [int(s) for s in request.features.split(',')]
             features = torch.FloatTensor([features])
@@ -218,7 +218,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             if self.debug: print(logits)
             pred = np.random.choice([False, True], p=logits)
             if self.debug: print(pred)
-            return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = state_encoded, pred = pred)
+            return Previrt_pb2.Prediction(q_no = logits[0], q_yes = logits[1], state_encoded = "EMPTY", pred = pred)
         #context.set_trailing_metadata(('metadata_for_testint', b'I agree'),)
         elif self.mode == Mode.TRAINING_RNN:
             meta = request.meta

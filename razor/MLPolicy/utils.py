@@ -87,12 +87,14 @@ class ReplayMemory(object):
         return len(self.memory)
 
 class Dataset(object):
-    def __init__(self, folder, metric, n_unused_stat = 3, size=99999999):
+    def __init__(self, folder, metric, collect_encoded_state = False, n_unused_stat = 3, size=99999999):
         self.folder = folder
         self.metric = metric
         print(self.folder, self.metric)
+        print("collect_encoded_state=", collect_encoded_state)
         self.n_unused_stat = n_unused_stat
         self.all_data = []
+        self.collect_encoded_state = collect_encoded_state
         self.collect(size)
         if self.no_good_runs > 0:
             self.calculate_stats()
@@ -116,7 +118,7 @@ class Dataset(object):
                 f_enc_data = f_encoded.readlines()
 
             #broken run
-            if len(f_data)!=len(f_enc_data):
+            if self.collect_encoded_state and len(f_data)!=len(f_enc_data):
                 if DEBUG:
                     print("error in %s"%fname)
                     print("there are only %s lines in .encoded_state"%str(len(f_enc_data)))
@@ -125,7 +127,7 @@ class Dataset(object):
             #read data
             for i in range(len(f_data)):
                 l = f_data[i]
-                if len(f_enc_data)>0:
+                if self.collect_encoded_state and len(f_enc_data)>0:
                     rnn_state = f_enc_data[i]
                     rnn_state = [int(t) for t in rnn_state.strip().split()]
                     #print(len(rnn_state))
