@@ -216,11 +216,20 @@ class Dataset(object):
         self.minn = np.min(raw_data_np, 0)
         #calculate mean and std of scores based on current dataset
         final_scores = []
-        for eps in self.all_data:
-            final_scores.append(eps["score"])
-        final_scores = np.array(final_scores)
-        self.score_mean = np.mean(final_scores, 0)
-        self.score_std  = np.std(final_scores, 0)
+        self.score_mean = {}
+        self.score_std  = {}
+        self.score_max  = {}
+        self.score_min  = {}
+        for k in self.none_results:
+            scores_for_k = []
+            for eps in self.all_data:
+                scores_for_k.append(eps["raw_result"][k])
+
+            scores_for_k = np.array(scores_for_k)
+            self.score_mean[k] = np.mean(scores_for_k, 0)
+            self.score_std[k]  = np.std(scores_for_k, 0)
+            self.score_max[k]  = np.max(scores_for_k, 0)
+            self.score_min[k]  = np.min(scores_for_k, 0)
 
     def collect(self, size):
         self.raw_data = []
