@@ -13,7 +13,6 @@ import torch.optim as optim
 import argparse
 import subprocess
 
-#stuffs from openAI baselines
 import sys
 import re
 import multiprocessing
@@ -49,6 +48,7 @@ parser.add_argument('-s', default = 10, type=int, help='no of sampling')
 parser.add_argument('-i', default = 3, type=int, help ='no of iteration')
 parser.add_argument('-d', dest='DEBUG', action = 'store_true')
 parser.add_argument('-g', dest='grpc_mode', action = 'store_true')
+parser.add_argument('-m', dest='metric', default = 'Total unique gadgets')
 parser.set_defaults(DEBUG = False, grpc_mode = False)
 args = parser.parse_args()
 workdir = args.workdir
@@ -61,30 +61,28 @@ DEBUG = args.DEBUG
 print("DEBUG=", DEBUG)
 grpc_mode = args.grpc_mode
 print("grpc_mode:", grpc_mode)
-#load latest model or create a new one
-def evaluate(model_path):
-    _ = subprocess.check_output("./build.sh -epsilon 0 -folder eval 2>eval.log".split(), cwd = workdir)
-    print(_)
-    print("done evaluation")
+metric = args.metric
 
-#baselines main
-def main(args):
-    # configure logger, disable logging in child MPI processes (with rank > 0)
-
-    arg_parser = common_arg_parser()
-    args, unknown_args = arg_parser.parse_known_args(args)
-    extra_args = parse_cmdline_kwargs(unknown_args)
-
-    if MPI is None or MPI.COMM_WORLD.Get_rank() == 0:
-        rank = 0
-        configure_logger(args.log_path)
-    else:
-        rank = MPI.COMM_WORLD.Get_rank()
-        configure_logger(args.log_path, format_strs=[])
-
-    model, env = train(args, extra_args)
-
-    return model
+accepted_metrics = [
+        "COP gadgets", 
+        "JOP gadgets", 
+        "Number of basic blocks", 
+        "Number of bounded loops", 
+        "Number of direct calls", 
+        "Number of external calls", 
+        "Number of functions", 
+        "Number of indirect calls", 
+        "Number of instructions", 
+        "Number of loops", 
+        "Number of memory instructions", 
+        "ROP gadgets", 
+        "Statically safe memory accesses", 
+        "Statically unknown memory accesses", 
+        "Total unique gadgets"
+] 
+if metric not in accepted_metrics:
+    print("Not one of the accepted metrics")
+    quit()
 
 
 if __name__=="__main__":
@@ -92,8 +90,8 @@ if __name__=="__main__":
         gen_new_meta()
     elif action=="train-scratch":
         #policy = DoubleQPolicy(workdir, model_path, FeedForwardSingleInput, network_hp = None)
-        #policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
-        policy = PolicyGradient(workdir, model_path, UberNet, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG)
+        policy = PolicyGradient(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG, metric = metric)
+        # policy = PolicyGradient(workdir, model_path, UberNet, network_hp = None, grpc_mode = grpc_mode, debug = DEBUG, metric = metric)
         #policy = DAgger(workdir, model_path, FeedForwardSingleInputSoftmax, network_hp = None)
         policy.train(model_path, no_of_sampling, no_of_iter, from_scratch = True)
     elif action=="train-continue":

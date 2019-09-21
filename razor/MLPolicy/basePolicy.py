@@ -7,27 +7,30 @@ from grpc_server import QueryOracleServicer
 OCCAM_HOME = os.environ['OCCAM_HOME']
 
 class BasePolicy(object):
-    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug):
+    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug, metric):
         self.run_command = "./build.sh --devirt none"
         self.workdir = workdir
         self.model_path = model_path
         self.dataset_path = os.path.join(workdir, "slash")
         self.network_type = network_type
         self.network_hp = network_hp
+        self.debug = debug
+
         self.get_meta()
+        self.metadata["metric"] = metric
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.trace_len = 40 #a raw estimate of total number of steps in 1 episode. only use to decay epsilon
         self.grpc_mode = grpc_mode
         if self.grpc_mode:
             self.run_command +=" -g "
-        self.debug = debug
     def get_meta(self):
         with open(os.path.join(self.workdir, "metadata.json")) as json_file:  
             self.metadata = json.load(json_file)
             self.sample_inputs = torch.tensor(self.metadata["sample_inputs"]).view(1, -1)
-        print("init the policy with :")
-        for k in self.metadata:
-            print(k, self.metadata[k])
+        if self.debug:
+            print("init the policy with :")
+            for k in self.metadata:
+                print(k, self.metadata[k])
 
     def load(self, model_path):
         self.net = torch.load(model_path)

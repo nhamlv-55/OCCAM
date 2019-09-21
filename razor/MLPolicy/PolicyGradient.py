@@ -19,15 +19,16 @@ import Previrt_pb2_grpc
 from grpc_server import QueryOracleServicer, Mode, serve_multiple
 import multiprocessing
 torch.manual_seed(1)
-#np.random.seed(1)
+np.random.seed(1)
 
 debug_print_limit = 6
 lr = 0.01
 minimize = True
 MIN_USABLE_RUNS = 1
+PLOT_ITER = 20
 class PolicyGradient(BasePolicy):
-    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode = False, debug = False):
-        BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug)
+    def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug, metric):
+        BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug, metric)
         if network_hp is not None:
             self.net = network_type(self.metadata, network_hp)
         else:
@@ -45,7 +46,7 @@ class PolicyGradient(BasePolicy):
 
         for i in range(no_of_iter):
             start_time = time.time()
-            if (i+1)%3 == 0:
+            if (i+1)%PLOT_ITER == 0:
                 fig_name = self.metadata["metric"].replace(" ", "_")
                 self.plot(no_of_sampling, i, fig_name)
             eps_threshold = -1 #set to -1 to always use policy
@@ -81,12 +82,12 @@ class PolicyGradient(BasePolicy):
                 self.run_policy(no_of_sampling, eps_threshold, i)
             run_policy_time = time.time()
             print("Rollout %s runs in %s seconds"%(no_of_sampling, run_policy_time - start_time))
-            dataset = Dataset(self.dataset_path, collect_encoded_state = collect_encoded_state, metric = self.metadata["metric"], size = no_of_sampling)
+            dataset = Dataset(self.dataset_path, collect_encoded_state = collect_encoded_state, size = no_of_sampling)
             #abort bad runs
             if dataset.no_good_runs < MIN_USABLE_RUNS:
                 print("too many broken runs")
                 continue
-            trajectory_data = dataset.get_trajectory_data(normalize_rewards = True)
+            trajectory_data = dataset.get_trajectory_data(metric = self.metadata["metric"], normalize_rewards = True)
             collect_data_time = time.time()
             print("Processing data in ", collect_data_time - run_policy_time)
             self.optimize(trajectory_data, i)

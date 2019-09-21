@@ -106,10 +106,9 @@ class ReplayMemory(object):
         return len(self.memory)
 
 class Dataset(object):
-    def __init__(self, folder, metric, collect_encoded_state = False, n_unused_stat = 3, size=99999999):
+    def __init__(self, folder, collect_encoded_state = False, n_unused_stat = 3, size=99999999):
         self.folder = folder
-        self.metric = metric
-        print(self.folder, self.metric)
+        print(self.folder)
         print("collect_encoded_state=", collect_encoded_state)
         self.n_unused_stat = n_unused_stat
         self.all_data = []
@@ -188,10 +187,6 @@ class Dataset(object):
             self.none_results = result
         return result
     
-    def score(self, result):
-        return result[self.metric]*1.0
-        #return 1.0*result["Statically safe memory accesses"]/result["Number of memory instructions"]
-        #return result["Statically unknown memory accesses"]
     def get_step_reward(self, current_state, next_state, final_score):
         #reward is 0 for all step
         if next_state is not None:
@@ -220,7 +215,7 @@ class Dataset(object):
         self.score_std  = {}
         self.score_max  = {}
         self.score_min  = {}
-        for k in self.none_results:
+        for k in self.all_data[0]["raw_result"]:
             scores_for_k = []
             for eps in self.all_data:
                 scores_for_k.append(eps["raw_result"][k])
@@ -250,7 +245,6 @@ class Dataset(object):
             result = self.get_stat(r)
             self.raw_data.extend(_)
             run_data["episode_data"] = episode_data
-            run_data["score"] = self.score(result)
             run_data["raw_result"] = result
             run_data["total"] = total
             self.all_data.append(run_data)
@@ -261,7 +255,7 @@ class Dataset(object):
         self.all_data.sort(key=lambda x: x["score"])
 
     # for Policy Gradient
-    def get_trajectory_data(self, normalize_rewards = False):
+    def get_trajectory_data(self, metric, normalize_rewards = False):
         batch_states = []
         batch_rnn_states = []
         batch_actions = []
@@ -288,7 +282,7 @@ class Dataset(object):
             batch_probs.extend(probs)
             #rewards = [eps["score"]]*len(states)
             rewards = [0]*len(states)
-            rewards[-1] = eps["score"]
+            rewards[-1] = float(eps["raw_result"][metric])
             batch_rewards.extend(discount_rewards(rewards, GAMMA))
         if normalize_rewards:
             if DEBUG: print("before norm:", batch_rewards)
@@ -373,10 +367,7 @@ def discount_rewards(rewards, gamma):
     return discounted_rewards
 
 
-def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, metric = None):
-    if metric is None:
-        print("Need to provide metric")
-        return
+def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False):
     metadata = {}
     metadata["padding_idx"] = 8565 #hard coded. = no of entry in inst2vec vocab
     metadata["max_sequence_len"] = 2000 #hardcoded. assuming the longest len of a function is 2000
@@ -400,7 +391,6 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
     dataset_path = os.path.join(workdir, "slash")
     # run slash without the model to see how many features we are using
     print("run check_format to see if we change the number of features")
-    print("metric:", metric)
     #clear previous runs
     if os.path.exists(dataset_path):
         print("clearning previous runs...")
@@ -429,7 +419,7 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
         if not os.path.exists(directory_name):
             os.mkdir(directory_name)
         gsa.run_gsa(original, variants_dict, directory_name)
-    dataset_bootstrap = Dataset(dataset_path, metric)
+    dataset_bootstrap = Dataset(dataset_path)
     dataset_bootstrap.sort()
     dataset_bootstrap.dump()
     print("features_len:", dataset_bootstrap.features_len)
@@ -445,7 +435,6 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False, m
     metadata["min_score"] = dataset_bootstrap.all_data[-1]["score"]
     metadata["maxx"] = dataset_bootstrap.maxx.tolist()
     metadata["minn"] = dataset_bootstrap.minn.tolist()
-    metadata["metric"] = dataset_bootstrap.metric
     metadata["agg_results"] = dataset_bootstrap.agg_results
     metadata["none_results"]= dataset_bootstrap.none_results
     with open(os.path.join(workdir, "metadata.json"), "w") as f:
@@ -567,10 +556,8 @@ if __name__== "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', default=100, help='number of trial runs to get meta data')
     parser.add_argument('-f', default=os.path.join(OCCAM_HOME,"examples/portfolio/tree"), help='work_dir')
-    parser.add_argument('-m', default="Total unique gadgets", help='metrics to get')
     args = parser.parse_args()
     bootstrap_runs = int(args.n)
     model_path = os.path.join(OCCAM_HOME, "razor/MLPolicy/model") 
     work_dir   = args.f
-    metric = args.m
-    gen_new_meta(work_dir, bootstrap_runs, "./build.sh ", metric = metric)
+    gen_new_meta(work_dir, bootstrap_runs, "./build.sh ")
