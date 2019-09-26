@@ -72,8 +72,9 @@ namespace previrt
     void markRecursiveFunctions();
     bool isRecursive(llvm::Function* f) const;    
     bool allowSpecialization(llvm::Function* f) const;
-    std::vector<float> getInstructionCount(llvm::Function* f) const;
-    float getLoopCount(llvm::Function* f) const;
+    std::vector<unsigned> getInstructionCount(llvm::Function* f) const;
+    unsigned getLoopCount(llvm::Function* f) const;
+    std::vector<unsigned> getModuleFeatures(llvm::Function* caller) const;
     bool random_with_prob(const double prob) const;
     void pushToTrace(const int v) const;
     // Generate the net
@@ -93,8 +94,9 @@ namespace previrt
 
     virtual bool specializeOn(llvm::CallSite CS,
                               std::vector<llvm::Value*>& slice,
-                              const std::vector<float> module_features,
-                              QueryOracleClient* q) const ;
+                              QueryOracleClient* q,
+                              const unsigned worklist_size
+                              ) const ;
 
     virtual bool specializeOn(llvm::Function* F,
 			      const PrevirtType* begin,

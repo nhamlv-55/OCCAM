@@ -59,8 +59,8 @@ bool AggressiveSpecPolicy::specializeOn(CallSite CS,
   return specialize;
 }
   
-  bool AggressiveSpecPolicy::specializeOn(llvm::CallSite, std::vector<llvm::Value*>&, const std::vector<float>, QueryOracleClient*) const {return false;};
-bool AggressiveSpecPolicy::specializeOn(Function *F, const PrevirtType *begin,
+  bool AggressiveSpecPolicy::specializeOn(llvm::CallSite, std::vector<llvm::Value*>&, QueryOracleClient*, const unsigned worklist_size) const {return false;};
+  bool AggressiveSpecPolicy::specializeOn(Function *F, const PrevirtType *begin,
                                         const PrevirtType *end,
                                         SmallBitVector &slice) const {
   bool specialize = false;

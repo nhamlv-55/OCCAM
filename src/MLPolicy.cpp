@@ -39,6 +39,7 @@
 #include <time.h>
 #include "llvm/Analysis/LoopInfo.h"
 #include "utils/UberIRDumper.h"
+#include "utils/Profiler.h"
 using namespace llvm;
 using namespace torch;
 namespace previrt {
@@ -133,14 +134,14 @@ namespace previrt {
   }
 
 
-  std::vector<float> MLPolicy::getInstructionCount(llvm::Function *f) const {
-    std::vector<float> counts;
-    float total_int_count = 0;
-    float total_bb_count = 0;
-    float load_int_count = 0;
-    float store_int_count = 0;
-    float call_int_count = 0;
-    float branch_int_count = 0;
+  std::vector<unsigned> MLPolicy::getInstructionCount(llvm::Function *f) const {
+    std::vector<unsigned> counts;
+    unsigned total_int_count = 0;
+    unsigned total_bb_count = 0;
+    unsigned load_int_count = 0;
+    unsigned store_int_count = 0;
+    unsigned call_int_count = 0;
+    unsigned branch_int_count = 0;
 
     for (const BasicBlock &BB : *f){
       total_bb_count ++;
@@ -160,41 +161,51 @@ namespace previrt {
     counts.push_back(call_int_count);
     counts.push_back(branch_int_count);
 
-    counts.push_back((float)getLoopCount(f));
+    counts.push_back(getLoopCount(f));
 
     return counts;
   }
 
-  unsigned handleLoop(llvm::Loop *L, unsigned loopcounter) {
-    loopcounter++;
-    for (llvm::Loop *SL : L->getSubLoops()) {
-      loopcounter += handleLoop(SL, loopcounter);
+  unsigned MLPolicy::getLoopCount(llvm::Function *f) const {
+    unsigned TotalLoops = 0;
+    LoopInfo& LI = pass.getAnalysis<LoopInfoWrapperPass>(*f).getLoopInfo();
+    for (auto L: LI) {
+      ++TotalLoops;
     }
-    return loopcounter;
-  }
-
-  float MLPolicy::getLoopCount(llvm::Function *f) const {
-    float loopcounter = 0;
-
-    llvm::LoopInfo &li = pass.getAnalysis<LoopInfoWrapperPass>(*f).getLoopInfo();
-    for (llvm::LoopInfo::iterator LIT = li.begin(), LEND = li.end(); LIT != LEND;
-         ++LIT) {
-      loopcounter = handleLoop(*LIT, loopcounter);
-    }
-    return loopcounter;
+    return TotalLoops;
   }
 
   void MLPolicy::pushToTrace(const int v) const{
     std::vector<int> onehot = std::vector<int>(2, 0);
     onehot[v] = 1;
     trace->insert(trace->end(), onehot.begin(), onehot.end());
-  //   for(std::vector<int>::iterator it = trace->begin(); it !=trace->end(); it++,i++ )    {
-  //     // found nth element..print and break.
-  //     if(*it == 0) {
-  //       *it = v;
-  //       break;
-  //     }
-  //   }
+    //   for(std::vector<int>::iterator it = trace->begin(); it !=trace->end(); it++,i++ )    {
+    //     // found nth element..print and break.
+    //     if(*it == 0) {
+    //       *it = v;
+    //       break;
+    //     }
+    //   }
+  }
+
+  std::vector<unsigned> MLPolicy::getModuleFeatures(llvm::Function *caller) const {
+    ProfilerPass &p = pass.getAnalysis<ProfilerPass>();
+    p.runOnModule(*(caller->getParent()));
+    //const unsigned callee_no_of_uses = callee->getNumUses();
+    const unsigned caller_no_of_uses = caller->getNumUses();
+    //errs()<<"number of time callee is used:"<<callee_no_of_uses<<"\n";
+    //errs()<<"number of time caller is used:"<<caller_no_of_uses<<"\n";
+    //errs()<<"callee:"<<*callee<<"\n";
+    //errs()<<"caller:"<<*caller<<"\n";
+    //        errs()<<"Number of time callee is used:"<<no_of_uses<<std::endl;
+    std::vector<unsigned> module_features ;
+    module_features.push_back(p.getNumFuncs());
+    module_features.push_back(p.getTotalInst());
+    module_features.push_back(p.getTotalBlocks());
+    module_features.push_back(p.getTotalDirectCalls());
+    //module_features.push_back((float)callee_no_of_uses);
+    module_features.push_back(caller_no_of_uses);
+    return module_features;
   }
 
   bool MLPolicy::specializeOn(llvm::CallSite, std::vector<llvm::Value*>&) const {return false;};
@@ -208,24 +219,24 @@ namespace previrt {
       affected_inst++;
       worklist.pop_back();
       visited.push_back(e);
-      errs()<<"processing ";
-      e->print(errs());
-      errs()<<"...\n";
+      //errs()<<"processing ";
+      //e->print(errs());
+      //errs()<<"...\n";
       for(auto U : e->users()){  // U is of type User*
-        e->print(errs());
-        e->print(*rso);
+        //e->print(errs());
+        //e->print(*rso);
         if (auto I = dyn_cast<Instruction>(U)){
           if(std::find(visited.begin(), visited.end(), U) == visited.end()) {
-            errs()<<"\tUser:";
-            *rso<<"\tUser:";
-            I->print(errs());
-            I->print(*rso);
-            errs()<<"\n";
-            *rso<<"\n";
+            //errs()<<"\tUser:";
+            //*rso<<"\tUser:";
+            //I->print(errs());
+            //I->print(*rso);
+            //errs()<<"\n";
+            //*rso<<"\n";
             worklist.push_back(I);
             if(isa<llvm::BranchInst>(*I)){
               branch_cnt++;
-              errs()<<"is a cmp inst\n";
+              //errs()<<"is a cmp inst\n";
             }
           }
         }
@@ -238,13 +249,15 @@ namespace previrt {
 
   bool MLPolicy::specializeOn(CallSite CS,
                               std::vector<Value *> &slice,
-                              const std::vector<float> module_features,
-                              QueryOracleClient* q) const {
+                              QueryOracleClient* q,
+                              const unsigned worklist_size) const {
     errs()<<"TOUCH A CALL SITE"<<"\n";
     errs()<<"EPSILON:"<<epsilon<<"\n";
     const int type = 0; //Policy gradient
     //const int type = 1; // DQN
     //const int type = 2; //AggressiveSpecPolicy
+    const bool state_rnn = epsilon < -100;
+
     llvm::Function *callee = CS.getCalledFunction();
     llvm::Function *caller = CS.getCaller();
     float q_Yes = -1;
@@ -312,48 +325,62 @@ namespace previrt {
       // return false immediately
       if(specialize==false){errs()<<"all arguemnts are not specializable"<<"\n"; return false;}
       // only invoke MLPolicy after this point
-      std::vector<float> features;
-      std::vector<float> callee_features = getInstructionCount(callee);
+      std::vector<unsigned> features;
+      std::vector<unsigned> callee_features = getInstructionCount(callee);
       features.insert( features.end(), callee_features.begin(), callee_features.end() );
-      std::vector<float> caller_features = getInstructionCount(caller);
+      std::vector<unsigned> caller_features = getInstructionCount(caller);
       features.insert( features.end(), caller_features.begin(), caller_features.end() );
       features.push_back(no_of_const);
       features.push_back(no_of_arg);
+      std::vector<unsigned> module_features = getModuleFeatures(caller);
       features.insert( features.end(), module_features.begin(), module_features.end() );
       features.push_back(branch_cnt);
       features.push_back(affected_inst);
+      features.push_back(worklist_size);
       trace->insert(trace->end(), features.begin(), features.end());
+      std::string caller_ir;
+      llvm::raw_string_ostream caller_rso(caller_ir);
+        
+      std::string callee_ir;
+      llvm::raw_string_ostream callee_rso(callee_ir);
 
-      //build a calling context of k instructions before 
-      Instruction* current = CS.getInstruction();
-      for(int i=0 ;  i < window_size; i++){
-        if(current==nullptr){
-          ctx_rso<<"NONE\n";
-          errs()<<"NONE\n";
-        }else{
-          current->print(errs());
-          errs()<<"\n";
-          current->print(ctx_rso);
-          ctx_rso<<"\n";
-          current = current->getPrevNode();
+      if(state_rnn){
+        //build a calling context of k instructions before 
+        Instruction* current = CS.getInstruction();
+        for(int i=0 ;  i < window_size; i++){
+          if(current==nullptr){
+            ctx_rso<<"NONE\n";
+            errs()<<"NONE\n";
+          }else{
+            current->print(errs());
+            errs()<<"\n";
+            current->print(ctx_rso);
+            ctx_rso<<"\n";
+            current = current->getPrevNode();
+          }
         }
-      }
-      //build a calling context of k instructions after
-      current = CS.getInstruction();
-      for(int i=0 ;  i < window_size; i++){
-        if(current==nullptr){
-          ctx_rso<<"NONE\n";
-          errs()<<"NONE\n";
-        }else{
-          current->print(errs());
-          errs()<<"\n";
-          current->print(ctx_rso);
-          ctx_rso<<"\n";
-          current = current->getNextNode();
+        //build a calling context of k instructions after
+        current = CS.getInstruction();
+        for(int i=0 ;  i < window_size; i++){
+          if(current==nullptr){
+            ctx_rso<<"NONE\n";
+            errs()<<"NONE\n";
+          }else{
+            current->print(errs());
+            errs()<<"\n";
+            current->print(ctx_rso);
+            ctx_rso<<"\n";
+            current = current->getNextNode();
+          }
         }
+
+        caller->print(caller_rso);
+
+        callee->print(callee_rso);
+
+
+       
       }
-
-
       //      features.push_back((float)M->getInstructionCount ());
       //features.insert( features.end(), (*trace).begin(), (*trace).end());
       //std::vector<float> trace_mask = std::vector<float>(42-(*trace).size(), 0);
@@ -382,13 +409,6 @@ namespace previrt {
           // utils::dump_IR_as_tokens(*caller, &tokens_rso); //
           // tokens_rso<<"End tokens:\n";                    //
           /////////////////////////////////////////////////////
-          std::string caller_ir;
-          llvm::raw_string_ostream caller_rso(caller_ir);
-          caller->print(caller_rso);
-
-          std::string callee_ir;
-          llvm::raw_string_ostream callee_rso(callee_ir);
-          callee->print(callee_rso);
 
           previrt::proto::Prediction prediction = q->Query(q->MakeState(state, "meta", caller_rso.str(), callee_rso.str(), ctx_rso.str(), args_state, *trace));
           final_decision = prediction.pred();
@@ -444,20 +464,20 @@ namespace previrt {
       //note: currently +1 because we use a fixed size vector for trace with value 0 used as mask.
       return final_decision;
     } else {
-        errs() << "not callee or not allowSpecialization" << "\n";
-        return false;
-      }
+      errs() << "not callee or not allowSpecialization" << "\n";
+      return false;
+    }
   }
 
-    bool MLPolicy::specializeOn(llvm::Function *F, const PrevirtType *begin,
-                                const PrevirtType *end,
-                                SmallBitVector &slice) const {
-      if (allowSpecialization(F)) {
-        return delegate->specializeOn(F, begin, end, slice);
-      } else {
-        return false;
-      }
+  bool MLPolicy::specializeOn(llvm::Function *F, const PrevirtType *begin,
+                              const PrevirtType *end,
+                              SmallBitVector &slice) const {
+    if (allowSpecialization(F)) {
+      return delegate->specializeOn(F, begin, end, slice);
+    } else {
+      return false;
     }
+  }
 
   bool MLPolicy::specializeOn(llvm::Function *F,
                               std::vector<PrevirtType>::const_iterator begin,

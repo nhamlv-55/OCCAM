@@ -152,7 +152,7 @@ namespace previrt
     }
     //Force inlining
     errs()<<"force inlining...\n";
-    result->addFnAttr (Attribute::AlwaysInline);
+    //result->addFnAttr (Attribute::AlwaysInline);
     //Force no inlining
     //errs()<<"force no inlining...\n";
     //result->addFnAttr (Attribute::NoInline);
