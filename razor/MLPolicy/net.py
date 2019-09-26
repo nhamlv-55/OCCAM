@@ -103,7 +103,7 @@ def create_emb_layer(emb_file, non_trainable = False):
     return emb_layer, num_emb, dim_emb
 
 class UberNet(Net):
-    def __init__(self, metadata, dim_hidden = 64, dim_hidden_args = 16, dim_emb_args = 4, num_layers = 2):
+    def __init__(self, metadata, dim_hidden = 64, dim_hidden_args = 16, dim_emb_args = 4, num_layers = 1):
         Net.__init__(self, metadata)
         self.extra_feat = ["caller_no_of_use"]
         self.max_sequence_len = metadata["max_sequence_len"]

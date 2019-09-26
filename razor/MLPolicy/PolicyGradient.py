@@ -22,10 +22,10 @@ torch.manual_seed(1)
 np.random.seed(1)
 
 debug_print_limit = 6
-lr = 0.01
+lr = 0.001
 minimize = True
-MIN_USABLE_RUNS = 1
-PLOT_ITER = 20
+MIN_USABLE_RUNS = 15
+PLOT_ITER = 2
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug, metric):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug, metric)
@@ -52,23 +52,25 @@ class PolicyGradient(BasePolicy):
             eps_threshold = -1 #set to -1 to always use policy
             if self.grpc_mode:
                 if self.net.net_type == "UberNet":
+                    eps_threshold = -200 #to trigger rnn state in MLPolicy
                     collect_encoded_state = True
-                    workers = serve_multiple(10, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
-                    time.sleep(3) #make sure all models and dicts are loaded into grpc_server
+                    workers = serve_multiple(15, Mode.TRAINING_RNN, 1, 1, self.workdir, self.net)
+                    time.sleep(2) #make sure all models and dicts are loaded into grpc_server
                     self.run_policy(no_of_sampling, eps_threshold, i)
-                    time.sleep(3) #make sure all clients have finished
+                    time.sleep(1) #make sure all clients have finished
                     for w in workers:
                         w.terminate()
                         if self.debug: print("%s is terminated"%str(w))
                     print("all grpc workers are terminated")
                 else:
-                    workers = serve_multiple(10, Mode.TRAINING, 1, 1, self.workdir, self.net)
+                    workers = serve_multiple(20, Mode.TRAINING, 1, 1, self.workdir, self.net)
                     time.sleep(1) #make sure all models and dicts are loaded into grpc_server
                     self.run_policy(no_of_sampling, eps_threshold, i)
                     time.sleep(1) #make sure all clients have finished
                     for w in workers:
                         w.terminate()
-                        print("%s is terminated"%str(w))
+                        if self.debug: print("%s is terminated"%str(w))
+                    print("all grpc workers are terminated")
 #                    Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
 #                        QueryOracleServicer(mode = Mode.TRAINING_RNN, workdir = self.workdir, atomizer = self.atomizer, net = self.net, debug = False), server)
 #                else:
@@ -115,12 +117,12 @@ class PolicyGradient(BasePolicy):
         if self.net.net_type == "UberNet":
             #check rnn_state_tensor
             if rnn_state_tensor.shape[-1]==0:
-                print("ERROR: broken!")
-                print(trajectory_data)
+                #print("ERROR: broken!")
+                #print(trajectory_data)
                 #do not optimize
                 return
 
-            print("piece of rnn_state", rnn_state_tensor[:debug_print_limit])
+            #print("piece of rnn_state", rnn_state_tensor[:debug_print_limit])
             predict_tensor = self.net.forward(rnn_state_tensor)
         else:
             predict_tensor = self.net.forward(state_tensor)

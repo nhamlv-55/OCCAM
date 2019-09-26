@@ -63,7 +63,11 @@ class BasePolicy(object):
         runners_cmd = "parallel %s -epsilon %s -folder {} 2>/dev/null  ::: %s"%(self.run_command, eps_threshold, job_ids)
         if self.debug: print(runners_cmd)
         if self.debug: print("workdir:", self.workdir)
-        runners = subprocess.check_output(runners_cmd.split(), cwd = self.workdir)
+        try:
+            runners = subprocess.check_output(runners_cmd.split(), cwd = self.workdir)
+        except subprocess.CalledProcessError as e:
+            print(e.output)
+            return None
         return runners
     
     def train(self):

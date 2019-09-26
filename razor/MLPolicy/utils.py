@@ -49,8 +49,8 @@ def plot(no_of_sampling, no_of_run, workdir, graph_file, agg, opt,  metric = "To
 
 
     def read_rop_stats(iteration, run, metric):
-        res_path = os.path.join(workdir, "slash_run%s/run%s/"%(str(iteration), str(run)))
-        with open(res_path+"/gadget_count.json", "r") as f:
+        res_path = os.path.join(workdir, "slash_run%s/run%s/gadget_count.json"%(str(iteration), str(run)))
+        with open(res_path, "r") as f:
             data = json.load(f)
             return int(data[metric])
 
@@ -218,8 +218,10 @@ class Dataset(object):
         for k in self.all_data[0]["raw_result"]:
             scores_for_k = []
             for eps in self.all_data:
-                scores_for_k.append(eps["raw_result"][k])
-
+                if k in eps["raw_result"]:
+                    scores_for_k.append(eps["raw_result"][k])
+                else:
+                    scores_for_k.append(0)
             scores_for_k = np.array(scores_for_k)
             self.score_mean[k] = np.mean(scores_for_k, 0)
             self.score_std[k]  = np.std(scores_for_k, 0)
@@ -242,7 +244,10 @@ class Dataset(object):
                 _, episode_data, total = csv_datas
             else:
                 continue
-            result = self.get_stat(r)
+            try:
+                result = self.get_stat(r)
+            except Exception as e:
+                continue
             self.raw_data.extend(_)
             run_data["episode_data"] = episode_data
             run_data["raw_result"] = result
@@ -250,9 +255,6 @@ class Dataset(object):
             self.all_data.append(run_data)
             self.no_good_runs+=1
         print("collected %s good runs out of %s runs"%(str(self.no_good_runs), str(size)))
-
-    def sort(self):
-        self.all_data.sort(key=lambda x: x["score"])
 
     # for Policy Gradient
     def get_trajectory_data(self, metric, normalize_rewards = False):
@@ -344,20 +346,6 @@ class Dataset(object):
 
     
 
-    def dump(self):
-        ##########################################################
-        # for r in self.all_data:                                #
-        #     print("score:", r["score"])                        #
-        #     print("number of call sites:", r["total"])         #
-        #     print("number of passes:", len(r["episode_data"])) #
-        #     for run in r["episode_data"]:                      #
-        #         for callsite in run:                           #
-        #             print(callsite)                            #
-        ##########################################################
-        #        print("------")
-        print("best score", self.all_data[0]["score"])
-        print("worst score", self.all_data[-1]["score"])
-
 def discount_rewards(rewards, gamma):
     discounted_rewards = np.zeros(len(rewards))
     cumulative_rewards = 0
@@ -405,9 +393,11 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False):
         job_ids +=" %s"%str(jid)
     #run the jobs
     runners_cmd = "parallel %s -epsilon 10.5 -folder {} 2>/dev/null ::: %s"%(run_command, job_ids)
-    print(runners_cmd) 
-    runners = subprocess.check_output(runners_cmd.split(), cwd = workdir)
-
+    print(runners_cmd)
+    try:
+        runners = subprocess.check_output(runners_cmd.split(), cwd = workdir)
+    except subprocess.CalledProcessError as e:
+        print(e, e.output)
     #use GSA to get ROP stats
     if get_rop_detail:
         print("getting ROP details...")
@@ -420,8 +410,6 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False):
             os.mkdir(directory_name)
         gsa.run_gsa(original, variants_dict, directory_name)
     dataset_bootstrap = Dataset(dataset_path)
-    dataset_bootstrap.sort()
-    dataset_bootstrap.dump()
     print("features_len:", dataset_bootstrap.features_len)
     print("mean:", dataset_bootstrap.mean)
     print("std:", dataset_bootstrap.std)
@@ -431,8 +419,6 @@ def gen_new_meta(workdir, bootstrap_runs, run_command, get_rop_detail = False):
     metadata["score_mean"] = dataset_bootstrap.score_mean
     metadata["score_std"]  = dataset_bootstrap.score_std
     metadata["sample_inputs"] = dataset_bootstrap.raw_data[0][:dataset_bootstrap.features_len]
-    metadata["max_score"] = dataset_bootstrap.all_data[0]["score"]
-    metadata["min_score"] = dataset_bootstrap.all_data[-1]["score"]
     metadata["maxx"] = dataset_bootstrap.maxx.tolist()
     metadata["minn"] = dataset_bootstrap.minn.tolist()
     metadata["agg_results"] = dataset_bootstrap.agg_results
