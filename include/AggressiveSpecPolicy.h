@@ -50,7 +50,7 @@ namespace previrt
 			      std::vector<llvm::Value*>& slice) const override;
 
 
-    virtual bool specializeOn(llvm::CallSite, std::vector<llvm::Value*>&, QueryOracleClient*, const unsigned worklist_size) const override;
+    virtual bool specializeOn(llvm::CallSite, std::vector<llvm::Value*>&, QueryOracleClient*, const unsigned) const override;
     virtual bool specializeOn(llvm::Function* F,
 			      const PrevirtType* begin,
 			      const PrevirtType* end,

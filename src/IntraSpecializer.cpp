@@ -151,7 +151,6 @@ namespace previrt {
       worklist.pop_back();
       CallSite cs(ci);
       Function *callee = cs.getCalledFunction();
-      Function *caller = cs.getCaller();
       assert(callee);
       if (!GlobalValue::isLocalLinkage(callee->getLinkage())) {
         // We only try to specialize a function if it's internal.
@@ -163,9 +162,9 @@ namespace previrt {
       //                   constant c
       std::vector<Value *> specScheme;
       bool specialize = false;
-      const unsigned worklist_size = worklist.size();
+      
       if(SpecPolicy==ML){
-        specialize = policy->specializeOn(cs, specScheme,&client, worklist_size);
+        specialize = policy->specializeOn(cs, specScheme, &client, worklist.size());
         //try dump policy
         //specialize = callee_no_of_uses>2 && specialize; 
       }else{

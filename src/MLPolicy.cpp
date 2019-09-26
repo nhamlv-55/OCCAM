@@ -49,7 +49,6 @@ namespace previrt {
     : cg(_cg), delegate(_delegate), pass(_pass), epsilon(_epsilon), use_grpc(_use_grpc){
     database->assign(_database);
     assert(delegate);
-    torch::Tensor tensor = torch::eye(3);
     errs() << "Hello ML" << "\n";
     // randomize weight
     // torch::nn::init::xavier_uniform_(this->net->fc1->weight, 1.0);
@@ -83,6 +82,7 @@ namespace previrt {
   }
 
   void MLPolicy::markRecursiveFunctions() {
+    errs() << "call markRecursiveFunctions\n";
     for (auto it = scc_begin(&cg); !it.isAtEnd(); ++it) {
       auto &scc = *it;
       bool recursive = false;
@@ -416,32 +416,33 @@ namespace previrt {
           q_No  = prediction.q_no();
           state_encoded->append(prediction.state_encoded());
           errs()<<"final_decision:"<<final_decision<<"\n";
-        }else{
-          torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
-          x = x.reshape({1, x.size(0)});
-          std::vector<torch::jit::IValue> inputs;
-          inputs.push_back(x);
-          std::cerr << x << "\n";
-          at::Tensor prediction = module->forward(inputs).toTensor();
-          q_No  = prediction[0][0].item<float>();
-          q_Yes = prediction[0][1].item<float>();
-          switch(type){
-          case 0: //Policy Gradient
-            final_decision = random_with_prob(q_Yes);
-            break;
-          case 1: //DQN
-            if(random_with_prob(epsilon))
-              final_decision = random_with_prob(0.5);
-            else
-              final_decision = q_Yes > q_No;
-            break;
-          case 2: //AggressiveSpecPolicy
-            final_decision = true;
-            break;
-          default:
-            final_decision = random_with_prob(0.5);
-          }
         }
+        // else{
+        //   torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
+        //   x = x.reshape({1, x.size(0)});
+        //   std::vector<torch::jit::IValue> inputs;
+        //   inputs.push_back(x);
+        //   std::cerr << x << "\n";
+        //   at::Tensor prediction = module->forward(inputs).toTensor();
+        //   q_No  = prediction[0][0].item<float>();
+        //   q_Yes = prediction[0][1].item<float>();
+        //   switch(type){
+        //   case 0: //Policy Gradient
+        //     final_decision = random_with_prob(q_Yes);
+        //     break;
+        //   case 1: //DQN
+        //     if(random_with_prob(epsilon))
+        //       final_decision = random_with_prob(0.5);
+        //     else
+        //       final_decision = q_Yes > q_No;
+        //     break;
+        //   case 2: //AggressiveSpecPolicy
+        //     final_decision = true;
+        //     break;
+        //   default:
+        //     final_decision = random_with_prob(0.5);
+        //   }
+        // }
       }else{//not using policy or using grpc
         q_Yes = -1;
         q_No = -1;

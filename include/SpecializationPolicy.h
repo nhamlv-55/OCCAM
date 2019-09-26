@@ -75,11 +75,11 @@ namespace previrt
     virtual ~SpecializationPolicy(){}
     
     virtual bool specializeOn(llvm::CallSite, std::vector<llvm::Value*>&) const = 0;
-    virtual bool specializeOn(llvm::CallSite CS,
-                              std::vector<llvm::Value*>& slice,
-                              QueryOracleClient* q,
-                              const unsigned worklist_size
-                              ) const ;
+    virtual bool specializeOn(llvm::CallSite,
+                              std::vector<llvm::Value*>&,
+                              QueryOracleClient* ,
+                              const unsigned 
+                              ) const = 0 ;
 
 
     virtual bool specializeOn(llvm::Function*,
