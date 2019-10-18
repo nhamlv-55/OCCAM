@@ -6,30 +6,8 @@
 export LLVM_COMPILER=clang
 export WLLVM_OUTPUT=WARNING
 
-WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-INSTALL_DIR=${WORKING_DIR}/install
-
-if [ -d "$INSTALL_DIR" ];
-then
-    echo "Install directory already exists. Skipped compilation ..."
-else
-    # download and fetch source
-    wget http://lighttpd.net/download/lighttpd-1.4.13.tar.gz
-    tar -zxf lighttpd-1.4.13.tar.gz
-    cd lighttpd-1.4.13
-    # configure without shared libs...will save headaches
-    CC=gclang ./configure --without-openssl --without-pcre --without-zlib --without-bzip2 --prefix=${WORKING_DIR}/install
-    CC=gclang make
-    make install
-fi
-
-# Extract bitcode
-get-bc ${INSTALL_DIR}/sbin/lighttpd 
-mv ${INSTALL_DIR}/sbin/lighttpd.bc ${WORKING_DIR}
-
 ## Run Occam
 
-cd ${WORKING_DIR}
 
 # set up manifests
  cat > lhttpd.manifest <<EOF
