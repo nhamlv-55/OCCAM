@@ -455,7 +455,7 @@ namespace previrt {
         }
       }
       //record data to file
-      for (double f: features){ s->append(std::to_string(f).append(",")); }
+      for (unsigned f: features){ s->append(std::to_string(f).append(",")); }
       s->append(std::to_string(q_No));
       s->append(",");
       s->append(std::to_string(q_Yes));
