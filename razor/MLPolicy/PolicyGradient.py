@@ -22,10 +22,10 @@ torch.manual_seed(1)
 np.random.seed(1)
 
 debug_print_limit = 6
-lr = 0.001
+lr = 0.005
 minimize = True
-MIN_USABLE_RUNS = 15
-PLOT_ITER = 2
+MIN_USABLE_RUNS = 20
+PLOT_ITER = 5
 class PolicyGradient(BasePolicy):
     def __init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug, metric):
         BasePolicy.__init__(self, workdir, model_path, network_type, network_hp, grpc_mode, debug, metric)
@@ -34,7 +34,8 @@ class PolicyGradient(BasePolicy):
         else:
             self.net = network_type(self.metadata)
         #self.atomizer = Atomizer()
-
+        self.clip = 1
+        self.normalize_rewards = True 
     def train(self, model_path, no_of_sampling, no_of_iter, from_scratch):
         collect_encoded_state = False
         if from_scratch:
@@ -47,8 +48,11 @@ class PolicyGradient(BasePolicy):
         for i in range(no_of_iter):
             start_time = time.time()
             if (i+1)%PLOT_ITER == 0:
-                fig_name = self.metadata["metric"].replace(" ", "_")
-                self.plot(no_of_sampling, i, fig_name)
+                try:
+                    fig_name = self.metadata["metric"].replace(" ", "_")
+                    self.plot(no_of_sampling, i, fig_name)
+                except Exception as e:
+                    print(e)
             eps_threshold = -1 #set to -1 to always use policy
             if self.grpc_mode:
                 if self.net.net_type == "UberNet":
@@ -89,7 +93,7 @@ class PolicyGradient(BasePolicy):
             if dataset.no_good_runs < MIN_USABLE_RUNS:
                 print("too many broken runs")
                 continue
-            trajectory_data = dataset.get_trajectory_data(metric = self.metadata["metric"], normalize_rewards = True)
+            trajectory_data = dataset.get_trajectory_data(metric = self.metadata["metric"], normalize_rewards = self.normalize_rewards, baseline = self.metadata["none_results"][self.metadata["metric"]])
             collect_data_time = time.time()
             print("Processing data in ", collect_data_time - run_policy_time)
             self.optimize(trajectory_data, i)
@@ -149,7 +153,8 @@ class PolicyGradient(BasePolicy):
             print("before updating parameters-------------")
             for param in self.net.parameters():
                 print("params:", param.data.view(1, -1),)
-        
+        #clip gradients
+        torch.nn.utils.clip_grad_norm_(self.net.parameters(), self.clip) 
         # Apply gradients
         self.optimizer.step()
         if self.debug:

@@ -257,7 +257,7 @@ class Dataset(object):
         print("collected %s good runs out of %s runs"%(str(self.no_good_runs), str(size)))
 
     # for Policy Gradient
-    def get_trajectory_data(self, metric, normalize_rewards = False):
+    def get_trajectory_data(self, metric, normalize_rewards = False, baseline = 0):
         batch_states = []
         batch_rnn_states = []
         batch_actions = []
@@ -284,7 +284,7 @@ class Dataset(object):
             batch_probs.extend(probs)
             #rewards = [eps["score"]]*len(states)
             rewards = [0]*len(states)
-            rewards[-1] = float(eps["raw_result"][metric])
+            rewards[-1] = float(eps["raw_result"][metric])-(-baseline)
             batch_rewards.extend(discount_rewards(rewards, GAMMA))
         if normalize_rewards:
             if DEBUG: print("before norm:", batch_rewards)
