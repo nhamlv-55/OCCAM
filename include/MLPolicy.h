@@ -40,8 +40,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-// #include "torch/torch.h"
-// #include "torch/script.h"
 #include <vector>
 #include <cstdlib>
 #include <random>
@@ -65,7 +63,6 @@ namespace previrt
     std::string* s = new std::string();
     std::string* state_encoded = new std::string();
     std::vector<float>* trace = new std::vector<float>();
-    // std::shared_ptr<torch::jit::script::Module> module = torch::jit::load( std::string(std::getenv("OCCAM_HOME")).append("/model.pt"));
     const bool use_grpc;
     FunctionSet rec_functions;
     

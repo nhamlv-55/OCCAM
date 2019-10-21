@@ -63,8 +63,6 @@ def previrt(fin, fout, args, **opts):
     libs = ['-load={0}'.format(config.get_sea_dsalib()),
             '-load={0}'.format(config.get_llvm_dsalib()),
             '-load={0}'.format(config.get_occamlib())]
-    for l in config.get_torch_libs():
-        libs=['-load={0}'.format(l)]+libs
     args = opt_debug_cmds \
             +libs + [fin, '-o={0}'.format(fout)] + args
 
@@ -74,9 +72,6 @@ def previrt_progress(fin, fout, args, output=None):
     libs = ['-load={0}'.format(config.get_sea_dsalib()),
             '-load={0}'.format(config.get_llvm_dsalib()),
             '-load={0}'.format(config.get_occamlib())]
-    torchlibs = []
-    for l in config.get_torch_libs():
-        libs=['-load={0}'.format(l)]+libs
     prog = config.get_llvm_tool('opt')
 
     args = opt_debug_cmds +libs + [fin, '-o={0}'.format(fout)] + args

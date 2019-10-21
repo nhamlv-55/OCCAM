@@ -41,7 +41,6 @@
 #include "utils/UberIRDumper.h"
 #include "utils/Profiler.h"
 using namespace llvm;
-using namespace torch;
 namespace previrt {
 
   MLPolicy::MLPolicy(SpecializationPolicy *_delegate, CallGraph &_cg,
@@ -51,8 +50,6 @@ namespace previrt {
     assert(delegate);
     errs() << "Hello ML" << "\n";
     // randomize weight
-    // torch::nn::init::xavier_uniform_(this->net->fc1->weight, 1.0);
-    // torch::nn::init::xavier_uniform_(this->net->fc2->weight, 1.0);
     // errs() << "w:::" << this->net->fc1->weight << "\n";
     // errs() << "w:::" << this->net->fc2->weight << "\n";
     markRecursiveFunctions();
@@ -386,10 +383,10 @@ namespace previrt {
       //std::vector<float> trace_mask = std::vector<float>(42-(*trace).size(), 0);
       //features.insert( features.end(), trace_mask.begin(), trace_mask.end());
       //features.insert( features.end(), argument_features.begin(), argument_features.end());
-      std::cerr << "trace so far:"<<(*trace)<<"\n";
-      std::cerr << "Feature vector: " << features << "\n";
-      std::cerr << "Invoke MLpolicy" <<"\n";
-      std::cerr << "Module feature: " << module_features <<"\n";
+      // std::cerr << "trace so far:"<<(*trace)<<"\n";
+      // std::cerr << "Feature vector: " << features << "\n";
+      // std::cerr << "Invoke MLpolicy" <<"\n";
+      // std::cerr << "Module feature: " << module_features <<"\n";
       bool final_decision;
       if(!random_with_prob(epsilon) || (type==1)){ //if random<epsilon -> random, if not, call the policy. for DQN, always use policy)
         if(use_grpc){
@@ -417,32 +414,6 @@ namespace previrt {
           state_encoded->append(prediction.state_encoded());
           errs()<<"final_decision:"<<final_decision<<"\n";
         }
-        // else{
-        //   torch::Tensor x = torch::tensor(at::ArrayRef<float>(std::vector<float>(features.begin(), features.end())));
-        //   x = x.reshape({1, x.size(0)});
-        //   std::vector<torch::jit::IValue> inputs;
-        //   inputs.push_back(x);
-        //   std::cerr << x << "\n";
-        //   at::Tensor prediction = module->forward(inputs).toTensor();
-        //   q_No  = prediction[0][0].item<float>();
-        //   q_Yes = prediction[0][1].item<float>();
-        //   switch(type){
-        //   case 0: //Policy Gradient
-        //     final_decision = random_with_prob(q_Yes);
-        //     break;
-        //   case 1: //DQN
-        //     if(random_with_prob(epsilon))
-        //       final_decision = random_with_prob(0.5);
-        //     else
-        //       final_decision = q_Yes > q_No;
-        //     break;
-        //   case 2: //AggressiveSpecPolicy
-        //     final_decision = true;
-        //     break;
-        //   default:
-        //     final_decision = random_with_prob(0.5);
-        //   }
-        // }
       }else{//not using policy or using grpc
         q_Yes = -1;
         q_No = -1;

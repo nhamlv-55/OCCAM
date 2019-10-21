@@ -99,7 +99,7 @@ class ThreadPool(object):
     def shutdown(self):
         pass
 
-POOL = ThreadPool(10)
+POOL = ThreadPool(3)
 
 def getDefaultPool():
     return POOL

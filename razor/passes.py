@@ -186,7 +186,7 @@ def peval(input_file, output_file, \
     tmp.close()
     ## Only for debugging or tests
     disable_opt = False
-    disable_inlining = True
+    disable_inlining = False
 
     def _optimize(input_file, output_file, use_seaopt, iteration = None):
         retcode = optimize(input_file, output_file,
@@ -306,7 +306,7 @@ def peval(input_file, output_file, \
             
     if policy <> 'none':
         if policy == 'machine-learning':
-            max_intra_specializer_iteration = 1 
+            max_intra_specializer_iteration = 3 
         else:
             max_intra_specializer_iteration = 9999999
         out = ['blah']
