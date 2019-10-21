@@ -36,8 +36,10 @@ syntax = "proto2";
 package previrt.proto;
 
 service QueryOracle {
-  rpc Query(State) returns (Prediction) {}
+  rpc Query(State) returns (Prediction) {};
+  rpc Step(Prediction) returns (ORDI) {}; //ORDI stands for Obs Reward Done Info required by Gym
 }
+
 
 enum Type {
   U = 0 ; // unknown
@@ -218,4 +220,11 @@ message Prediction {
   required float q_no = 2 ;
   required bool pred = 3;
   optional string state_encoded = 4;
+}
+
+message ORDI {
+  repeated float obs = 1;
+  required float reward = 2;
+  required bool done = 3;
+  optional string info = 4;
 }
