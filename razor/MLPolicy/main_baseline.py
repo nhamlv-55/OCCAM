@@ -1,10 +1,5 @@
-import gym
-
-env = gym.make('OccamGym')
-model = PPO2(MlpPolicy, env, verbose = 1)
-model.learn(total_timesteps = 10000)
-obs = env.reset()
-for i in range(1000):
-    action, _states = model.predict(obs)
-    obs, rewards, dones, info = env.step(action)
-    
+import os
+from OccamGym import *
+from Connector import Mode
+OCCAM_HOME = os.environ["OCCAM_HOME"]
+env = OccamGymEnv(os.path.join(OCCAM_HOME, "examples/portfolio/tree"), Mode.TRAINING,  "1")
