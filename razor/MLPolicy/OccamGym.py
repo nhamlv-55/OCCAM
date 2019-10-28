@@ -15,6 +15,8 @@ class OccamGymEnv(gym.Env):
         self.mode = mode
         self.connection = connection
         self.metric = metric
+        self._occam_proc = None
+        self._server_proc = None
         self._start_server()
 
     def _get_obs(self):
@@ -42,6 +44,9 @@ class OccamGymEnv(gym.Env):
 
     def reset(self):
         print("Reset env...")
+        if self._occam_proc is not None:
+            self._occam_proc.kill()
+            print("Kill the current Occam process")
         occam_command = "./build.sh --devirt none -g -epsilon %s -folder %s 2>/dev/null"%("-1", self.idx)
         self._occam_proc = subprocess.Popen(occam_command.split(), cwd = self.workdir)
         #keep querying until the 1st obs is returned
