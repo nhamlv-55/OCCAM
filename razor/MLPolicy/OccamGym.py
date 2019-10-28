@@ -14,6 +14,7 @@ class OccamGymEnv(gym.Env):
         self.workdir = workdir
         self.mode = mode
         self.connection = connection
+        self._start_server()
         self.reset()
     def _get_obs(self):
         return self.step(action = None)
@@ -29,11 +30,15 @@ class OccamGymEnv(gym.Env):
             reward = response.reward
             done = response.done
             info = response.info
+            print(response)
         return obs, reward, done, info
+
+    def _start_server(self):
+        self._server_proc=  subprocess.Popen("python Connector.py > log_connector".split())
+
     def reset(self):
-        subprocess.Popen("python Connector.py > log_connector".split())
         occam_command = "./build.sh --devirt none -g -epsilon %s -folder %s 2>/dev/null"%("-1", self.idx)
-        subprocess.Popen(occam_command.split(), cwd = self.workdir)
+        self._occam_proc = subprocess.Popen(occam_command.split(), cwd = self.workdir)
         #keep querying until the 1st obs is returned
         time.sleep(2)
         while True:
