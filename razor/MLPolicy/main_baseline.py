@@ -1,5 +1,8 @@
 import os
-from OccamGym import *
+from OccamGym import OccamGymEnv
 from Connector import Mode
 OCCAM_HOME = os.environ["OCCAM_HOME"]
-env = OccamGymEnv(os.path.join(OCCAM_HOME, "examples/portfolio/tree"), Mode.TRAINING,  "1")
+env = OccamGymEnv(workdir = os.path.join(OCCAM_HOME, "examples/portfolio/tree"),
+                  mode = Mode.TRAINING,
+                  idx = "2",
+                  connection = 'localhost:50051')
