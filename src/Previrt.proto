@@ -38,8 +38,12 @@ package previrt.proto;
 service QueryOracle {
   rpc Query(State) returns (Prediction) {};
   rpc Step(Prediction) returns (ORDI) {}; //ORDI stands for Obs Reward Done Info required by Gym
+  rpc Done(Empty) returns (Empty) {};
 }
 
+message Empty {
+
+}
 
 enum Type {
   U = 0 ; // unknown

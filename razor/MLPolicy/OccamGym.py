@@ -8,12 +8,13 @@ import Previrt_pb2
 import Previrt_pb2_grpc
 import grpc
 class OccamGymEnv(gym.Env):
-    def __init__(self, workdir, mode, idx, connection):
+    def __init__(self, workdir, mode, idx, metric, connection):
         self.idx = idx
         self.counter = 0
         self.workdir = workdir
         self.mode = mode
         self.connection = connection
+        self.metric = metric
         self._start_server()
         self.reset()
     def _get_obs(self):
@@ -34,7 +35,9 @@ class OccamGymEnv(gym.Env):
         return obs, reward, done, info
 
     def _start_server(self):
-        self._server_proc=  subprocess.Popen("python Connector.py > log_connector".split())
+        server_cmd = ["python", "Connector.py", "--idx", self.idx, "--metric", self.metric, "--workdir", self.workdir]
+        print(server_cmd)
+        self._server_proc = subprocess.Popen(server_cmd)
 
     def reset(self):
         occam_command = "./build.sh --devirt none -g -epsilon %s -folder %s 2>/dev/null"%("-1", self.idx)

@@ -40,7 +40,12 @@ class Mode(Enum):
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
-    def __init__(self, mode, workdir, debug = True):
+    def __init__(self, mode, workdir, idx, metric, debug = True):
+        '''
+        workdir is the original binary directory (../tree/)
+        idx is the id of the run (0, 1, ...)
+        rundir will be workdir/slash/runidx (.../tree/slash/run1)
+        '''
         self.names = [
             "block_count",
             "inst_count",
@@ -73,19 +78,38 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         self.mode = mode
         if self.debug: print("mode:", self.mode)
         self.get_meta(workdir)
+        self.metadata["metric"] = metric
         if self.debug: print("read Meta from metadata.json...")
         self._got_step = Event()
         self._got_new_obs = Event()
         if self.debug: print("create Event object...")
         self._latest_obs = [-1]
-        self.metric_file = "blah"
-
+        self.idx = idx
+        self.rundir = os.path.join(workdir, "slash", "run"+idx, )
+        self.done = False
     def get_metrics(self):
-        return 0
+        result = {}
+        #get rop gadgets count
+        with open(os.path.join(self.rundir,"gadget_count.json"), "r") as f:
+            data = json.load(f)
+            for k in data:
+                result[k]= data[k]
+ 
+        #get instruction counts
+        with open(os.path.join(self.rundir,"0AfterSpecialization_results.txt"), "r") as f:
+            for l in f.readlines():
+                if "[" in l:
+                    continue
+                tokens = l.strip().split()
+                v = int(tokens[0])
+                k = " ".join(tokens[1:])
+                result[k] = v
+
+        return result[self.metadata["metric"]]
 
     def get_meta(self, workdir):
         with open(os.path.join(workdir, "metadata.json"), "r") as metafile:
-            self.meta = json.load(metafile)
+            self.metadata = json.load(metafile)
 
     def Step(self, request, context):
         if request.q_yes != -99:
@@ -95,14 +119,17 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         else:
             print("got _get_obs")
 
-        if os.path.exists(self.metric_file):
+        #only wait if the episode is not over
+        self._got_new_obs.wait()
+        self._got_new_obs.clear()
+
+        if self.done:
             reward = self.get_metrics()
             done = True
+            print("Episode is done! Reward = %s"%str(reward))
         else:
             reward = 0
             done = False
-        self._got_new_obs.wait()
-        self._got_new_obs.clear()
         return Previrt_pb2.ORDI(obs = self._latest_obs, reward = reward, done = done, info = "EMPTY")
 
     def Query(self, request, context):
@@ -121,13 +148,18 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         else:
             return self._prediction
 
+    def Done(self, request, context):
+        print("Being notified that the episode is over")
+        self._got_new_obs.set()
+        self.done = True
+        return Previrt_pb2.Empty()
 
 
-
-def run_server(mode, workdir):
+def run_server(mode, workdir, idx, metric):
+    print("starting server with\n mode = %s\n workdir = %s\n idx = %s\n metric = %s"%(mode, workdir, idx, metric))
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
-        QueryOracleServicer(mode = mode, workdir = workdir), server)
+        QueryOracleServicer(mode = mode, workdir = workdir, idx = idx, metric = metric), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     try:
@@ -136,5 +168,13 @@ def run_server(mode, workdir):
     except KeyboardInterrupt:
         pass
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-w', '--workdir', default=os.path.join(OCCAM_HOME, "examples/portfolio/tree/"), help='s')
+parser.add_argument('-m', '--metric', default = 'Total unique gadgets')
+parser.add_argument('-i', '--idx')
+args = parser.parse_args()
+workdir = args.workdir
+metric = args.metric
+idx = args.idx
 if __name__== "__main__":
-    run_server(Mode.TRAINING, os.path.join(OCCAM_HOME, "examples/portfolio/tree"))
+    run_server(Mode.TRAINING, workdir = workdir, idx = idx, metric = metric)
