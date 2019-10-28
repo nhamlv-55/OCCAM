@@ -19,9 +19,9 @@ class OccamGymEnv(gym.Env):
             done = response.done
         return obs, reward, done, info
     def reset(self):
-        subprocess.Popen("python Connector.py".split(), close_fds=True)
+        subprocess.Popen("python Connector.py > log_connector".split())
         print("server is up")
-        occam_command = "./build.sh --devirt none -epsilon %s -folder %s 2>/dev/null"%("-1", self.idx)
+        occam_command = "./build.sh --devirt none -g -epsilon %s -folder %s 2>/dev/null"%("-1", self.idx)
         subprocess.check_output(occam_command.split(), cwd = self.workdir)
     def render(self):
         pass

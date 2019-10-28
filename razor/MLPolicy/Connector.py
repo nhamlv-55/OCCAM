@@ -70,6 +70,8 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         ]
         self.debug = debug
         if self.debug: print("init QueryOracleServicer...")
+        self.mode = mode
+        if self.debug: print("mode:", self.mode)
         self.get_meta(workdir)
         if self.debug: print("read Meta from metadata.json...")
         self._got_step = Event()
@@ -91,9 +93,10 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         return Previrt_pb2.ORDI(obs = self._latest_obs, reward = reward, done = done, info = "EMPTY")
 
     def Query(self, request, context):
+        print("got obs")
         if self.debug: print(self.mode)
         if self.mode == Mode.TRAINING:
-            if self.debug: self.print_state(request)
+            # if self.debug: self.print_state(request)
             features = [int(s) for s in request.features.split(',')]
             print(features)
             self._latest_obs = features
