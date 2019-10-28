@@ -16,9 +16,10 @@ class OccamGymEnv(gym.Env):
         self.connection = connection
         self.metric = metric
         self._start_server()
-        self.reset()
+
     def _get_obs(self):
         return self.step(action = None)
+
     def step(self, action, q_yes = -1, q_no = -1, state_encoded = "EMPTY"):
         if action is not None:
             prediction =  Previrt_pb2.Prediction(q_no = q_no, q_yes = q_yes, state_encoded = state_encoded, pred = action)
@@ -50,7 +51,7 @@ class OccamGymEnv(gym.Env):
                 obs, reward, done, info = self._get_obs()
                 if obs[0] != -1:
                     print("env is reset. Got 1st state")
-                    return obs, reward, done, info
+                    return obs 
             except Exception as e:
                 print(e)
     def render(self):
