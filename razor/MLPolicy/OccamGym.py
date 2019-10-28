@@ -41,6 +41,7 @@ class OccamGymEnv(gym.Env):
         self._server_proc = subprocess.Popen(server_cmd)
 
     def reset(self):
+        print("Reset env...")
         occam_command = "./build.sh --devirt none -g -epsilon %s -folder %s 2>/dev/null"%("-1", self.idx)
         self._occam_proc = subprocess.Popen(occam_command.split(), cwd = self.workdir)
         #keep querying until the 1st obs is returned
@@ -57,4 +58,5 @@ class OccamGymEnv(gym.Env):
     def render(self):
         pass
     def close(self):
-        pass
+        print("Close env...")
+        self._server_proc.kill()

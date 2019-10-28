@@ -12,4 +12,5 @@ while True:
     action = True
     obs, rewards, dones, info = env.step(action)
     if dones:
+        env.close()
         break
