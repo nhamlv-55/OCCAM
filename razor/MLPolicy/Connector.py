@@ -75,6 +75,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         self.get_meta(workdir)
         if self.debug: print("read Meta from metadata.json...")
         self._got_step = Event()
+        self._got_new_obs = Event()
         if self.debug: print("create Event object...")
         self._latest_obs = [-1]
         self.metric_file = "blah"
@@ -88,7 +89,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
 
     def Step(self, request, context):
         if request.q_yes != -99:
-            self._prediction = request.pred
+            self._prediction = request
             self._got_step.set()
             print("got Step. Set event.")
         else:
@@ -100,6 +101,8 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         else:
             reward = 0
             done = False
+        self._got_new_obs.wait()
+        self._got_new_obs.clear()
         return Previrt_pb2.ORDI(obs = self._latest_obs, reward = reward, done = done, info = "EMPTY")
 
     def Query(self, request, context):
@@ -110,6 +113,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             features = [int(s) for s in request.features.split(',')]
             print(features)
             self._latest_obs = features
+            self._got_new_obs.set()
             print("wait for Step")
             self._got_step.wait()
             self._got_step.clear()
