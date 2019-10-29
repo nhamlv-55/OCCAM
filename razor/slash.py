@@ -136,6 +136,7 @@ class Slash(object):
                         'database=',
                         'epsilon=',
                         'grpc',
+                        'grpc-conn='
             ]
 
             parsedargs = getopt.getopt(argv[1:], None, cmdflags)
@@ -271,6 +272,7 @@ class Slash(object):
         epsilon  = utils.get_flag(self.flags, 'epsilon', '2')
         no_inlining = utils.get_flag(self.flags, 'disable-inlining', None)
         use_grpc = utils.get_flag(self.flags, 'grpc', None)
+        grpc_conn = utils.get_flag(self.flags, 'grpc-conn', None)
         if use_grpc is not None:
             use_grpc = True
         else:
@@ -424,7 +426,8 @@ class Slash(object):
                              log=open(fn, 'w'), \
                              database = database, \
                              epsilon = epsilon, \
-                             use_grpc = use_grpc)
+                             use_grpc = use_grpc, \
+                             grpc_conn = grpc_conn)
 
             pool.InParallel(intra, files.values(), self.pool)
 

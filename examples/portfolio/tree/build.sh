@@ -12,6 +12,7 @@ INTRA_SPEC="machine-learning"
 DEVIRT="none"
 OPT_OPTIONS=""
 EPSILON="-10"
+GRPC_CONN=""
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -34,6 +35,11 @@ do
             ;;
         -intra-spec|--intra-spec)
             INTRA_SPEC="$2"
+            shift # past argument
+            shift # past value
+            ;;
+        -grpc-conn|--grpc-conn)
+            GRPC_CONN="$2"
             shift # past argument
             shift # past value
             ;;
@@ -93,12 +99,12 @@ export OCCAM_LOGFILE=${PWD}/slash/$PREFIX/occam.log
 
 mkdir -p $DATABASE
 # OCCAM
-SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE} --epsilon=$EPSILON"
+SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} --devirt=${DEVIRT} --no-strip --stats $OPT_OPTIONS --database=${DATABASE} --epsilon=$EPSILON --grpc-conn=$GRPC_CONN --work-dir=slash/$PREFIX"
 echo "============================================================"
 echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"
-slash ${SLASH_OPTS} --work-dir=slash/$PREFIX tree.manifest.constraints
+slash ${SLASH_OPTS} tree.manifest.constraints
 
 #ROPgadget --binary slash/$PREFIX/tree > slash/$PREFIX/rop_stats.txt
 python ${OCCAM_HOME}/razor/MLPolicy/GSA_util/GSA.py -r $PREFIX -f ${PWD} 
-python ${OCCAM_HOME}/razor/MLPolicy/notify.py -p 50051
+python ${OCCAM_HOME}/razor/MLPolicy/notify.py -c $GRPC_CONN 

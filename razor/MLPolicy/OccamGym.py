@@ -47,8 +47,8 @@ class OccamGymEnv(gym.Env):
         if self._occam_proc is not None:
             self._occam_proc.kill()
             print("Kill the current Occam process")
-        occam_command = "./build.sh --devirt none -g -epsilon %s -folder %s 2>/dev/null"%("-1", self.idx)
-        self._occam_proc = subprocess.Popen(occam_command.split(), cwd = self.workdir)
+        occam_command = ["./build.sh", "--devirt", "none", "-g", "-grpc-conn", self.connection, "-epsilon", "-1", "-folder", self.idx]
+        self._occam_proc = subprocess.Popen(occam_command, cwd = self.workdir)
         #keep querying until the 1st obs is returned
         time.sleep(2)
         while True:

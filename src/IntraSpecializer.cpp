@@ -84,6 +84,8 @@ static cl::opt<SpecializationPolicyType> SpecPolicy(
 static cl::opt<float> Epsilon("Ppeval-epsilon", cl::desc("Epsilon for MLPolicy"));
 
 static cl::opt<bool> UseGRPC("Ppeval-grpc", cl::desc("Use GRPC mode"), cl::init(false));
+
+static cl::opt<std::string> Connection("Ppeval-grpc-conn", cl::desc("GRPC ip and port"));
 namespace previrt {
   /* Intra-module specialization */
   class SpecializerPass : public llvm::ModulePass {
@@ -92,7 +94,7 @@ namespace previrt {
     bool trySpecializeFunction(Function *f, llvm::Module &M, SpecializationTable &table,
                                SpecializationPolicy *policy,
                                std::vector<Function *> &to_add);
-    std::shared_ptr<Channel> connection = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+    std::shared_ptr<Channel> connection = grpc::CreateChannel(Connection, grpc::InsecureChannelCredentials());
   public:
     static char ID;
 

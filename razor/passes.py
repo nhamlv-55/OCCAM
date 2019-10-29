@@ -175,7 +175,7 @@ def peval(input_file, output_file, \
           opt_options, \
           policy, \
           devirt_method, \
-          use_llpe, use_ipdse, use_ai_dce, log=None, database=None, epsilon = -1, use_grpc = False):
+          use_llpe, use_ipdse, use_ai_dce, log=None, database=None, epsilon = -1, use_grpc = False, grpc_conn = None):
     """ intra module specialization/optimization
     """
     opt = tempfile.NamedTemporaryFile(suffix='.bc', delete=False)
@@ -186,7 +186,7 @@ def peval(input_file, output_file, \
     tmp.close()
     ## Only for debugging or tests
     disable_opt = False
-    disable_inlining = False
+    disable_inlining = True
 
     def _optimize(input_file, output_file, use_seaopt, iteration = None):
         retcode = optimize(input_file, output_file,
@@ -330,6 +330,7 @@ def peval(input_file, output_file, \
                 passes.append('-Ppeval-epsilon={0}'.format(epsilon))
             if use_grpc:
                 passes.append('-Ppeval-grpc')
+                passes.append('-Ppeval-grpc-conn={0}'.format(grpc_conn))
             progress = driver.previrt_progress(opt.name, done.name, passes, output=out)
             sys.stderr.write("\tintra-module specialization finished\n")
             if progress:
