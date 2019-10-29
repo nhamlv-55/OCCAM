@@ -24,7 +24,9 @@ import Previrt_pb2
 import Previrt_pb2_grpc
 import numpy as np
 import random
-from utils import *
+import json
+#from utils import *
+import argparse
 import multiprocessing
 from threading import Event
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
@@ -111,6 +113,11 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         with open(os.path.join(workdir, "metadata.json"), "r") as metafile:
             self.metadata = json.load(metafile)
 
+    def _reset(self):
+        self._got_new_obs.clear()
+        self._got_step.clear()
+        self.done = False
+
     def Step(self, request, context):
         if request.q_yes != -99:
             self._prediction = request
@@ -127,6 +134,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
             reward = self.get_metrics()
             done = True
             print("Episode is done! Reward = %s"%str(reward))
+            self._reset()
         else:
             reward = 0
             done = False
@@ -152,6 +160,7 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         print("Being notified that the episode is over")
         self._got_new_obs.set()
         self.done = True
+        
         return Previrt_pb2.Empty()
 
 

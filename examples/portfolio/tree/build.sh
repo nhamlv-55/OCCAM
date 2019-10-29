@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Make sure we exit if there is a failure
+
+SLASH="/root/anaconda3/envs/py2/bin/slash" 
 set -e
 
 function usage() {
@@ -103,8 +105,8 @@ SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} 
 echo "============================================================"
 echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"
-slash ${SLASH_OPTS} tree.manifest.constraints
+${SLASH} ${SLASH_OPTS} tree.manifest.constraints
 
 #ROPgadget --binary slash/$PREFIX/tree > slash/$PREFIX/rop_stats.txt
 python ${OCCAM_HOME}/razor/MLPolicy/GSA_util/GSA.py -r $PREFIX -f ${PWD} 
-python ${OCCAM_HOME}/razor/MLPolicy/notify.py -c $GRPC_CONN 
+python3 ${OCCAM_HOME}/razor/MLPolicy/notify.py -c $GRPC_CONN 
