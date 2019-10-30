@@ -40,12 +40,14 @@ class OccamGymEnv(gym.Env):
         with grpc.insecure_channel(self.connection) as channel:
             stub = Previrt_pb2_grpc.QueryOracleStub(channel)
             response = stub.Step(prediction)
-            obs = response.obs
+            obs = list(response.obs)
             reward = response.reward
             done = response.done
             info = response.info
             if done:
                 info = {"is_success": True}
+            else:
+                info = {"info": info}
         return obs, reward, done, info
 
     def _start_server(self):

@@ -179,6 +179,10 @@ current working directory.
 
 This material is based upon work supported by the National Science Foundation under Grant [ACI-1440800](http://www.nsf.gov/awardsearch/showAward?AWD_ID=1440800). Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
 
+# Using OccamGym with stable-baselines
+Since OccamGym is not registered to Gym, we need to use a modifed version of stable-baselines. Please use this fork:
+https://github.com/nhamlv-55/stable-baselines
+
 # Using Pytorch
 `install_name_tool -rpath @rpath/libcaffe2.dylib /Users/e32851/workspace/libtorchmac/libtorch/lib/libcaffe2.dylib libcaffe2.dylib`
 
