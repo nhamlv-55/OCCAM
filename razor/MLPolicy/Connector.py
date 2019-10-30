@@ -141,7 +141,6 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         return Previrt_pb2.ORDI(obs = self._latest_obs, reward = reward, done = done, info = "EMPTY")
 
     def Query(self, request, context):
-        print("got obs")
         if self.debug: print(self.mode)
         if self.mode == Mode.TRAINING:
             # if self.debug: self.print_state(request)
@@ -165,11 +164,16 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
 
 
 def run_server(mode, workdir, idx, metric):
-    print("starting server with\n mode = %s\n workdir = %s\n idx = %s\n metric = %s"%(mode, workdir, idx, metric))
+    connection = '[::]:%s'%str(50000+int(idx)) 
+    print("starting server with\n mode = %s\n workdir = %s\n idx = %s\n metric = %s\n connection = %s"%(mode,
+                                                                                                        workdir,
+                                                                                                        idx,
+                                                                                                        metric,
+                                                                                                        connection))
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     Previrt_pb2_grpc.add_QueryOracleServicer_to_server(
         QueryOracleServicer(mode = mode, workdir = workdir, idx = idx, metric = metric), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port(connection)
     server.start()
     try:
         while True:
