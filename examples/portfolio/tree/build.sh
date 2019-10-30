@@ -105,7 +105,7 @@ SLASH_OPTS="--inter-spec-policy=${INTER_SPEC} --intra-spec-policy=${INTRA_SPEC} 
 echo "============================================================"
 echo "Running with options ${SLASH_OPTS}"
 echo "============================================================"
-${SLASH} ${SLASH_OPTS} tree.manifest.constraints
+${SLASH} ${SLASH_OPTS} tree.manifest.constraints >slash/$PREFIX/stdout_log 2>slash/$PREFIX/stderr_log
 
 #ROPgadget --binary slash/$PREFIX/tree > slash/$PREFIX/rop_stats.txt
 python ${OCCAM_HOME}/razor/MLPolicy/GSA_util/GSA.py -r $PREFIX -f ${PWD} 

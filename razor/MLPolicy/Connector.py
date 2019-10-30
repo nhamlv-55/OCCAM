@@ -42,7 +42,7 @@ class Mode(Enum):
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
-    def __init__(self, mode, workdir, idx, metric, debug = True):
+    def __init__(self, mode, workdir, idx, metric, debug = False):
         '''
         workdir is the original binary directory (../tree/)
         idx is the id of the run (0, 1, ...)
@@ -122,9 +122,9 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         if request.q_yes != -99:
             self._prediction = request
             self._got_step.set()
-            print("got Step. Set event.")
+            if self.debug: print("got Step. Set event.")
         else:
-            print("got _get_obs")
+            if self.debug: print("got _get_obs")
 
         #only wait if the episode is not over
         self._got_new_obs.wait()
@@ -146,10 +146,10 @@ class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
         if self.mode == Mode.TRAINING:
             # if self.debug: self.print_state(request)
             features = [int(s) for s in request.features.split(',')]
-            print(features)
+            if self.debug: print(features)
             self._latest_obs = features
             self._got_new_obs.set()
-            print("wait for Step")
+            if self.debug: print("wait for Step")
             self._got_step.wait()
             self._got_step.clear()
             return self._prediction
