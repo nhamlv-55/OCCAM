@@ -50,7 +50,7 @@ def make_env(idx):
 
 def main():
     # multiprocess environment
-    n_cpu = 2
+    n_cpu = 75
     env_list = []
     for i in range(n_cpu):
         a_env = OccamGymEnv(workdir = os.path.join(OCCAM_HOME, "examples/portfolio/tree"),
@@ -65,11 +65,7 @@ def main():
     env = SubprocVecEnv(env_list)
     model = A2C(MlpPolicy, env, verbose=1)
     model.learn(total_timesteps=25000)
-    model.save("a2c_cartpole")
-
-    del model # remove to demonstrate saving and loading
-
-    model = A2C.load("a2c_cartpole")
+    model.save("occam_gym")
 
     obs = env.reset()
     while True:

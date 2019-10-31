@@ -10,6 +10,8 @@ import grpc
 import json
 import numpy as np
 import signal
+
+FNULL = open(os.devnull, 'w')
 class OccamGymEnv(gym.Env):
     def __init__(self, workdir, mode, idx, metric, connection):
         self.idx = idx
@@ -22,7 +24,7 @@ class OccamGymEnv(gym.Env):
         self._server_proc_pid = None
         self.action_space = spaces.Discrete(2)
         self._get_meta()
-        self.observation_space = spaces.Box(np.asarray(self.metadata["minn"][:-3]), np.asarray(self.metadata["maxx"][:-3]), dtype = np.uint8)
+        self.observation_space = spaces.Box(np.zeros(24), 2*np.asarray(self.metadata["maxx"][:-3]), dtype = np.uint8)
         self._start_server()
     def _get_obs(self):
         return self.step(action = None)
@@ -51,9 +53,10 @@ class OccamGymEnv(gym.Env):
         return obs, reward, done, info
 
     def _start_server(self):
+        server_log = open(os.path.join(self.workdir, "server_%s_log"%self.idx), "w")
         server_cmd = ["python3", "Connector.py", "--idx", self.idx, "--metric", self.metric, "--workdir", self.workdir]
         print(server_cmd)
-        server_proc = subprocess.Popen(server_cmd)
+        server_proc = subprocess.Popen(server_cmd, stdout = server_log)
         self._server_proc_pid = server_proc.pid
 
     def reset(self):
@@ -61,8 +64,8 @@ class OccamGymEnv(gym.Env):
         if self._occam_proc_pid is not None:
             os.kill(self._occam_proc_pid, signal.SIGTERM) #or signal.SIGKILL 
             print("Kill the current Occam process")
-        occam_command = ["./build.sh", "--devirt", "none", "-g", "-grpc-conn", self.connection, "-epsilon", "-1", "-folder", self.idx]
-        occam_proc = subprocess.Popen(occam_command, cwd = self.workdir)
+        occam_command = ["./build.sh", "--devirt", "none", "-g", "-grpc-conn", self.connection, "-epsilon", "-1", "-folder", self.idx ]
+        occam_proc = subprocess.Popen(occam_command, cwd = self.workdir, stdout = FNULL )
         self._occam_proc_pid = occam_proc.pid
         #keep querying until the 1st obs is returned
         time.sleep(2)

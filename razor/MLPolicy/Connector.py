@@ -42,7 +42,7 @@ class Mode(Enum):
 class QueryOracleServicer(Previrt_pb2_grpc.QueryOracleServicer):
     """Provides methods that implement functionality of route guide server."""
 
-    def __init__(self, mode, workdir, idx, metric, debug = False):
+    def __init__(self, mode, workdir, idx, metric, debug = True):
         '''
         workdir is the original binary directory (../tree/)
         idx is the id of the run (0, 1, ...)
