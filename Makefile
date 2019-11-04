@@ -16,7 +16,7 @@ endif
 # tools that are used
 PROTOC  = $(shell which protoc)
 PYLINT  = $(shell which pylint)
-PIP     = $(shell which pip2)
+PIP     = $(shell which pip)
 MKDIR_P = mkdir -p
 RM_F    = rm -f
 
