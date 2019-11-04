@@ -16,7 +16,7 @@ endif
 # tools that are used
 PROTOC  = $(shell which protoc)
 PYLINT  = $(shell which pylint)
-PIP     = $(shell which pip)
+PIP     = $(shell which pip2)
 MKDIR_P = mkdir -p
 RM_F    = rm -f
 
@@ -34,7 +34,7 @@ all: sanity_check dist occam_lib
 # Sanity Checks.
 #
 # iam: We do not really need protoc if we add the generated code to the repo.
-# But currently we do not do that in the python, but do do it in the  C++, so some
+# But currently we do not do that in the python2, but do do it in the  C++, so some
 # consistency would be good.
 #
 #
@@ -103,7 +103,7 @@ ifeq ($(PIP),)
 endif
 	$(PIP) install -e .
 
-# python pip packaging
+# python2 pip packaging
 
 dist: proto
 	python setup.py sdist bdist_wheel

@@ -104,8 +104,6 @@ utils/%.o: utils/%.cpp
 	$(CXX) -I. ${CXX_FLAGS} $< -c 
 
 proto/%.o: proto/%.cc proto/%.h
-	echo AAAAAAAAAAAAAA
-	echo _
 	$(CXX)  ${CXX_FLAGS} $< -c -o $@
 	$(CXX)  ${CXX_FLAGS} proto/Previrt.grpc.pb.cc -c -o proto/Previrt.grpc.pb.o
 
