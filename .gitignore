@@ -13,3 +13,5 @@ examples/
 GPATH
 GRTAGS
 GTAGS
+razor/MLPolicy/Previrt_pb2.py
+razor/MLPolicy/Previrt_pb2_grpc.py
