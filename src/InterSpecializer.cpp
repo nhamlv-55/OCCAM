@@ -55,6 +55,8 @@
 #include "MLPolicy.h"
 /* call profiler */
 #include "utils/Profiler.h"
+/* call Pointer Analysis */
+#include "utils/MemoryMLFeatures.h"
 #include "utils/QueryOracleClient.h"
 
 #include <vector>
@@ -342,6 +344,7 @@ namespace previrt {
     virtual void getAnalysisUsage(AnalysisUsage &AU) const {
       AU.addRequired<CallGraphWrapperPass> ();
       AU.addRequired<ProfilerPass>();
+      AU.addRequired<MemoryMLFeaturesPass>();
       AU.addRequired<LoopInfoWrapperPass>();
     }
     

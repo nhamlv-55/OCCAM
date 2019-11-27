@@ -40,6 +40,7 @@
 #include "llvm/Analysis/LoopInfo.h"
 #include "utils/UberIRDumper.h"
 #include "utils/Profiler.h"
+#include "utils/MemoryMLFeatures.h"
 using namespace llvm;
 namespace previrt {
 
@@ -59,22 +60,22 @@ namespace previrt {
     if (delegate) {
       delete delegate;
     }
-    pid_t pid = getpid();
-    database->append(std::to_string(pid)).append("collected_data.csv");
-    std::ofstream outFile(*database);
-    errs() << "calling destructor with file " << *database << "\n";
-    outFile << *s;
-    outFile.flush();
-    outFile.close();
-    errs() << "file closed" << "\n";
+    // pid_t pid = getpid();
+    // database->append(std::to_string(pid)).append("collected_data.csv");
+    // std::ofstream outFile(*database);
+    // errs() << "calling destructor with file " << *database << "\n";
+    // outFile << *s;
+    // outFile.flush();
+    // outFile.close();
+    // errs() << "file closed" << "\n";
 
-    database->append(".state_encoded");
-    std::ofstream outFile2(*database);
-    errs() << "calling destructor with file " << *database << "\n";
-    outFile2 << *state_encoded;
-    outFile2.flush();
-    outFile2.close();
-    errs() << "file closed" << "\n";
+    // database->append(".state_encoded");
+    // std::ofstream outFile2(*database);
+    // errs() << "calling destructor with file " << *database << "\n";
+    // outFile2 << *state_encoded;
+    // outFile2.flush();
+    // outFile2.close();
+    // errs() << "file closed" << "\n";
 
   }
 
@@ -330,6 +331,13 @@ namespace previrt {
       features.push_back(no_of_const);
       features.push_back(no_of_arg);
       std::vector<unsigned> module_features = getModuleFeatures(caller);
+
+      //extract Pointer Analysis feature
+
+      MemoryMLFeaturesPass &MLP = pass.getAnalysis<MemoryMLFeaturesPass>();
+      MLP.runOnModule(*(caller->getParent()));
+      MLFeaturesCallSite MCS = MLP.extractMLFeatures(CS);
+      MCS.write(errs());
       features.insert( features.end(), module_features.begin(), module_features.end() );
       features.push_back(branch_cnt);
       features.push_back(affected_inst);
@@ -406,7 +414,7 @@ namespace previrt {
           // utils::dump_IR_as_tokens(*caller, &tokens_rso); //
           // tokens_rso<<"End tokens:\n";                    //
           /////////////////////////////////////////////////////
-
+          
           previrt::proto::Prediction prediction = q->Query(q->MakeState(state, "meta", caller_rso.str(), callee_rso.str(), ctx_rso.str(), args_state, *trace));
           final_decision = prediction.pred();
           q_Yes = prediction.q_yes();

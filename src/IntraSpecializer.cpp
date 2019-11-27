@@ -63,6 +63,8 @@
 #include "MLPolicy.h"
 /* call profiler */
 #include "utils/Profiler.h"
+#include "utils/MemoryMLFeatures.h"
+
 #include "utils/QueryOracleClient.h"
 using namespace llvm;
 using namespace previrt;
@@ -349,6 +351,7 @@ namespace previrt {
     AU.addRequired<CallGraphWrapperPass>();
     AU.addRequired<LoopInfoWrapperPass>();
     AU.addRequired<ProfilerPass>();
+    AU.addRequired<MemoryMLFeaturesPass>();
     AU.setPreservesAll();
   }
 
