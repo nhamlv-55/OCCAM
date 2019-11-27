@@ -109,4 +109,9 @@ ${SLASH} ${SLASH_OPTS} tree.manifest.constraints >slash/$PREFIX/stdout_log 2>sla
 
 #ROPgadget --binary slash/$PREFIX/tree > slash/$PREFIX/rop_stats.txt
 python ${OCCAM_HOME}/razor/MLPolicy/GSA_util/GSA.py -r $PREFIX -f ${PWD} 
-python3 ${OCCAM_HOME}/razor/MLPolicy/notify.py -c $GRPC_CONN 
+if [$GRPC_CONN == ""]
+then
+    exit 0
+else
+    python3 ${OCCAM_HOME}/razor/MLPolicy/notify.py -c $GRPC_CONN
+fi
